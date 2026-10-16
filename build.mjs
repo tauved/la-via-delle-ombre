@@ -99,6 +99,7 @@ const icona = {
   intero: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   condividi: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7.5 7.5L12 3l4.5 4.5M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   cerca: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  gioca: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>',
   esterno: '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 
@@ -240,6 +241,21 @@ const sigillo = (pagina) => `<div class="sigillo">
   <img class="sigillo-logo" src="${indirizzo(media.logoGrande, pagina)}" width="612" height="420" alt="TAUH">
 </div>`;
 
+function immagineGioco(pagina, dimensioni, lazy, alt = "") {
+  const g = sito.gioco || {};
+  const pigro = lazy ? ' loading="lazy"' : "";
+  if (g.disponibile && media.giocoCopertina) {
+    return `<picture>
+          <source type="image/webp" srcset="${indirizzo(media.giocoCopertina640, pagina)} 640w, ${indirizzo(media.giocoCopertina, pagina)} 1280w" sizes="${dimensioni}">
+          <img src="${indirizzo(media.giocoCopertina, pagina)}" width="1280" height="720" alt="${esc(alt)}"${pigro} decoding="async">
+        </picture>`;
+  }
+  return `<picture>
+          <source type="image/webp" srcset="${indirizzo(media.gioco600, pagina)} 600w, ${indirizzo(media.gioco1080, pagina)} 1080w" sizes="${dimensioni}">
+          <img src="${indirizzo(media.gioco600, pagina)}" width="600" height="750" alt="${esc(alt)}"${pigro} decoding="async">
+        </picture>`;
+}
+
 function blocchiTavola(t, indice) {
   return t.blocchi
     .filter((b) => b.tipo !== "titolo")
@@ -287,7 +303,7 @@ function paginaHome(caroselli) {
     link.youtube && `<li><a href="${esc(link.youtube)}" rel="me noopener">YouTube <small>Guarda i video</small></a></li>`,
   ].filter(Boolean);
   const giocoTesto = gioco.disponibile
-    ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca ora</a>`
+    ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const jsonLd = {
     "@context": "https://schema.org",
@@ -354,10 +370,7 @@ function paginaHome(caroselli) {
     <div class="via" style="--pos: 64%" aria-hidden="true"></div>
     <div class="colonna">
       <div class="gioco-invito">
-        <picture>
-          <source type="image/webp" srcset="${indirizzo(media.gioco600, pagina)} 600w, ${indirizzo(media.gioco1080, pagina)} 1080w" sizes="(min-width: 800px) 36rem, 100vw">
-          <img src="${indirizzo(media.gioco600, pagina)}" width="600" height="750" alt="" loading="lazy" decoding="async">
-        </picture>
+        ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
         <div class="gioco-invito-testo">
           ${gioco.disponibile ? "" : '<span class="stato">In arrivo</span>'}
           <h2 id="titolo-gioco">${esc(gioco.titolo || "Il gioco")}</h2>
@@ -502,18 +515,35 @@ function paginaGioco() {
   const pagina = "/gioco/";
   const g = sito.gioco || {};
   const titolo = g.titolo || "Il gioco";
+  const percorso = indirizzo(g.percorso || "/gioco/play/", pagina);
+  const comandi = Array.isArray(g.comandi) ? g.comandi : [];
+  const touch = Array.isArray(g.comandi_touch) ? g.comandi_touch : [];
   const corpo = g.disponibile
     ? `<main id="contenuto" class="colonna gioco">
   <header class="carosello-testa">
     <h1>${esc(titolo)}</h1>
-    ${g.testo ? `<p>${esc(g.testo)}</p>` : ""}
+    ${g.sottotitolo ? `<p class="sottotitolo">${esc(g.sottotitolo)}</p>` : ""}
   </header>
-  <div class="cornice" data-cornice style="--proporzioni: ${esc(g.proporzioni || "16 / 9")}">
-    <iframe src="${indirizzo(g.percorso || "/gioco/play/", pagina)}" title="${esc(titolo)}" allow="fullscreen; autoplay; gamepad" allowfullscreen></iframe>
+  <div class="schermo-gioco" data-schermo-gioco style="--proporzioni: ${esc(g.proporzioni || "16 / 9")}">
+    <a class="avvia" href="${percorso}" data-avvia data-titolo="${esc(titolo)}">
+      ${immagineGioco(pagina, "(min-width: 76rem) 76rem, 100vw", false, g.descrizione_immagine || "")}
+      <span class="avvia-bottone">${icona.gioca}Gioca</span>
+    </a>
   </div>
-  <div class="azioni">
-    <button class="bottone primario" type="button" data-gioco-intero>${icona.intero}Gioca a schermo intero</button>
-    <a class="bottone filo" href="${indirizzo(g.percorso || "/gioco/play/", pagina)}">Apri il gioco da solo</a>
+  <div class="azioni gioco-azioni">
+    <button class="bottone filo" type="button" data-gioco-intero hidden>${icona.intero}Schermo intero</button>
+    <a class="bottone filo" href="${percorso}">Apri il gioco a tutta pagina</a>
+  </div>
+  <div class="gioco-info">
+    <div class="gioco-storia">
+      ${g.testo ? `<p>${esc(g.testo)}</p>` : ""}
+      ${g.dettagli ? `<p>${esc(g.dettagli)}</p>` : ""}
+    </div>
+    ${comandi.length || touch.length ? `<section class="comandi" aria-labelledby="titolo-comandi">
+      <h2 id="titolo-comandi">Comandi</h2>
+      ${comandi.length ? `<dl>${comandi.map(([tasto, azione]) => `<div><dt>${esc(tasto)}</dt><dd>${esc(azione)}</dd></div>`).join("")}</dl>` : ""}
+      ${touch.length ? `<h3>Su telefono e tablet</h3>\n      <ul>${touch.map((voce) => `<li>${esc(voce)}</li>`).join("")}</ul>` : ""}
+    </section>` : ""}
   </div>
 </main>`
     : `<main id="contenuto" class="scena">
@@ -536,7 +566,7 @@ function paginaGioco() {
     pagina,
     titolo,
     descrizione: g.testo || `${titolo} di TAUH, da giocare nel browser.`,
-    immagine: media.ogHome,
+    immagine: (g.disponibile && media.ogGioco) || media.ogHome,
     larghezzaImmagine: 1200,
     altezzaImmagine: 630,
     attiva: "gioco",
@@ -582,6 +612,20 @@ async function scrivi(percorsoPagina, html) {
   await writeFile(destinazione, html);
 }
 
+// Il gioco esportato per itch.io carica i caratteri da Google: qui li sostituisco
+// con quelli del sito, così nessuna pagina chiama server esterni.
+async function adattaGioco() {
+  const file = path.join(USCITA, "gioco", "play", "index.html");
+  if (!existsSync(file)) return;
+  const prima = await readFile(file, "utf8");
+  let html = prima.replace(/<link[^>]+fonts\.(?:googleapis|gstatic)\.com[^>]*>\s*/gi, "");
+  if (html === prima) return;
+  const pagina = "/gioco/play/";
+  const font = `<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`;
+  html = html.includes("</head>") ? html.replace("</head>", `${font}\n</head>`) : `${font}\n${html}`;
+  await writeFile(file, html);
+}
+
 async function principale() {
   const caroselli = await caricaCaroselli();
 
@@ -590,6 +634,7 @@ async function principale() {
 
   // file statici, immagini del sito e caratteri
   await cp(path.join(RADICE, "static"), USCITA, { recursive: true });
+  await adattaGioco();
   await cp(path.join(RADICE, "src", "img"), path.join(USCITA, "img"), { recursive: true });
   await cp(path.join(RADICE, "src", "font"), path.join(USCITA, "assets", "font"), { recursive: true });
 
@@ -612,6 +657,12 @@ async function principale() {
     soglia: await versioneImg("soglia-900.webp"),
     ogHome: await versioneImg("og-home.jpg"),
   });
+  const copertinaGioco = sito.gioco?.immagine;
+  if (copertinaGioco && existsSync(path.join(RADICE, "src", "img", `${copertinaGioco}-1280.webp`))) {
+    media.giocoCopertina = await versioneImg(`${copertinaGioco}-1280.webp`);
+    media.giocoCopertina640 = await versioneImg(`${copertinaGioco}-640.webp`);
+  }
+  if (existsSync(path.join(RADICE, "src", "img", "og-gioco.jpg"))) media.ogGioco = await versioneImg("og-gioco.jpg");
 
   // immagini dei caroselli
   for (const c of caroselli) {

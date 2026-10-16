@@ -22,12 +22,31 @@
     "testo": "Su Telegram trovi i testi completi che accompagnano ogni carosello, con le fonti."
   },
   "gioco": {
-    "disponibile": false,
-    "titolo": "Il gioco",
-    "testo": "Un gioco della via delle ombre, da giocare qui nel browser, senza installare niente.",
+    "disponibile": true,
+    "titolo": "Incubo",
+    "sottotitolo": "Primo livello: la Breccia",
+    "testo": "Sei un demone di Samael, entrato da una breccia nel Cielo del Parassita. Libera le anime chiuse nelle gabbie, uccidi gli angeli e il loro carceriere, l'Esattore di Anime.",
+    "dettagli": "Uno sparatutto in prima persona alla Doom, disegnato in cel shading con i contorni a inchiostro. Si gioca nel browser, da computer o da telefono, senza installare niente. In sottofondo suona «Incubo» di Tauh.",
     "in_arrivo": "Lo stiamo ancora forgiando. Quando apre lo annunciamo sul canale Telegram.",
     "percorso": "/gioco/play/",
-    "proporzioni": "16 / 9"
+    "proporzioni": "16 / 9",
+    "immagine": "incubo",
+    "descrizione_immagine": "Una scena di Incubo: un corridoio del Cielo del Parassita, con le porte segnate dall'occhio e la mano del demone in primo piano.",
+    "comandi": [
+      ["WASD o frecce", "muoverti (le frecce laterali girano)"],
+      ["Mouse", "guardarti intorno"],
+      ["Clic sinistro o Ctrl", "attaccare"],
+      ["1–4 o rotella", "cambiare arma"],
+      ["E o Spazio", "aprire porte e muri segreti"],
+      ["Shift", "correre"],
+      ["Esc o P", "pausa"]
+    ],
+    "comandi_touch": [
+      "A sinistra trascina per muoverti.",
+      "A destra trascina per girarti: i gesti veloci girano di più.",
+      "Tieni premuto ATTACCA per sparare e trascinalo per mirare.",
+      "Gira il telefono in orizzontale per giocare meglio."
+    ]
   },
   "link": {
     "instagram": "https://www.instagram.com/tauh616/",

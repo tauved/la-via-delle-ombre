@@ -16,7 +16,6 @@ for (const box of $$("[data-incorpora]")) {
     frame.height = box.dataset.altezza || "352";
     frame.allow = "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture";
     frame.referrerPolicy = "strict-origin-when-cross-origin";
-    frame.setAttribute("allowfullscreen", "");
     box.replaceChildren(frame);
     box.classList.add("caricato");
   });
@@ -221,11 +220,32 @@ if (campo) {
   }
 }
 
-// ---------------------------------------------------------------- gioco a schermo intero
+// ---------------------------------------------------------------- gioco
+// Su computer il gioco si apre dentro la pagina; su telefono e tablet il link
+// porta al gioco a tutta pagina, dove funzionano i comandi touch.
 
-const cornice = $("[data-cornice]");
-const giocoIntero = $("[data-gioco-intero]");
-if (cornice && giocoIntero) {
-  if (!cornice.requestFullscreen) giocoIntero.hidden = true;
-  else giocoIntero.addEventListener("click", () => cornice.requestFullscreen().catch(() => {}));
+const avvia = $("[data-avvia]");
+if (avvia) {
+  const schermo = avvia.closest("[data-schermo-gioco]");
+  const intero = $("[data-gioco-intero]");
+  const dentroPagina = window.matchMedia("(pointer: fine) and (min-width: 900px)");
+  avvia.addEventListener("click", (evento) => {
+    if (!dentroPagina.matches || !schermo) return;
+    evento.preventDefault();
+    const cornice = document.createElement("div");
+    cornice.className = "cornice";
+    const frame = document.createElement("iframe");
+    frame.src = avvia.href;
+    frame.title = avvia.dataset.titolo || "Gioco";
+    frame.allow = "fullscreen; autoplay; gamepad";
+    cornice.append(frame);
+    schermo.replaceChildren(cornice);
+    frame.addEventListener("load", () => frame.focus(), { once: true });
+    if (intero && cornice.requestFullscreen) {
+      intero.hidden = false;
+      intero.addEventListener("click", () => {
+        cornice.requestFullscreen().then(() => frame.focus()).catch(() => {});
+      });
+    }
+  });
 }

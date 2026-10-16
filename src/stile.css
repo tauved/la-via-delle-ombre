@@ -1110,23 +1110,23 @@ body::before {
     justify-self: start;
   }
 
-  .carosello-testa {
+  .carosello > .carosello-testa {
     grid-area: testa;
   }
 
-  .visore {
+  .carosello > .visore {
     grid-area: visore;
     width: 100%;
     position: sticky;
     top: calc(var(--alt-testata) + 1.5rem);
   }
 
-  .testo-tavole {
+  .carosello > .testo-tavole {
     grid-area: testo;
     margin-top: 0.75rem;
   }
 
-  .vicini {
+  .carosello > .vicini {
     grid-area: vicini;
   }
 }
@@ -1235,14 +1235,69 @@ body::before {
   padding-block: clamp(1.5rem, 4vw, 2.5rem) clamp(3.5rem, 8vw, 5rem);
 }
 
-.cornice {
-  width: 100%;
+.schermo-gioco {
+  justify-self: center;
+  width: min(100%, calc((100svh - var(--alt-testata) - 13rem) * var(--proporzioni, 16 / 9)));
   aspect-ratio: var(--proporzioni, 16 / 9);
-  max-height: calc(100svh - var(--alt-testata) - 10rem);
   border-radius: 14px;
   overflow: hidden;
   background: var(--nero);
   box-shadow: inset 0 0 0 1px var(--filo);
+}
+
+.avvia {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: var(--nero);
+  text-decoration: none;
+}
+
+.avvia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avvia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 35%, rgba(0, 0, 0, 0.6) 100%);
+}
+
+.avvia-bottone {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1.9rem 0.9rem 1.6rem;
+  border-radius: 999px;
+  background: var(--lime);
+  color: var(--nero);
+  font: 700 1.15rem/1 var(--corpo);
+  box-shadow: 0 0 34px rgba(207, 254, 126, 0.5);
+}
+
+.avvia:hover .avvia-bottone {
+  background: var(--lime-chiaro);
+  color: var(--nero);
+}
+
+.avvia:focus-visible {
+  outline-offset: -4px;
+}
+
+.cornice {
+  width: 100%;
+  height: 100%;
+  background: var(--nero);
 }
 
 .cornice iframe {
@@ -1252,8 +1307,83 @@ body::before {
   border: 0;
 }
 
+.gioco-azioni {
+  justify-content: center;
+}
+
+.gioco-info {
+  display: grid;
+  gap: 2.25rem;
+  margin-top: 1.5rem;
+}
+
+.gioco-storia {
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.gioco-storia p:first-child {
+  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--bianco);
+}
+
+.gioco-storia p + p {
+  color: var(--grigio);
+}
+
+.comandi h2 {
+  font-size: clamp(1.4rem, 3.5vw, 1.75rem);
+  margin-bottom: 0.75rem;
+}
+
+.comandi dl {
+  display: grid;
+  margin: 0;
+}
+
+.comandi dl > div {
+  display: grid;
+  grid-template-columns: minmax(7.5rem, 11rem) 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding-block: 0.55rem;
+  border-bottom: 1px solid var(--filo);
+}
+
+.comandi dt {
+  color: var(--lime);
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.comandi dd {
+  margin: 0;
+}
+
+.comandi h3 {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.comandi ul {
+  display: grid;
+  gap: 0.4rem;
+  margin: 0;
+  padding-left: 1.15rem;
+}
+
+@media (min-width: 900px) {
+  .gioco-info {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2.5rem, 5vw, 4.5rem);
+  }
+}
+
 .cornice:fullscreen {
-  max-height: none;
   border-radius: 0;
 }
 

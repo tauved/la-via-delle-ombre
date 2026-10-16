@@ -63,11 +63,20 @@ Per togliere un carosello cancella la sua cartella.
 Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify e Telegram.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
-### Mettere online il gioco
+### Il gioco
 
-1. Copia l'esportazione web del gioco (il suo `index.html` con tutti i file) in `static/gioco/play/`, al posto della pagina segnaposto.
-2. In `contenuti/sito.json`, nella sezione `"gioco"`, metti `"disponibile": true` e imposta `"proporzioni"` (per esempio `"16 / 9"` per un gioco orizzontale, `"9 / 16"` per uno verticale).
-3. Commit e push. La pagina /gioco/ mostra il gioco con il bottone per lo schermo intero.
+Il gioco è Incubo e sta in `static/gioco/play/`: è la versione per itch.io (`index.html` e la cartella `assets` con la musica).
+Su computer si apre dentro la pagina /gioco/, con il bottone per lo schermo intero; su telefono e tablet si apre a tutta pagina con i comandi touch.
+
+Per aggiornarlo:
+
+1. Metti al posto del contenuto di `static/gioco/play/` quello della nuova build per itch.io.
+2. Controlla che nei testi del gioco non ci siano riferimenti all'EP.
+3. Commit e push.
+
+I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli del sito durante la generazione.
+I testi della pagina (storia, comandi, immagine di copertina in `src/img/incubo-1280.webp`) sono in `contenuti/sito.json`, alla voce `"gioco"`.
+Con `"disponibile": false` la pagina torna a mostrare «In arrivo».
 
 ## Provarlo sul computer
 
