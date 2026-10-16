@@ -56,6 +56,13 @@ const perRicerca = (testo) => {
   return [...new Set(parole)].join(" ");
 };
 
+// La data di oggi in Italia (AAAA-MM-GG): serve a capire cosa è già uscito quando si genera il sito.
+const oggiItalia = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Rome", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+
+// La chiave con cui il gioco segna nel browser che il primo livello è finito (la legge anche src/app.js).
+const CHIAVE_GIOCO = "tauh-incubo-livello-1";
+
 const dataEstesa = (iso) => {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
   if (!m) return "";
@@ -167,6 +174,7 @@ const icona = {
   pausa: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',
   prossimo: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5.5v13l9-6.5zM16 5.5h2.5v13H16z" fill="currentColor"/></svg>',
   scarica: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  lucchetto: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 10.5V8a4 4 0 018 0v2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   menu: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   chiudi: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   esterno: '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -230,7 +238,15 @@ async function caricaMusica() {
       if (existsSync(path.join(CONTENUTI, "musica", b.copertina))) copertina = path.join(CONTENUTI, "musica", b.copertina);
       else console.warn(`Manca la copertina contenuti/musica/${b.copertina}: per «${b.titolo}» uso quella di riserva.`);
     }
-    return { ...b, sorgente, sorgenteCopertina: copertina };
+    // Col lucchetto: fino a quel giorno si ascolta solo dopo aver finito il primo livello del gioco.
+    let bloccata = "";
+    if (b.bloccata_fino_al) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.bloccata_fino_al)) {
+        throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «bloccata_fino_al» deve essere nel formato AAAA-MM-GG.`);
+      }
+      if (b.bloccata_fino_al > oggiItalia()) bloccata = b.bloccata_fino_al;
+    }
+    return { ...b, sorgente, sorgenteCopertina: copertina, bloccata };
   });
 }
 
@@ -366,8 +382,9 @@ function barraAscolto(pagina) {
     file: indirizzo(b.url, pagina),
     copertina: indirizzo(b.urlCopertina, pagina),
     durata: Math.round(b.durata * 10) / 10,
+    ...(b.bloccata ? { bloccata: b.bloccata } : {}),
   }));
-  const primo = raccolte.brani[0];
+  const primo = raccolte.brani.find((b) => !b.bloccata) || raccolte.brani[0];
   return `<div class="ascolto" data-lettore>
   <button class="ascolto-suona" type="button" data-lettore-suona aria-label="Ascolta ${esc(primo.titolo)} di TAUH"><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span></button>
   <img class="ascolto-copertina" data-lettore-copertina src="${indirizzo(primo.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
@@ -598,11 +615,17 @@ function paginaHome(caroselli) {
           ${raccolte.brani
             .map((b, i) => {
               const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
-              return `<li><button class="brano" type="button" data-brano="${i}" aria-pressed="false">
+              const interno = (testo, simbolo) => `
             <img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
-            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${nota ? `<span class="brano-nota">${esc(nota)}</span>` : ""}</span>
-            <span class="brano-icona"><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span></span>
-          </button></li>`;
+            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${esc(testo)}</span>` : ""}</span>
+            <span class="brano-icona">${simbolo}</span>`;
+              const bottone = `<button class="brano" type="button" data-brano="${i}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
+          </button>`;
+              if (!b.bloccata) return `<li>${bottone}</li>`;
+              // col lucchetto: finché non si sblocca, al posto del bottone c'è il link al gioco (app.js li scambia)
+              return `<li data-bloccata="${b.bloccata}">${bottone}
+          <a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
+          </a></li>`;
             })
             .join("\n          ")}
         </ol>
@@ -1116,15 +1139,66 @@ async function scrivi(percorsoPagina, html) {
 
 // Il gioco esportato per itch.io carica i caratteri da Google: qui li sostituisco
 // con quelli del sito, così nessuna pagina chiama server esterni.
-async function adattaGioco() {
+// Quando il giocatore vede la schermata di vittoria del primo livello, il browser se lo ricorda:
+// così i brani col lucchetto si sbloccano nella musica del sito. Lo script osserva solo lo
+// schermo #won del gioco, senza toccarne il codice.
+function scriptSblocco(bloccati, pagina) {
+  const dati = {
+    chiave: CHIAVE_GIOCO,
+    brani: bloccati.map((b) => ({ titolo: b.titolo, fino: b.bloccata })),
+    musica: indirizzo("/#musica", pagina),
+  };
+  return `<style>.sblocco-sito{max-width:560px;margin:4px 0 0;font-size:15px;line-height:1.5;color:#CFFE7E}.sblocco-sito-link{font-family:Cinzel,serif;font-weight:800;font-size:14px;letter-spacing:.2em;color:#CFFE7E;border:2px solid #CFFE7E;padding:10px 22px;text-decoration:none;pointer-events:auto}.sblocco-sito-link:hover,.sblocco-sito-link:focus-visible{background:#CFFE7E;color:#140b1c;outline:none}</style>
+<script>
+(() => {
+  const d = ${JSON.stringify(dati).replace(/</g, "\\u003c")};
+  const oggi = new Date();
+  oggi.setHours(0, 0, 0, 0);
+  const ancoraChiusi = d.brani.filter((b) => {
+    const [a, m, g] = b.fino.split("-").map(Number);
+    return new Date(a, m - 1, g) > oggi;
+  });
+  let fatto = false;
+  new MutationObserver(() => {
+    const vinto = document.getElementById("won");
+    if (fatto || !vinto || vinto.hidden) return;
+    fatto = true;
+    try { localStorage.setItem(d.chiave, String(Date.now())); } catch (e) { return; }
+    if (!ancoraChiusi.length) return;
+    const titoli = ancoraChiusi.map((b) => "«" + b.titolo + "»");
+    const testo = document.createElement("p");
+    testo.className = "sblocco-sito";
+    testo.textContent = "Hai sbloccato " + titoli.join(" e ") + ": ora " + (titoli.length > 1 ? "le" : "la") + " ascolti anche sul sito.";
+    const link = document.createElement("a");
+    link.className = "sblocco-sito-link";
+    link.href = d.musica;
+    link.target = "_top";
+    link.textContent = titoli.length > 1 ? "ASCOLTALE SUL SITO" : "ASCOLTALA SUL SITO";
+    const prima = vinto.querySelector("button");
+    vinto.insertBefore(testo, prima);
+    vinto.insertBefore(link, prima);
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["hidden"] });
+})();
+</script>`;
+}
+
+async function adattaGioco(brani) {
   const file = path.join(USCITA, "gioco", "play", "index.html");
   if (!existsSync(file)) return;
-  const prima = await readFile(file, "utf8");
-  let html = prima.replace(/<link[^>]+fonts\.(?:googleapis|gstatic)\.com[^>]*>\s*/gi, "");
-  if (html === prima) return;
   const pagina = "/gioco/play/";
-  const font = `<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`;
-  html = html.includes("</head>") ? html.replace("</head>", `${font}\n</head>`) : `${font}\n${html}`;
+  let html = await readFile(file, "utf8");
+  const aggiunte = [];
+  // i caratteri del sito al posto di quelli di Google Fonts
+  const senzaGoogle = html.replace(/<link[^>]+fonts\.(?:googleapis|gstatic)\.com[^>]*>\s*/gi, "");
+  if (senzaGoogle !== html) {
+    html = senzaGoogle;
+    aggiunte.push(`<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`);
+  }
+  const bloccati = brani.filter((b) => b.bloccata);
+  if (bloccati.length) aggiunte.push(scriptSblocco(bloccati, pagina));
+  if (!aggiunte.length) return;
+  const testa = aggiunte.join("\n");
+  html = html.includes("</head>") ? html.replace("</head>", () => `${testa}\n</head>`) : `${testa}\n${html}`;
   await writeFile(file, html);
 }
 
@@ -1150,7 +1224,7 @@ async function principale() {
 
   // file statici, immagini del sito e caratteri
   await cp(path.join(RADICE, "static"), USCITA, { recursive: true });
-  await adattaGioco();
+  await adattaGioco(brani);
   await cp(path.join(RADICE, "src", "img"), path.join(USCITA, "img"), { recursive: true });
   await cp(path.join(RADICE, "src", "font"), path.join(USCITA, "assets", "font"), { recursive: true });
 

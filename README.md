@@ -114,7 +114,7 @@ I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in 
 {
   "brani": [
     { "titolo": "Non ho un cuore", "file": "non-ho-un-cuore.mp3", "copertina": "non-ho-un-cuore.webp" },
-    { "titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco" }
+    { "titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco", "bloccata_fino_al": "2026-10-28" }
   ]
 }
 ```
@@ -129,6 +129,14 @@ Per aggiungere un brano:
 I brani di adesso hanno tutti lo stesso volume (circa −10 LUFS), così passando da uno all'altro non ci sono salti. Se ne aggiungi uno molto più forte o più piano, chiedi a Claude di allinearlo.
 
 Per togliere un brano cancella la sua riga e il file.
+
+#### Brani col lucchetto
+
+Con `"bloccata_fino_al": "AAAA-MM-GG"` il brano ha il lucchetto: nell'elenco compare con «Finisci il primo livello del gioco per ascoltarla» e porta alla pagina del gioco, e il lettore lo salta. Chi finisce il primo livello lo sblocca: il browser se lo ricorda e il brano si ascolta come gli altri. Dal giorno indicato (a mezzanotte) il brano è libero per tutti, senza fare niente; dopo quella data la riga si può anche togliere.
+
+Adesso ce l'ha «Incubo», la traccia del gioco, fino al 28 ottobre 2026, il giorno in cui finisce il conto alla rovescia del pre-save.
+
+Lo sblocco funziona perché, durante la generazione, alla pagina del gioco si aggiunge un piccolo script: quando compare la schermata di vittoria («Le anime sono libere») segna il livello finito e mostra «Hai sbloccato…» con il link alla musica del sito. Il codice del gioco non cambia, quindi resta così anche quando si aggiorna il gioco, purché la schermata di vittoria si chiami ancora `won`.
 
 ### Artwork
 
@@ -241,7 +249,7 @@ Per aggiornarlo:
 2. Controlla che nei testi del gioco non ci siano riferimenti all'EP.
 3. Commit e push.
 
-I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli del sito durante la generazione.
+I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli del sito durante la generazione. Sempre durante la generazione si aggiunge lo script che, a fine livello, sblocca i brani col lucchetto (vedi «Brani col lucchetto»).
 I testi della pagina (storia, comandi, immagine di copertina in `src/img/incubo-1280.webp`) sono in `contenuti/sito.json`, alla voce `"gioco"`.
 Con `"disponibile": false` la pagina torna a mostrare «In arrivo».
 
@@ -260,4 +268,5 @@ Genera il sito e lo apre su http://localhost:8787 con le stesse regole di Cloudf
 - I caratteri sono Cinzel e Montserrat, con licenza SIL Open Font License (i file sono in `src/font`). Il font Who asks Satan non è usato nel sito perché è gratuito solo per uso non commerciale.
 - Il sito non usa cookie propri. I player di Spotify e YouTube si caricano solo quando chi visita preme il bottone.
 - Per ricordare il brano e il punto in cui era, il lettore usa la memoria della scheda del browser (si cancella quando la scheda si chiude).
+- Che il primo livello del gioco è finito, invece, il browser lo ricorda nella memoria del sito (la stessa dove il gioco salva volume e sensibilità): serve solo a sbloccare i brani col lucchetto e non esce dal browser.
 - Sul sito non c'è nessun riferimento all'EP.

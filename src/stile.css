@@ -1844,6 +1844,25 @@ body:has(.ascolto) {
   box-shadow: none;
 }
 
+.brano[hidden] {
+  display: none;
+}
+
+/* brano col lucchetto: finché non si sblocca, porta al gioco */
+.brano-chiuso,
+.brano-chiuso:hover {
+  color: var(--bianco);
+  text-decoration: none;
+}
+
+.brano-chiuso .brano-copertina {
+  opacity: 0.6;
+}
+
+.brano-chiuso:hover .brano-copertina {
+  opacity: 0.85;
+}
+
 .brani-aiuto {
   margin-top: 0.75rem;
   color: var(--grigio);

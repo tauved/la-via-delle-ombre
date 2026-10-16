@@ -7,13 +7,15 @@
     {"titolo": "Falene", "file": "falene.mp3", "copertina": "falene.webp"},
     {"titolo": "Futuro nero", "file": "futuro-nero.mp3", "copertina": "futuro-nero.webp", "nota": "feat. Perry Watt"},
     {"titolo": "La carne è debole", "file": "la-carne-e-debole.mp3", "copertina": "la-carne-e-debole.webp", "nota": "feat. Adria The Reject"},
-    {"titolo": "Per levarti il sorriso", "file": "per-levarti-il-sorriso.mp3", "copertina": "per-levarti-il-sorriso.webp"},
+    {"titolo": "Per levarti il sorriso", "file": "per-levarti-il-sorriso.mp3", "copertina": "per-levarti-il-sorriso.webp", "nota": "feat. Perry Watt e John Faser"},
     {"titolo": "Demoni", "file": "demoni.mp3", "copertina": "demoni.webp"},
     {"titolo": "Liberami", "file": "liberami.mp3", "copertina": "liberami.webp"},
     {"titolo": "Lecter", "file": "lecter.mp3", "copertina": "lecter.webp"},
     {"titolo": "Brum brum", "file": "brum-brum.mp3"},
     {"titolo": "Toxic Avenger", "file": "toxic-avenger.mp3"},
     {"titolo": "Colpirli tutti per non rieducare più nessuno", "file": "colpirli-tutti.mp3", "copertina": "colpirli-tutti.webp", "nota": "feat. Perry Watt"},
-    {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco"}
+    {"titolo": "Netflix", "file": "netflix.mp3"},
+    {"titolo": "Corpi", "file": "corpi.mp3"},
+    {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco", "bloccata_fino_al": "2026-10-28"}
   ]
 }

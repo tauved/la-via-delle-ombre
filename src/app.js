@@ -24,6 +24,31 @@ const sostituisciIndirizzo = (url) => {
   }
 };
 
+// ---------------------------------------------------------------- brani col lucchetto
+// Un brano con "bloccata_fino_al" in musica.json si ascolta solo dopo aver finito il
+// primo livello del gioco: la pagina del gioco lo segna nel browser con questa chiave
+// (lo script lo aggiunge build.mjs). Dal giorno indicato il brano è libero per tutti.
+
+const CHIAVE_GIOCO = "tauh-incubo-livello-1";
+
+const giornoArrivato = (iso) => {
+  const [anno, mese, giorno] = String(iso || "").split("-").map(Number);
+  if (!anno || !mese || !giorno) return true;
+  const oggi = new Date();
+  oggi.setHours(0, 0, 0, 0);
+  return new Date(anno, mese - 1, giorno) <= oggi;
+};
+
+const giocoFinito = () => {
+  try {
+    return Boolean(localStorage.getItem(CHIAVE_GIOCO));
+  } catch {
+    return false;
+  }
+};
+
+const libero = (bloccata) => !bloccata || giornoArrivato(bloccata) || giocoFinito();
+
 // ================================================================ lettore della musica
 
 const lettore = (() => {
@@ -61,6 +86,16 @@ const lettore = (() => {
   let ultimoSalvataggio = 0;
   const ripieghi = new Map();
   const ascoltatori = new Set();
+
+  const chiuso = (i) => !libero(brani[i]?.bloccata);
+  // il primo brano ascoltabile dopo «da» (o prima, con passo -1); -1 se non ce ne sono
+  const vicino = (da, passo = 1) => {
+    for (let k = 1; k <= brani.length; k++) {
+      const i = (((da + passo * k) % brani.length) + brani.length) % brani.length;
+      if (!chiuso(i)) return i;
+    }
+    return -1;
+  };
 
   const caricato = () => audio.readyState > 0;
   const durata = () => (Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration : brani[indice].durata || 0);
@@ -139,6 +174,9 @@ const lettore = (() => {
   }
 
   function avvia(i = indice) {
+    i = ((i % brani.length) + brani.length) % brani.length;
+    if (chiuso(i)) i = vicino(i);
+    if (i < 0) return;
     if (i !== indice || !audio.getAttribute("src")) carica(i);
     attivo = true;
     const promessa = audio.play();
@@ -151,7 +189,14 @@ const lettore = (() => {
   }
 
   const pausa = () => audio.pause();
-  const prossimo = () => avvia(indice + 1);
+  const prossimo = () => {
+    const i = vicino(indice);
+    if (i >= 0) avvia(i);
+  };
+  const precedente = () => {
+    const i = vicino(indice, -1);
+    if (i >= 0) avvia(i);
+  };
 
   function vaiA(secondi) {
     const d = durata();
@@ -261,7 +306,7 @@ const lettore = (() => {
       play: () => avvia(),
       pause: pausa,
       nexttrack: prossimo,
-      previoustrack: () => (posizione() > 3 ? vaiA(0) : avvia(indice - 1)),
+      previoustrack: () => (posizione() > 3 ? vaiA(0) : precedente()),
       seekto: (d) => vaiA(d.seekTime),
     };
     for (const [azione, f] of Object.entries(azioni)) {
@@ -275,13 +320,14 @@ const lettore = (() => {
 
   try {
     const s = JSON.parse(sessionStorage.getItem(CHIAVE) || "null");
-    if (s?.a && Number.isInteger(s.i) && brani[s.i]) {
+    if (s?.a && Number.isInteger(s.i) && brani[s.i] && !chiuso(s.i)) {
       attivo = true;
       carica(s.i, Math.max(0, Number(s.t) || 0));
     }
   } catch {
     /* niente da recuperare */
   }
+  if (chiuso(indice)) indice = Math.max(0, vicino(indice));
   window.addEventListener("pagehide", () => salva());
   window.addEventListener("pageshow", aggiorna);
   aggiorna();
@@ -733,6 +779,23 @@ function uscita() {
 function elencoBrani(signal) {
   const bottoni = $$("[data-brano]");
   if (!bottoni.length || !lettore) return;
+  // brani col lucchetto: finché sono chiusi, al posto del bottone c'è il link al gioco
+  const chiusi = $$("[data-bloccata]");
+  const controlla = () => {
+    for (const voce of chiusi) {
+      const aperto = libero(voce.dataset.bloccata);
+      const bottone = $("[data-brano]", voce);
+      const verso = $("[data-sblocca]", voce);
+      if (bottone) bottone.hidden = !aperto;
+      if (verso) verso.hidden = aperto;
+    }
+  };
+  if (chiusi.length) {
+    controlla();
+    // il gioco finito in un'altra scheda, o tornando indietro dal gioco
+    window.addEventListener("storage", (e) => (e.key === CHIAVE_GIOCO || e.key === null) && controlla(), { signal });
+    window.addEventListener("pageshow", controlla, { signal });
+  }
   for (const b of bottoni) {
     b.addEventListener(
       "click",
