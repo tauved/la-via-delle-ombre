@@ -1,0 +1,72 @@
+{
+  "opere": [
+    {
+      "titolo": "Non ho un cuore",
+      "file": "non-ho-un-cuore.jpg",
+      "anteprima": "non-ho-un-cuore-600.webp",
+      "grande": "non-ho-un-cuore-1600.webp"
+    },
+    {
+      "titolo": "Colpirli tutti per non rieducare più nessuno",
+      "file": "colpirli-tutti.jpg",
+      "anteprima": "colpirli-tutti-600.webp",
+      "grande": "colpirli-tutti-1600.webp"
+    },
+    {
+      "titolo": "La carne è debole",
+      "file": "la-carne-e-debole.jpg",
+      "anteprima": "la-carne-e-debole-600.webp",
+      "grande": "la-carne-e-debole-1600.webp"
+    },
+    {
+      "titolo": "Per levarti il sorriso",
+      "file": "per-levarti-il-sorriso.jpg",
+      "anteprima": "per-levarti-il-sorriso-600.webp",
+      "grande": "per-levarti-il-sorriso-1600.webp"
+    },
+    {
+      "titolo": "Per levarti il sorriso",
+      "file": "per-levarti-il-sorriso-viola.jpg",
+      "anteprima": "per-levarti-il-sorriso-viola-600.webp",
+      "grande": "per-levarti-il-sorriso-viola-1600.webp",
+      "versione": "viola"
+    },
+    {
+      "titolo": "Demoni",
+      "file": "demoni.jpg",
+      "anteprima": "demoni-600.webp",
+      "grande": "demoni-1600.webp"
+    },
+    {
+      "titolo": "Demoni",
+      "file": "demoni-orizzontale.jpg",
+      "anteprima": "demoni-orizzontale-600.webp",
+      "grande": "demoni-orizzontale-1600.webp",
+      "versione": "orizzontale"
+    },
+    {
+      "titolo": "Danse Macabre",
+      "file": "danse-macabre.jpg",
+      "anteprima": "danse-macabre-600.webp",
+      "grande": "danse-macabre-1600.webp"
+    },
+    {
+      "titolo": "Liberami",
+      "file": "liberami.jpg",
+      "anteprima": "liberami-600.webp",
+      "grande": "liberami-1600.webp"
+    },
+    {
+      "titolo": "Lecter",
+      "file": "lecter.jpg",
+      "anteprima": "lecter-600.webp",
+      "grande": "lecter-1600.webp"
+    },
+    {
+      "titolo": "Falene",
+      "file": "falene.jpg",
+      "anteprima": "falene-600.webp",
+      "grande": "falene-1600.webp"
+    }
+  ]
+}

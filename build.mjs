@@ -62,6 +62,70 @@ const dataEstesa = (iso) => {
   return `${Number(m[3])} ${MESI[Number(m[2]) - 1]} ${m[1]}`;
 };
 
+const peso = (byte) => {
+  if (byte < 1024 * 1024) return `${Math.max(1, Math.round(byte / 1024))} KB`;
+  return `${(byte / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
+};
+
+// Larghezza e altezza di un'immagine JPG, PNG o WebP, lette dall'intestazione del file.
+function dimensioniImmagine(buf) {
+  if (buf.length > 24 && buf.readUInt32BE(0) === 0x89504e47) return { w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) };
+  if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+    let i = 2;
+    while (i + 9 < buf.length) {
+      if (buf[i] !== 0xff) { i += 1; continue; }
+      const marcatore = buf[i + 1];
+      if ([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf].includes(marcatore)) {
+        return { w: buf.readUInt16BE(i + 7), h: buf.readUInt16BE(i + 5) };
+      }
+      i += 2 + buf.readUInt16BE(i + 2);
+    }
+    return null;
+  }
+  if (buf.length > 30 && buf.toString("ascii", 0, 4) === "RIFF" && buf.toString("ascii", 8, 12) === "WEBP") {
+    const tipo = buf.toString("ascii", 12, 16);
+    if (tipo === "VP8 ") return { w: buf.readUInt16LE(26) & 0x3fff, h: buf.readUInt16LE(28) & 0x3fff };
+    if (tipo === "VP8L") {
+      const [b0, b1, b2, b3] = [buf[21], buf[22], buf[23], buf[24]];
+      return { w: 1 + (((b1 & 0x3f) << 8) | b0), h: 1 + (((b3 & 0xf) << 10) | (b2 << 2) | ((b1 & 0xc0) >> 6)) };
+    }
+    if (tipo === "VP8X") return { w: 1 + buf.readUIntLE(24, 3), h: 1 + buf.readUIntLE(27, 3) };
+  }
+  return null;
+}
+
+// Durata in secondi di un MP3: legge l'intestazione Xing/Info scritta dagli encoder,
+// altrimenti la stima dal bitrate (vale per i file a bitrate costante).
+function durataMp3(buf) {
+  let i = 0;
+  if (buf.toString("latin1", 0, 3) === "ID3") {
+    i = 10 + (((buf[6] & 0x7f) << 21) | ((buf[7] & 0x7f) << 14) | ((buf[8] & 0x7f) << 7) | (buf[9] & 0x7f));
+    if (buf[5] & 0x10) i += 10;
+  }
+  while (i + 4 < buf.length && !(buf[i] === 0xff && (buf[i + 1] & 0xe0) === 0xe0)) i += 1;
+  if (i + 40 >= buf.length) return 0;
+  const h = buf.readUInt32BE(i);
+  const versione = (h >>> 19) & 3; // 3 = MPEG-1, 2 = MPEG-2, 0 = MPEG-2.5
+  const layer = (h >>> 17) & 3; // 1 = Layer III
+  const frequenza = [44100, 48000, 32000][(h >>> 10) & 3];
+  if (layer !== 1 || !frequenza || versione === 1) return 0;
+  const hz = versione === 3 ? frequenza : versione === 2 ? frequenza / 2 : frequenza / 4;
+  const campioni = versione === 3 ? 1152 : 576;
+  const mono = ((h >>> 6) & 3) === 3;
+  const x = i + 4 + (versione === 3 ? (mono ? 17 : 32) : mono ? 9 : 17);
+  const etichetta = buf.toString("latin1", x, x + 4);
+  if ((etichetta === "Xing" || etichetta === "Info") && buf.readUInt32BE(x + 4) & 1) {
+    return (buf.readUInt32BE(x + 8) * campioni) / hz;
+  }
+  const kbps = (versione === 3 ? [0, 32, 40, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320] : [0, 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160])[(h >>> 12) & 15];
+  return kbps ? ((buf.length - i) * 8) / (kbps * 1000) : 0;
+}
+
+const minuti = (secondi) => {
+  const s = Math.round(secondi);
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+};
+
 const impronta = (dati) => createHash("sha256").update(dati).digest("hex").slice(0, 10);
 
 const ordinaNaturale = (a, b) => a.localeCompare(b, "it", { numeric: true, sensitivity: "base" });
@@ -100,6 +164,11 @@ const icona = {
   condividi: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7.5 7.5L12 3l4.5 4.5M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   cerca: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5L21 21" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   gioca: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>',
+  pausa: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',
+  prossimo: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5.5v13l9-6.5zM16 5.5h2.5v13H16z" fill="currentColor"/></svg>',
+  scarica: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  menu: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  chiudi: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   esterno: '<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
 };
 
@@ -147,15 +216,86 @@ async function caricaCaroselli() {
   return elenco;
 }
 
+async function caricaMusica() {
+  const file = path.join(CONTENUTI, "musica", "musica.json");
+  if (!existsSync(file)) return [];
+  const dati = await leggiJson(file);
+  return (Array.isArray(dati.brani) ? dati.brani : []).map((b, i) => {
+    if (!b.titolo || !b.file) throw new ErroreContenuti(`In contenuti/musica/musica.json il brano ${i + 1} deve avere «titolo» e «file».`);
+    const sorgente = path.join(CONTENUTI, "musica", b.file);
+    if (!existsSync(sorgente)) throw new ErroreContenuti(`Manca il file contenuti/musica/${b.file}.`);
+    if (!/\.mp3$/i.test(b.file)) console.warn(`Il brano «${b.titolo}» non è un MP3: alcuni browser potrebbero non suonarlo.`);
+    let copertina = "";
+    if (b.copertina) {
+      if (existsSync(path.join(CONTENUTI, "musica", b.copertina))) copertina = path.join(CONTENUTI, "musica", b.copertina);
+      else console.warn(`Manca la copertina contenuti/musica/${b.copertina}: per «${b.titolo}» uso quella di riserva.`);
+    }
+    return { ...b, sorgente, sorgenteCopertina: copertina };
+  });
+}
+
+async function caricaEbook() {
+  const cartella = path.join(CONTENUTI, "ebook");
+  if (!existsSync(cartella)) return [];
+  const voci = (await readdir(cartella, { withFileTypes: true })).filter((v) => v.isDirectory());
+  const elenco = [];
+  for (const voce of voci) {
+    const slug = voce.name;
+    const dir = path.join(cartella, slug);
+    if (!/^[a-z0-9-]+$/.test(slug)) {
+      throw new ErroreContenuti(`La cartella ebook «${slug}» ha un nome non valido: usa solo lettere minuscole, numeri e trattini.`);
+    }
+    const file = path.join(dir, "ebook.json");
+    if (!existsSync(file)) {
+      console.warn(`Salto la cartella ebook ${slug}: manca ebook.json`);
+      continue;
+    }
+    const e = await leggiJson(file);
+    if (!e.titolo) throw new ErroreContenuti(`Nell'ebook «${slug}» manca il titolo.`);
+    const formati = (Array.isArray(e.file) ? e.file : [e.file]).filter(Boolean).map((f) => (typeof f === "string" ? { file: f } : { ...f }));
+    if (!formati.length) throw new ErroreContenuti(`Nell'ebook «${slug}» manca il file da scaricare («file»).`);
+    for (const f of formati) {
+      if (!existsSync(path.join(dir, f.file))) throw new ErroreContenuti(`Nell'ebook «${slug}» manca il file ${f.file}.`);
+      f.etichetta = f.etichetta || path.extname(f.file).slice(1).toUpperCase();
+    }
+    if (e.copertina && !existsSync(path.join(dir, e.copertina))) throw new ErroreContenuti(`Nell'ebook «${slug}» manca la copertina ${e.copertina}.`);
+    elenco.push({ ...e, slug, dir, formati });
+  }
+  elenco.sort((a, b) => (b.data || "").localeCompare(a.data || "") || ordinaNaturale(a.titolo, b.titolo));
+  return elenco;
+}
+
+async function caricaArtwork() {
+  const dir = path.join(CONTENUTI, "artwork");
+  const file = path.join(dir, "artwork.json");
+  if (!existsSync(file)) return [];
+  const dati = await leggiJson(file);
+  return (Array.isArray(dati.opere) ? dati.opere : []).map((o, i) => {
+    if (!o.titolo || !o.file) throw new ErroreContenuti(`In contenuti/artwork/artwork.json l'opera ${i + 1} deve avere «titolo» e «file».`);
+    if (!existsSync(path.join(dir, o.file))) throw new ErroreContenuti(`Manca il file contenuti/artwork/${o.file}.`);
+    const anteprima = o.anteprima && existsSync(path.join(dir, o.anteprima)) ? o.anteprima : o.file;
+    const grande = o.grande && existsSync(path.join(dir, o.grande)) ? o.grande : o.file;
+    return { ...o, dir, anteprima, grande };
+  });
+}
+
 // ---------------------------------------------------------------- impaginazione comune
 
 function testata(pagina, attiva) {
   const voce = (href, nome, chiave) =>
     `<a href="${indirizzo(href, pagina)}"${attiva === chiave ? ' aria-current="page"' : ""}>${nome}</a>`;
+  const voci = [
+    voce("/caroselli/", "Caroselli", "caroselli"),
+    voce("/#musica", "Musica", "musica"),
+    voce("/gioco/", "Gioco", "gioco"),
+    raccolte.opere.length ? voce("/artwork/", "Artwork", "artwork") : "",
+    voce("/ebook/", "Ebook", "ebook"),
+  ].join("");
   return `<a class="salta" href="#contenuto">Vai al contenuto</a>
-<header class="testata">
+<header class="testata" data-testata>
   <a class="testata-logo" href="${indirizzo("/", pagina)}" aria-label="${esc(sito.nome)}, pagina iniziale"><img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt=""></a>
-  <nav aria-label="Principale">${voce("/caroselli/", "Caroselli", "caroselli")}${voce("/#musica", "Musica", "musica")}${voce("/gioco/", "Gioco", "gioco")}</nav>
+  <button class="testata-menu" type="button" data-menu aria-expanded="false" aria-controls="menu-principale"><span class="se-chiuso">${icona.menu}</span><span class="se-aperto">${icona.chiudi}</span><span class="testata-menu-testo">Menu</span></button>
+  <nav class="testata-nav" id="menu-principale" aria-label="Principale">${voci}</nav>
 </header>`;
 }
 
@@ -176,6 +316,28 @@ function piede(pagina) {
 </footer>`;
 }
 
+function barraAscolto(pagina) {
+  if (!raccolte.brani.length) return "";
+  const elenco = raccolte.brani.map((b) => ({
+    titolo: b.titolo,
+    file: indirizzo(b.url, pagina),
+    copertina: indirizzo(b.urlCopertina, pagina),
+    durata: Math.round(b.durata * 10) / 10,
+  }));
+  const primo = raccolte.brani[0];
+  return `<div class="ascolto" data-lettore>
+  <button class="ascolto-suona" type="button" data-lettore-suona aria-label="Ascolta ${esc(primo.titolo)} di TAUH"><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span></button>
+  <img class="ascolto-copertina" data-lettore-copertina src="${indirizzo(primo.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
+  <div class="ascolto-info">
+    <span class="ascolto-invito">Ascolta TAUH</span>
+    <span class="ascolto-riga"><span class="ascolto-titolo" data-lettore-titolo>${esc(primo.titolo)}</span><span class="ascolto-tempo" data-lettore-tempo>0:00</span></span>
+    <span class="ascolto-via" data-lettore-via role="slider" tabindex="0" aria-label="Posizione nel brano" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00 di ${minuti(primo.durata)}"><span></span></span>
+  </div>
+  <button class="ascolto-prossimo" type="button" data-lettore-prossimo aria-label="Brano successivo"${raccolte.brani.length < 2 ? " hidden" : ""}>${icona.prossimo}</button>
+</div>
+<script type="application/json" id="brani-dati">${JSON.stringify(elenco).replace(/</g, "\\u003c")}</script>`;
+}
+
 function documento({ pagina, titolo, descrizione, immagine, larghezzaImmagine, altezzaImmagine, tipo = "website", attiva = "", corpo, extraTesta = "" }) {
   if (ANTEPRIMA && pagina === "/") {
     // Nell'anteprima pubblicata come artifact la pagina iniziale riceve già doctype e <head>.
@@ -185,6 +347,7 @@ function documento({ pagina, titolo, descrizione, immagine, larghezzaImmagine, a
 ${testata(pagina, attiva)}
 ${corpo}
 ${piede(pagina)}
+${barraAscolto(pagina)}
 `;
   }
   const titoloCompleto = titolo ? `${titolo} – ${sito.nome}` : `${sito.nome} – ${sito.artista}`;
@@ -212,12 +375,14 @@ ${sito.url && !ANTEPRIMA ? `<meta property="og:url" content="${esc(assoluto(pagi
 <link rel="preload" href="${indirizzo("/assets/font/cinzel-var.woff", pagina)}" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="${indirizzo("/assets/font/montserrat-var.woff", pagina)}" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="${indirizzo(risorse.css, pagina)}">
+<script>document.documentElement.classList.add("js")</script>
 <script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
 ${extraTesta}</head>
 <body>
 ${testata(pagina, attiva)}
 ${corpo}
 ${piede(pagina)}
+${barraAscolto(pagina)}
 </body>
 </html>
 `;
@@ -330,7 +495,7 @@ function paginaHome(caroselli) {
   </section>
 
   <section class="sezione" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
-    <div class="via" style="--pos: 12%" aria-hidden="true"></div>
+    <div class="via" style="--pos: 10%" aria-hidden="true"></div>
     <div class="colonna sezione-testa">
       <div>
         <h2 id="titolo-caroselli">Caroselli</h2>
@@ -350,24 +515,37 @@ function paginaHome(caroselli) {
   </section>
 
   <section class="sezione" id="musica" aria-labelledby="titolo-musica">
-    <div class="via" style="--pos: 38%" aria-hidden="true"></div>
+    <div class="via" style="--pos: 30%" aria-hidden="true"></div>
     <div class="colonna musica">
       <div>
         <h2 id="titolo-musica">Ascolta</h2>
         <p>${esc(musica.testo || "")}</p>
+        ${raccolte.brani.length ? `<ol class="brani" role="list">
+          ${raccolte.brani
+            .map((b, i) => {
+              const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
+              return `<li><button class="brano" type="button" data-brano="${i}" aria-pressed="false">
+            <img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
+            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${nota ? `<span class="brano-nota">${esc(nota)}</span>` : ""}</span>
+            <span class="brano-icona"><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span></span>
+          </button></li>`;
+            })
+            .join("\n          ")}
+        </ol>
+        <p class="brani-aiuto">La musica continua mentre giri per il sito.</p>` : ""}
+      </div>
+      <div class="musica-fuori">
+      ${lettoreSpotify}
+      ${lettoreYoutube}
         <ul class="canali" role="list">
           ${canaliMusica.join("\n          ")}
         </ul>
-      </div>
-      <div>
-      ${lettoreSpotify}
-      ${lettoreYoutube}
       </div>
     </div>
   </section>
 
   <section class="sezione" id="gioco" aria-labelledby="titolo-gioco">
-    <div class="via" style="--pos: 64%" aria-hidden="true"></div>
+    <div class="via" style="--pos: 50%" aria-hidden="true"></div>
     <div class="colonna">
       <div class="gioco-invito">
         ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
@@ -381,8 +559,30 @@ function paginaHome(caroselli) {
     </div>
   </section>
 
+  ${`<section class="sezione" id="scarica" aria-labelledby="titolo-scarica">
+    <div class="via" style="--pos: 70%" aria-hidden="true"></div>
+    <div class="colonna">
+      <div class="sezione-testa">
+        <div>
+          <h2 id="titolo-scarica">Da scaricare</h2>
+          <p>${esc(sito.scarica?.testo || "")}</p>
+        </div>
+      </div>
+      <div class="porte">
+        ${raccolte.opere.length ? `<a class="porta" href="${indirizzo("/artwork/", pagina)}">
+          <img src="${indirizzo(raccolte.opere[0].urlAnteprima, pagina)}" width="${raccolte.opere[0].anteprimaW || 540}" height="${raccolte.opere[0].anteprimaH || 675}" alt="" loading="lazy" decoding="async">
+          <span class="porta-testo"><strong>Artwork</strong><span>${raccolte.opere.length === 1 ? "1 immagine" : `${raccolte.opere.length} immagini`} in alta risoluzione</span></span>
+        </a>` : ""}
+        <a class="porta" href="${indirizzo("/ebook/", pagina)}">
+          ${raccolte.ebook[0]?.urlCopertina ? `<img src="${indirizzo(raccolte.ebook[0].urlCopertina, pagina)}" width="${raccolte.ebook[0].copertinaW || 540}" height="${raccolte.ebook[0].copertinaH || 760}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
+          <span class="porta-testo"><strong>Ebook</strong><span>${raccolte.ebook.length ? (raccolte.ebook.length === 1 ? "1 ebook gratuito" : `${raccolte.ebook.length} ebook gratuiti`) : "In arrivo"}</span></span>
+        </a>
+      </div>
+    </div>
+  </section>`}
+
   ${link.telegram ? `<section class="sezione" id="telegram" aria-labelledby="titolo-telegram">
-    <div class="via" style="--pos: 88%" aria-hidden="true"></div>
+    <div class="via" style="--pos: 90%" aria-hidden="true"></div>
     <div class="colonna">
       <div class="riquadro">
         <h2 id="titolo-telegram">${esc(tg.titolo || "Il canale Telegram")}</h2>
@@ -574,6 +774,113 @@ function paginaGioco() {
   });
 }
 
+function paginaArtwork() {
+  const pagina = "/artwork/";
+  const a = sito.artwork || {};
+  const opere = raccolte.opere;
+  const corpo = `<main id="contenuto" class="colonna">
+  <header class="archivio-testa">
+    <h1>Artwork</h1>
+    ${a.testo ? `<p>${esc(a.testo)}</p>` : ""}
+    ${a.licenza ? `<p class="licenza">${esc(a.licenza)}</p>` : ""}
+  </header>
+  <ul class="opere" role="list">
+    ${opere
+      .map((o, i) => {
+        const formato = path.extname(o.file).slice(1).toUpperCase().replace("JPEG", "JPG");
+        const misure = o.larghezza ? `, ${o.larghezza} × ${o.altezza}` : "";
+        const completo = o.versione ? `${o.titolo} (${o.versione})` : o.titolo;
+        const nome = `TAUH - ${completo}${path.extname(o.file).toLowerCase()}`;
+        return `<li class="opera">
+      <button class="opera-apri" type="button" data-opera="${i}" data-grande="${indirizzo(o.urlGrande, pagina)}" data-file="${indirizzo(o.urlFile, pagina)}" data-titolo="${esc(completo)}" data-nome="${esc(nome)}" aria-label="Apri in grande: ${esc(completo)}">
+        <img src="${indirizzo(o.urlAnteprima, pagina)}" width="${o.anteprimaW || 600}" height="${o.anteprimaH || 600}" alt=""${i > 5 ? ' loading="lazy"' : ""} decoding="async">
+      </button>
+      <div class="opera-testo">
+        <h2 class="opera-titolo">${esc(o.titolo)}</h2>
+        ${o.versione ? `<p class="opera-versione">Versione ${esc(o.versione)}</p>` : ""}
+        ${o.carosello && raccolte.slugCaroselli.has(o.carosello) ? `<a class="opera-fonte" href="${indirizzo(`/caroselli/${o.carosello}/`, pagina)}">Dal carosello</a>` : ""}
+        ${o.descrizione ? `<p>${esc(o.descrizione)}</p>` : ""}
+        <a class="bottone primario stretto" href="${indirizzo(o.urlFile, pagina)}" download="${esc(nome)}">${icona.scarica}Scarica</a>
+        <span class="opera-meta">${formato}${misure}, ${peso(o.peso)}</span>
+      </div>
+    </li>`;
+      })
+      .join("\n    ")}
+  </ul>
+  <dialog class="lightbox" data-lightbox aria-label="Artwork in grande">
+    <figure class="lightbox-quadro">
+      <img data-lightbox-img alt="">
+      <figcaption data-lightbox-titolo></figcaption>
+    </figure>
+    <div class="lightbox-comandi">
+      <button class="freccia" type="button" data-lightbox-indietro aria-label="Immagine precedente">${icona.sinistra}</button>
+      <a class="bottone primario stretto" data-lightbox-scarica href="#" download>${icona.scarica}Scarica</a>
+      <button class="freccia" type="button" data-lightbox-avanti aria-label="Immagine successiva">${icona.destra}</button>
+      <button class="freccia" type="button" data-lightbox-chiudi aria-label="Chiudi">${icona.chiudi}</button>
+    </div>
+  </dialog>
+</main>`;
+  return documento({
+    pagina,
+    titolo: "Artwork",
+    descrizione: a.testo || "Gli artwork di TAUH, da scaricare gratis.",
+    immagine: media.ogHome,
+    larghezzaImmagine: 1200,
+    altezzaImmagine: 630,
+    attiva: "artwork",
+    corpo,
+  });
+}
+
+function paginaEbook() {
+  const pagina = "/ebook/";
+  const e = sito.ebook || {};
+  const ebook = raccolte.ebook;
+  const elenco = ebook.length
+    ? `<ul class="ebook-elenco" role="list">
+    ${ebook
+      .map(
+        (x) => `<li class="ebook" id="${esc(x.slug)}">
+      ${x.urlCopertina ? `<img class="ebook-copertina" src="${indirizzo(x.urlCopertina, pagina)}" width="${x.copertinaW || 540}" height="${x.copertinaH || 760}" alt="Copertina di ${esc(x.titolo)}" loading="lazy" decoding="async">` : ""}
+      <div class="ebook-testo">
+        <h2>${esc(x.titolo)}</h2>
+        ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
+        ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
+        <div class="azioni">
+          ${x.formati.map((f) => `<a class="bottone primario" href="${indirizzo(f.url, pagina)}" download="${esc(`TAUH - ${x.titolo}${path.extname(f.file).toLowerCase()}`)}">${icona.scarica}Scarica ${esc(f.etichetta)}</a>`).join("\n          ")}
+        </div>
+        <span class="ebook-meta">${x.formati.map((f) => `${esc(f.etichetta)}, ${peso(f.peso)}`).join("; ")}${x.data ? `. Uscito il ${dataEstesa(x.data)}` : ""}</span>
+      </div>
+    </li>`,
+      )
+      .join("\n    ")}
+  </ul>`
+    : `<div class="riquadro ebook-attesa">
+    <span class="stato stato-chiaro">In arrivo</span>
+    <h2>I primi ebook stanno arrivando</h2>
+    <p>${esc(e.in_arrivo || "")}</p>
+    <div class="azioni">
+      ${link.telegram ? `<a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale Telegram</a>` : ""}
+      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia i caroselli</a>
+    </div>
+  </div>`;
+  const corpo = `<main id="contenuto" class="colonna">
+  <header class="archivio-testa">
+    <h1>Ebook</h1>
+    ${e.testo ? `<p>${esc(e.testo)}</p>` : ""}
+  </header>
+  ${elenco}
+</main>`;
+  return documento({
+    pagina,
+    titolo: "Ebook",
+    descrizione: e.testo || "Gli ebook di TAUH, da scaricare gratis.",
+    immagine: ebook[0]?.urlCopertina || media.ogHome,
+    attiva: "ebook",
+    corpo,
+  });
+}
+
 function pagina404() {
   const pagina = "/404.html";
   const corpo = `<main id="contenuto" class="scena">
@@ -596,6 +903,7 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
+const raccolte = { brani: [], ebook: [], opere: [], slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -626,8 +934,19 @@ async function adattaGioco() {
   await writeFile(file, html);
 }
 
+async function copiaConImpronta(sorgente, cartella, nome) {
+  const dati = await readFile(sorgente);
+  const destinazione = path.join(USCITA, cartella, nome);
+  await mkdir(path.dirname(destinazione), { recursive: true });
+  await writeFile(destinazione, dati);
+  return { url: `/${cartella}/${nome}?v=${impronta(dati)}`, dati };
+}
+
 async function principale() {
   const caroselli = await caricaCaroselli();
+  const brani = await caricaMusica();
+  const ebook = await caricaEbook();
+  const opere = await caricaArtwork();
 
   await rm(USCITA, { recursive: true, force: true });
   await mkdir(path.join(USCITA, "assets"), { recursive: true });
@@ -656,6 +975,7 @@ async function principale() {
     gioco1080: await versioneImg("gioco-1080.webp"),
     soglia: await versioneImg("soglia-900.webp"),
     ogHome: await versioneImg("og-home.jpg"),
+    copertinaBrano: await versioneImg("copertina-tauh-512.webp"),
   });
   const copertinaGioco = sito.gioco?.immagine;
   if (copertinaGioco && existsSync(path.join(RADICE, "src", "img", `${copertinaGioco}-1280.webp`))) {
@@ -676,11 +996,52 @@ async function principale() {
     }
   }
 
+  // musica, ebook e artwork
+  raccolte.slugCaroselli = new Set(caroselli.map((c) => c.slug));
+  for (const b of brani) {
+    const { url, dati } = await copiaConImpronta(b.sorgente, "media/musica", b.file);
+    const urlCopertina = b.sorgenteCopertina ? (await copiaConImpronta(b.sorgenteCopertina, "media/musica", b.copertina)).url : media.copertinaBrano;
+    raccolte.brani.push({ ...b, url, urlCopertina, durata: durataMp3(dati) });
+  }
+  for (const x of ebook) {
+    for (const f of x.formati) {
+      const { url, dati: contenuto } = await copiaConImpronta(path.join(x.dir, f.file), `scarica/ebook/${x.slug}`, f.file);
+      f.url = url;
+      f.peso = contenuto.length;
+    }
+    if (x.copertina) {
+      const { url, dati: contenuto } = await copiaConImpronta(path.join(x.dir, x.copertina), `media/ebook/${x.slug}`, x.copertina);
+      const dim = dimensioniImmagine(contenuto);
+      Object.assign(x, { urlCopertina: url, copertinaW: dim?.w, copertinaH: dim?.h });
+    }
+    raccolte.ebook.push(x);
+  }
+  for (const o of opere) {
+    const originale = await copiaConImpronta(path.join(o.dir, o.file), "scarica/artwork", o.file);
+    const dim = dimensioniImmagine(originale.dati);
+    const piccola = o.anteprima === o.file ? originale : await copiaConImpronta(path.join(o.dir, o.anteprima), "media/artwork", o.anteprima);
+    const grande = o.grande === o.file ? originale : await copiaConImpronta(path.join(o.dir, o.grande), "media/artwork", o.grande);
+    const dimP = o.anteprima === o.file ? dim : dimensioniImmagine(piccola.dati);
+    raccolte.opere.push({
+      ...o,
+      urlFile: originale.url,
+      urlAnteprima: piccola.url,
+      urlGrande: grande.url,
+      peso: originale.dati.length,
+      larghezza: dim?.w,
+      altezza: dim?.h,
+      anteprimaW: dimP?.w,
+      anteprimaH: dimP?.h,
+    });
+  }
+
   const pagine = [
     ["/", paginaHome(caroselli)],
     ["/caroselli/", paginaArchivio(caroselli)],
     ...caroselli.map((c, i) => [`/caroselli/${c.slug}/`, paginaCarosello(c, i, caroselli)]),
     ["/gioco/", paginaGioco()],
+    ...(raccolte.opere.length ? [["/artwork/", paginaArtwork()]] : []),
+    ["/ebook/", paginaEbook()],
     ["/404.html", pagina404()],
   ];
   for (const [percorso, html] of pagine) await scrivi(percorso, html);
@@ -700,7 +1061,7 @@ ${indirizzi.map((p) => `  <url><loc>${esc(assoluto(p))}</loc></url>`).join("\n")
   await writeFile(path.join(USCITA, "robots.txt"), `${robots.join("\n")}\n`);
 
   const tavole = caroselli.reduce((s, c) => s + c.tavole.length, 0);
-  console.log(`Sito generato in ${path.relative(RADICE, USCITA)}/: ${pagine.length} pagine, ${caroselli.length} caroselli, ${tavole} tavole.`);
+  console.log(`Sito generato in ${path.relative(RADICE, USCITA)}/: ${pagine.length} pagine, ${caroselli.length} caroselli, ${tavole} tavole, ${raccolte.brani.length} brani, ${raccolte.opere.length} artwork, ${raccolte.ebook.length} ebook.`);
   if (!sito.url) console.log("Nota: in contenuti/sito.json manca «url». Inseriscilo quando il sito è online, per le anteprime dei link.");
 }
 

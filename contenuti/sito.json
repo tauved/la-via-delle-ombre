@@ -2,18 +2,18 @@
   "nome": "La via delle ombre",
   "artista": "TAUH",
   "url": "https://laviadelleombre.com",
-  "descrizione": "Il sito di TAUH: i caroselli sulla via della mano sinistra da sfogliare e leggere, la musica e un gioco da provare nel browser.",
+  "descrizione": "Il sito di TAUH: la musica da ascoltare, i caroselli sulla via della mano sinistra da sfogliare, le copertine da scaricare e un gioco da provare nel browser.",
   "apertura": {
     "titolo": "La via delle ombre",
     "motto": "Mai nel gregge del Parassita.",
-    "testo": "Caroselli, musica e un gioco firmati TAUH."
+    "testo": "Musica, caroselli e un gioco firmati TAUH."
   },
   "caroselli": {
     "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",
     "in_home": 8
   },
   "musica": {
-    "testo": "La musica di TAUH su Spotify e i video su YouTube.",
+    "testo": "I brani di TAUH da ascoltare qui, mentre giri per il sito. Li trovi anche su Spotify e YouTube.",
     "spotify_artista": "4wjw3C2aMvge2YdHKnvYYn",
     "youtube_video": ""
   },
@@ -33,20 +33,52 @@
     "immagine": "incubo",
     "descrizione_immagine": "Una scena di Incubo: un corridoio del Cielo del Parassita, con le porte segnate dall'occhio e la mano del demone in primo piano.",
     "comandi": [
-      ["WASD o frecce", "muoverti (le frecce laterali girano)"],
-      ["Mouse", "guardarti intorno"],
-      ["Clic sinistro o Ctrl", "attaccare"],
-      ["1–4 o rotella", "cambiare arma"],
-      ["E o Spazio", "aprire porte e muri segreti"],
-      ["Shift", "correre"],
-      ["Esc o P", "pausa"]
+      [
+        "WASD o frecce",
+        "muoverti (le frecce laterali girano)"
+      ],
+      [
+        "Mouse",
+        "guardarti intorno"
+      ],
+      [
+        "Clic sinistro o Ctrl",
+        "attaccare"
+      ],
+      [
+        "1–4 o rotella",
+        "cambiare arma"
+      ],
+      [
+        "E o Spazio",
+        "aprire porte e muri segreti"
+      ],
+      [
+        "Shift",
+        "correre"
+      ],
+      [
+        "Esc o P",
+        "pausa"
+      ]
     ],
     "comandi_touch": [
       "A sinistra trascina per muoverti.",
       "A destra trascina per girarti: i gesti veloci girano di più.",
       "Tieni premuto ATTACCA per sparare e trascinalo per mirare.",
-      "Gira il telefono in orizzontale per giocare meglio."
+      "Si gioca anche in verticale; in orizzontale vedi di più."
     ]
+  },
+  "scarica": {
+    "testo": "Artwork ed ebook di TAUH, gratis e senza registrazione."
+  },
+  "artwork": {
+    "testo": "Le copertine dei brani di TAUH in alta risoluzione. Scaricale gratis, senza registrazione.",
+    "licenza": "Puoi usarle come sfondo o stamparle per te. Per altri usi scrivi a TAUH su Instagram."
+  },
+  "ebook": {
+    "testo": "Testi della via delle ombre da leggere quando vuoi. Si scaricano gratis, senza registrazione.",
+    "in_arrivo": "Saranno gratuiti da scaricare. Li annunciamo sul canale Telegram appena sono pronti."
   },
   "link": {
     "instagram": "https://www.instagram.com/tauh616/",

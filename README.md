@@ -1,6 +1,6 @@
 # La via delle ombre
 
-Il sito di TAUH: i caroselli da sfogliare e leggere, la musica, il canale Telegram e il gioco.
+Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere, gli artwork e gli ebook da scaricare, il canale Telegram e il gioco.
 È un sito statico (HTML, CSS e JavaScript senza librerie) generato da un piccolo script e pubblicato su Cloudflare.
 
 ## Com'è fatto
@@ -13,6 +13,9 @@ contenuti/
     01.webp, 02.webp, …      le tavole (1080×1350)
     copertina-540.webp       copertina piccola (facoltativa)
     og.jpg                   anteprima per i link condivisi (facoltativa)
+  musica/                    i brani del lettore (MP3), le loro copertine e musica.json
+  artwork/                   le immagini da scaricare e artwork.json
+  ebook/<nome>/              un ebook per cartella, con ebook.json
 src/                         stile.css, app.js, immagini del sito e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
 strumenti/                   script per aggiungere caroselli
@@ -63,6 +66,73 @@ Per togliere un carosello cancella la sua cartella.
 Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify e Telegram.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
+### La musica in sottofondo
+
+In basso a destra c'è il lettore «Ascolta TAUH». La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, alla voce Ascolta, c'è l'elenco dei brani.
+
+I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in cui suonano (il primo è quello che parte con «Ascolta TAUH»):
+
+```json
+{
+  "brani": [
+    { "titolo": "Non ho un cuore", "file": "non-ho-un-cuore.mp3", "copertina": "non-ho-un-cuore.webp" },
+    { "titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco" }
+  ]
+}
+```
+
+Per aggiungere un brano:
+
+1. Esporta l'MP3 (a 192 kbps basta e avanza; ogni file deve stare sotto i 25 MB) e mettilo in `contenuti/musica/`.
+2. Se vuoi la copertina, mettila nella stessa cartella: un'immagine quadrata JPG o WebP da 512×512. Senza copertina il brano usa il logo di TAUH.
+3. Aggiungi una riga a `musica.json`. `"nota"` è facoltativa e compare sotto il titolo, accanto alla durata (per esempio «con …» per una collaborazione).
+4. Commit e push.
+
+I brani di adesso hanno tutti lo stesso volume (circa −10 LUFS), così passando da uno all'altro non ci sono salti. Se ne aggiungi uno molto più forte o più piano, chiedi a Claude di allinearlo.
+
+Per togliere un brano cancella la sua riga e il file.
+
+### Artwork
+
+Le immagini da scaricare stanno in `contenuti/artwork/`, elencate in `artwork.json` nell'ordine della pagina:
+
+```json
+{
+  "opere": [
+    { "titolo": "Demoni", "file": "demoni.jpg", "anteprima": "demoni-600.webp", "grande": "demoni-1600.webp" },
+    { "titolo": "Demoni", "versione": "orizzontale", "file": "demoni-orizzontale.jpg", "anteprima": "demoni-orizzontale-600.webp", "grande": "demoni-orizzontale-1600.webp" }
+  ]
+}
+```
+
+- `file` è l'immagine in alta risoluzione che si scarica (JPG o PNG).
+- `anteprima` (600 px) e `grande` (1600 px, quella che si apre toccando l'immagine) sono facoltative ma rendono la pagina molto più leggera: se mancano il sito usa il file grande. Claude le prepara da solo.
+- `versione` compare sotto il titolo («Versione orizzontale») e nel nome del file scaricato. Si può aggiungere anche `"descrizione"`.
+
+Chi scarica riceve il file con un nome chiaro, per esempio «TAUH - Demoni.jpg».
+
+### Ebook
+
+Ogni ebook ha una cartella in `contenuti/ebook/`, per esempio `contenuti/ebook/la-via-della-mano-sinistra/`, con dentro il PDF (o anche l'EPUB), la copertina e un file `ebook.json`:
+
+```json
+{
+  "titolo": "La via della mano sinistra",
+  "sottotitolo": "Breve guida",
+  "descrizione": "Di cosa parla, in due righe.",
+  "data": "2026-11-01",
+  "copertina": "copertina.webp",
+  "file": [
+    { "file": "la-via-della-mano-sinistra.pdf", "etichetta": "PDF" },
+    { "file": "la-via-della-mano-sinistra.epub", "etichetta": "EPUB" }
+  ]
+}
+```
+
+Se c'è un solo formato basta `"file": "nome.pdf"`. Gli ebook si ordinano per data, dal più recente. Finché la cartella è vuota la pagina Ebook mostra «In arrivo».
+
+Tutto quello che sta sotto `/scarica/` (artwork ed ebook) il browser lo scarica invece di aprirlo.
+
 ### Il gioco
 
 Il gioco è Incubo e sta in `static/gioco/play/`: `index.html`, la cartella `src` con il codice e la cartella `assets` con la musica (va bene anche la versione in un unico file per itch.io).
@@ -93,4 +163,5 @@ Genera il sito e lo apre su http://localhost:8787 con le stesse regole di Cloudf
 
 - I caratteri sono Cinzel e Montserrat, con licenza SIL Open Font License (i file sono in `src/font`). Il font Who asks Satan non è usato nel sito perché è gratuito solo per uso non commerciale.
 - Il sito non usa cookie propri. I player di Spotify e YouTube si caricano solo quando chi visita preme il bottone.
+- Per ricordare il brano e il punto in cui era, il lettore usa la memoria della scheda del browser (si cancella quando la scheda si chiude).
 - Sul sito non c'è nessun riferimento all'EP.
