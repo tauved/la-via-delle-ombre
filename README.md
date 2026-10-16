@@ -65,12 +65,13 @@ Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"
 
 ### Il gioco
 
-Il gioco è Incubo e sta in `static/gioco/play/`: è la versione per itch.io (`index.html` e la cartella `assets` con la musica).
+Il gioco è Incubo e sta in `static/gioco/play/`: `index.html`, la cartella `src` con il codice e la cartella `assets` con la musica (va bene anche la versione in un unico file per itch.io).
 Su computer si apre dentro la pagina /gioco/, con il bottone per lo schermo intero; su telefono e tablet si apre a tutta pagina con i comandi touch.
+Quando si preme «Entra nella breccia» su Android il gioco passa a schermo intero e si gira in orizzontale; dove non si può (iPhone, browser dentro le app) resta in verticale con l'inquadratura allargata.
 
 Per aggiornarlo:
 
-1. Metti al posto del contenuto di `static/gioco/play/` quello della nuova build per itch.io.
+1. Metti al posto del contenuto di `static/gioco/play/` quello della nuova versione del gioco.
 2. Controlla che nei testi del gioco non ci siano riferimenti all'EP.
 3. Commit e push.
 
