@@ -94,6 +94,7 @@ const lettore = (() => {
     const suona = !audio.paused;
     barra.classList.toggle("attivo", attivo);
     barra.classList.toggle("in-ascolto", suona);
+    document.documentElement.classList.toggle("musica-accesa", suona);
     titolo.textContent = b.titolo;
     if (copertina && b.copertina && copertina.src !== b.copertina) copertina.src = b.copertina;
     bottone.setAttribute("aria-label", `${suona ? "Metti in pausa" : "Ascolta"} ${b.titolo} di TAUH`);
@@ -705,6 +706,28 @@ function galleria(signal) {
   signal.addEventListener("abort", () => finestra.open && finestra.close(), { once: true });
 }
 
+// ---------------------------------------------------------------- nuova uscita: conto alla rovescia
+// Prima del giorno d'uscita dice quanti giorni mancano; dopo, il bottone porta ad ascoltarla.
+
+function uscita() {
+  const box = $("[data-uscita]");
+  const [anno, mese, giorno] = (box?.dataset.uscita || "").split("-").map(Number);
+  if (!anno || !mese || !giorno) return;
+  const oggi = new Date();
+  oggi.setHours(0, 0, 0, 0);
+  const mancano = Math.round((new Date(anno, mese - 1, giorno) - oggi) / 86400000);
+  const quando = $("[data-uscita-quando]", box);
+  if (mancano > 0) {
+    if (quando) quando.textContent = `${box.dataset.prima} · ${mancano === 1 ? "manca un giorno" : `mancano ${mancano} giorni`}`;
+    return;
+  }
+  const stato = $("[data-uscita-stato]", box);
+  const bottone = $("[data-uscita-link]", box);
+  if (quando) quando.textContent = mancano === 0 ? "Esce oggi" : box.dataset.dopo;
+  if (stato && mancano < 0) stato.textContent = "È uscito";
+  if (bottone?.dataset.dopo) $("span", bottone).textContent = bottone.dataset.dopo;
+}
+
 // ---------------------------------------------------------------- elenco dei brani nella home
 
 function elencoBrani(signal) {
@@ -738,7 +761,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

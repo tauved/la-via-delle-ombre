@@ -8,6 +8,16 @@
     "motto": "Mai nel gregge del Parassita.",
     "testo": "Musica, caroselli e un gioco firmati TAUH."
   },
+  "uscita": {
+    "titolo": "Come Dio",
+    "tipo": "Nuovo singolo",
+    "data": "2026-10-28",
+    "testo": "Pre-salvalo su Spotify: il giorno dell'uscita lo trovi già nella tua libreria.",
+    "link": "https://distrokid.com/hyperfollow/tauh/come-dio/",
+    "bottone": "Pre-salvalo su Spotify",
+    "bottone_dopo": "Ascoltalo su Spotify",
+    "copertina": ""
+  },
   "caroselli": {
     "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",
     "in_home": 8

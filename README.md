@@ -67,6 +67,25 @@ Per togliere un carosello cancella la sua cartella.
 Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify e Telegram.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
+### Un'uscita in arrivo (pre-save)
+
+In cima alla home, sotto l'apertura, c'è il riquadro della prossima uscita con il bottone per il pre-save. Si cambia in `contenuti/sito.json`, alla voce `"uscita"`:
+
+```json
+"uscita": {
+  "titolo": "Come Dio",
+  "tipo": "Nuovo singolo",
+  "data": "2026-10-28",
+  "testo": "Pre-salvalo su Spotify: il giorno dell'uscita lo trovi già nella tua libreria.",
+  "link": "https://distrokid.com/hyperfollow/tauh/come-dio/",
+  "bottone": "Pre-salvalo su Spotify",
+  "bottone_dopo": "Ascoltalo su Spotify",
+  "copertina": ""
+}
+```
+
+Prima della data il sito mostra quanti giorni mancano; dal giorno dell'uscita scrive «È uscito» e il bottone diventa «Ascoltalo su Spotify» (il link di HyperFollow dopo l'uscita porta al brano). Per mettere la copertina salvala in `contenuti/uscita/` (quadrata, per esempio 1000×1000) e scrivi il nome del file in `"copertina"`; senza copertina compare un disco con il logo, che gira mentre suona la musica del sito. Per togliere il riquadro cancella la voce `"uscita"`.
+
 ### La musica in sottofondo
 
 In basso a destra c'è il lettore «Ascolta TAUH». La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, alla voce Ascolta, c'è l'elenco dei brani.

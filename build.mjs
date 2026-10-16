@@ -488,6 +488,33 @@ function paginaHome(caroselli) {
   const giocoTesto = gioco.disponibile
     ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
+  const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
+  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0);
+  let nodo = 0;
+  const via = () => {
+    const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
+    nodo += 1;
+    return `<div class="via" style="--pos: ${pos}%" aria-hidden="true"></div>`;
+  };
+  const sezioneUscita = uscita
+    ? `<section class="sezione" id="uscita" aria-labelledby="titolo-uscita">
+    ${via()}
+    <div class="colonna">
+      <div class="uscita" data-uscita="${esc(uscita.data || "")}"${uscita.data ? ` data-prima="Esce il ${dataEstesa(uscita.data)}" data-dopo="Uscito il ${dataEstesa(uscita.data)}"` : ""}>
+        ${media.uscitaCopertina
+          ? `<img class="uscita-copertina" src="${indirizzo(media.uscitaCopertina, pagina)}" width="${media.uscitaCopertinaW || 600}" height="${media.uscitaCopertinaH || 600}" alt="La copertina di ${esc(uscita.titolo)}" loading="lazy" decoding="async">`
+          : `<div class="uscita-disco" aria-hidden="true"><span class="uscita-etichetta"><img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="" loading="lazy" decoding="async"></span></div>`}
+        <div class="uscita-testo">
+          <span class="stato" data-uscita-stato>${esc(uscita.tipo || "Nuova uscita")}</span>
+          <h2 id="titolo-uscita">${esc(uscita.titolo)}</h2>
+          ${uscita.data ? `<p class="uscita-data" data-uscita-quando>Esce il ${dataEstesa(uscita.data)}</p>` : ""}
+          ${uscita.testo ? `<p>${esc(uscita.testo)}</p>` : ""}
+          <a class="bottone primario" href="${esc(uscita.link)}" target="_blank" rel="noopener" data-uscita-link data-dopo="${esc(uscita.bottone_dopo || "Ascoltalo su Spotify")}">${icona.gioca}<span>${esc(uscita.bottone || "Pre-salvalo su Spotify")}</span></a>
+        </div>
+      </div>
+    </div>
+  </section>`
+    : "";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "MusicGroup",
@@ -512,8 +539,10 @@ function paginaHome(caroselli) {
     </div>
   </section>
 
+  ${sezioneUscita}
+
   <section class="sezione" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
-    <div class="via" style="--pos: 10%" aria-hidden="true"></div>
+    ${via()}
     <div class="colonna sezione-testa">
       <div>
         <h2 id="titolo-caroselli">Caroselli</h2>
@@ -533,7 +562,7 @@ function paginaHome(caroselli) {
   </section>
 
   <section class="sezione" id="musica" aria-labelledby="titolo-musica">
-    <div class="via" style="--pos: 30%" aria-hidden="true"></div>
+    ${via()}
     <div class="colonna musica">
       <div class="musica-testa">
         <h2 id="titolo-musica">Ascolta</h2>
@@ -565,7 +594,7 @@ function paginaHome(caroselli) {
   </section>
 
   <section class="sezione" id="gioco" aria-labelledby="titolo-gioco">
-    <div class="via" style="--pos: 50%" aria-hidden="true"></div>
+    ${via()}
     <div class="colonna">
       <div class="gioco-invito">
         ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
@@ -580,7 +609,7 @@ function paginaHome(caroselli) {
   </section>
 
   ${`<section class="sezione" id="scarica" aria-labelledby="titolo-scarica">
-    <div class="via" style="--pos: 70%" aria-hidden="true"></div>
+    ${via()}
     <div class="colonna">
       <div class="sezione-testa">
         <div>
@@ -606,7 +635,7 @@ function paginaHome(caroselli) {
   </section>`}
 
   ${link.telegram ? `<section class="sezione" id="telegram" aria-labelledby="titolo-telegram">
-    <div class="via" style="--pos: 90%" aria-hidden="true"></div>
+    ${via()}
     <div class="colonna">
       <div class="riquadro">
         <h2 id="titolo-telegram">${esc(tg.titolo || "Il canale Telegram")}</h2>
@@ -1073,6 +1102,16 @@ async function principale() {
     media.giocoCopertina640 = await versioneImg(`${copertinaGioco}-640.webp`);
   }
   if (existsSync(path.join(RADICE, "src", "img", "og-gioco.jpg"))) media.ogGioco = await versioneImg("og-gioco.jpg");
+  if (sito.uscita?.copertina) {
+    const sorgente = path.join(CONTENUTI, "uscita", sito.uscita.copertina);
+    if (existsSync(sorgente)) {
+      const { url, dati } = await copiaConImpronta(sorgente, "media/uscita", sito.uscita.copertina);
+      const dim = dimensioniImmagine(dati);
+      Object.assign(media, { uscitaCopertina: url, uscitaCopertinaW: dim?.w, uscitaCopertinaH: dim?.h });
+    } else {
+      console.warn(`Manca la copertina dell'uscita: contenuti/uscita/${sito.uscita.copertina}`);
+    }
+  }
 
   // immagini dei caroselli
   for (const c of caroselli) {
