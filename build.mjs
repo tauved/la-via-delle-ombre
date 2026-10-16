@@ -312,6 +312,20 @@ function caricaMerch() {
 
 const ebookAttivi = () => sito.ebook?.pubblica !== false;
 
+// I social della sezione in fondo alla home: ognuno con il suo sigillo al posto del logo.
+function caricaSocial() {
+  const s = sito.social;
+  if (!s || !Array.isArray(s.voci)) return [];
+  const dir = path.join(CONTENUTI, "social");
+  return s.voci
+    .map((v) => ({ ...v, link: v.link || link[v.canale] || "" }))
+    .filter((v) => v.link)
+    .map((v) => {
+      if (v.sigillo && !existsSync(path.join(dir, v.sigillo))) throw new ErroreContenuti(`Manca il sigillo contenuti/social/${v.sigillo} per ${v.nome || v.canale}.`);
+      return { ...v, dir };
+    });
+}
+
 // ---------------------------------------------------------------- impaginazione comune
 
 function testata(pagina, attiva) {
@@ -335,18 +349,11 @@ function testata(pagina, attiva) {
 }
 
 function piede(pagina) {
-  const canali = [
-    ["Instagram", link.instagram],
-    ["YouTube", link.youtube],
-    ["Spotify", link.spotify],
-    ["TikTok", link.tiktok],
-    ["Telegram", link.telegram],
-  ].filter(([, url]) => url);
   return `<footer class="piede">
   <div class="via via-fine" style="--pos: 90%" aria-hidden="true"></div>
   <div class="colonna piede-corpo">
     <img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="TAUH" loading="lazy">
-    <nav aria-label="Canali di TAUH">${canali.map(([nome, url]) => `<a href="${esc(url)}" rel="me noopener">${nome}</a>`).join("")}</nav>
+    ${sito.piede?.motto ? `<p class="piede-motto">${esc(sito.piede.motto)}</p>` : ""}
     <p class="firma">TAUH · la via delle ombre</p>
   </div>
 </footer>`;
@@ -507,7 +514,7 @@ function paginaHome(caroselli) {
     ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
-  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0) + (raccolte.merch.length ? 1 : 0);
+  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0) + (raccolte.merch.length ? 1 : 0) + (raccolte.social.length ? 1 : 0);
   let nodo = 0;
   const via = () => {
     const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
@@ -688,6 +695,29 @@ function paginaHome(caroselli) {
             ${sito.merch.link ? `<a class="bottone primario" href="${esc(sito.merch.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sito.merch.bottone || "Chiedi in DM su Instagram")}</a>` : ""}
           </div>
         </li>`,
+          )
+          .join("\n        ")}
+      </ul>
+    </div>
+  </section>` : ""}
+
+  ${raccolte.social.length ? `<section class="sezione" id="social" aria-labelledby="titolo-social">
+    ${via()}
+    <div class="colonna">
+      <div class="sezione-testa">
+        <div>
+          <h2 id="titolo-social">${esc(sito.social.titolo || "I miei social")}</h2>
+          ${sito.social.testo ? `<p>${esc(sito.social.testo)}</p>` : ""}
+        </div>
+      </div>
+      <ul class="social" role="list">
+        ${raccolte.social
+          .map(
+            (v) => `<li><a class="social-voce" href="${esc(v.link)}" target="_blank" rel="me noopener">
+          ${v.url ? `<img src="${indirizzo(v.url, pagina)}" width="360" height="360" alt="" loading="lazy" decoding="async">` : ""}
+          <span class="social-nome">${esc(v.nome || v.canale)}</span>
+          ${v.dettaglio ? `<span class="social-dettaglio">${esc(v.dettaglio)}</span>` : ""}
+        </a></li>`,
           )
           .join("\n        ")}
       </ul>
@@ -1067,7 +1097,7 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
-const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], slugCaroselli: new Set() };
+const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1111,6 +1141,7 @@ async function principale() {
   const brani = await caricaMusica();
   const ebook = ebookAttivi() ? await caricaEbook() : [];
   const merch = caricaMerch();
+  const social = caricaSocial();
   const opere = await caricaArtwork();
   raccolte.biblioteca = sito.biblioteca?.pubblica === false ? [] : await caricaBiblioteca();
 
@@ -1218,6 +1249,10 @@ async function principale() {
       Object.assign(im, { url, larghezza: dim?.w, altezza: dim?.h });
     }
     raccolte.merch.push(a);
+  }
+  for (const v of social) {
+    if (v.sigillo) v.url = (await copiaConImpronta(path.join(v.dir, v.sigillo), "media/social", v.sigillo)).url;
+    raccolte.social.push(v);
   }
 
   const pagine = [

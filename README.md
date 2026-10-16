@@ -65,7 +65,24 @@ Per togliere un carosello cancella la sua cartella.
 
 ### Cambiare testi e link
 
-Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito).
+Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito). La frase in fondo a ogni pagina è alla voce `"piede"`.
+
+### I miei social
+
+In fondo alla home, dopo il Merch, c'è la sezione «I miei social»: al posto dei loghi dei social ci sono i sigilli, e toccando il sigillo o il nome si apre il social. Si cambia in `contenuti/sito.json`, alla voce `"social"`:
+
+```json
+"social": {
+  "titolo": "I miei social",
+  "testo": "Tocca un sigillo e seguimi.",
+  "voci": [
+    { "canale": "instagram", "nome": "Instagram", "dettaglio": "@tauh616", "sigillo": "occhio.webp" },
+    { "canale": "telegram", "nome": "Telegram", "dettaglio": "Il canale", "sigillo": "mercurio.webp" }
+  ]
+}
+```
+
+`canale` prende l'indirizzo dalla voce `"link"` (in alternativa si scrive `"link"` direttamente nella voce). I sigilli stanno in `contenuti/social/`: ci sono anche `pentacolo.webp` e `pietra-filosofale.webp`, liberi per un social in più.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
 ### Un'uscita in arrivo (pre-save)

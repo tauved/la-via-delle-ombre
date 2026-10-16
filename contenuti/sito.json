@@ -138,5 +138,44 @@
         ]
       }
     ]
+  },
+  "piede": {
+    "motto": "Dove vengono alla luce le ombre"
+  },
+  "social": {
+    "titolo": "I miei social",
+    "testo": "Tocca un sigillo e seguimi.",
+    "voci": [
+      {
+        "canale": "instagram",
+        "nome": "Instagram",
+        "dettaglio": "@tauh616",
+        "sigillo": "occhio.webp"
+      },
+      {
+        "canale": "youtube",
+        "nome": "YouTube",
+        "dettaglio": "@tauh616",
+        "sigillo": "sigillo-di-lucifero.webp"
+      },
+      {
+        "canale": "spotify",
+        "nome": "Spotify",
+        "dettaglio": "Tauh",
+        "sigillo": "croce-del-leviatano.webp"
+      },
+      {
+        "canale": "tiktok",
+        "nome": "TikTok",
+        "dettaglio": "@tauh616",
+        "sigillo": "stella-del-caos.webp"
+      },
+      {
+        "canale": "telegram",
+        "nome": "Telegram",
+        "dettaglio": "Il canale",
+        "sigillo": "mercurio.webp"
+      }
+    ]
   }
 }
