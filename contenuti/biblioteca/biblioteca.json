@@ -1,24 +1,37 @@
 {
   "sezioni": [
     {
-      "titolo": "Miti e gnosi",
-      "testo": "La creazione nata dal caos e il dio minore che ha imprigionato il mondo.",
+      "titolo": "Miti e scritture",
+      "testo": "Il mito babilonese della creazione e i libri sacri dei monoteismi, da leggere alla fonte.",
       "voci": [
         {
           "titolo": "Enūma eliš. Il mito babilonese della creazione",
           "autore": "Alberto Elli",
           "tipo": "Libro",
+          "editore": "MediterraneoAntico",
+          "anno": "2016",
           "descrizione": "Il poema babilonese delle origini, in sette tavolette: Tiamat, il caos delle acque primordiali, e Marduk che dal suo corpo squartato ricava il cielo e la terra. Elli lo presenta dal testo cuneiforme alla traduzione, con il commento di ogni tavoletta.",
-          "link": "https://laviadelleombre.com/",
+          "link": "https://www.mediterraneoantico.it/wp-content/uploads/2016/09/SpecialeMA_Numero7_2016_enuma-elis.pdf",
           "dove": "gratis"
         },
         {
-          "titolo": "Abraxas, numero 0",
-          "autore": "Rivista di diffusione del pensiero gnostico",
-          "tipo": "Rivista",
-          "descrizione": "Il numero d'esordio di una rivista digitale sullo gnosticismo: il demiurgo cieco, il simbolo di Abraxas, il Caino gnostico, la nostalgia del Pleroma.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "gratis"
+          "titolo": "La Sacra Bibbia",
+          "autore": "Conferenza episcopale italiana",
+          "tipo": "Testo sacro",
+          "descrizione": "Antico e Nuovo Testamento nella traduzione della CEI, sul sito della Santa Sede. Senza conoscerla non si capiscono né la storia dell'Occidente né il suo Diavolo.",
+          "link": "https://www.vatican.va/archive/ITA0001/_INDEX.HTM",
+          "dove": "gratis",
+          "etichetta": "Leggila gratis"
+        },
+        {
+          "titolo": "Il Corano",
+          "autore": "A cura di Alessandro Bausani",
+          "tipo": "Testo sacro",
+          "editore": "BUR Rizzoli",
+          "anno": "2001",
+          "descrizione": "Il libro sacro dell'Islam: 114 sure che secondo la tradizione furono rivelate a Maometto, nella traduzione con commento di uno dei grandi islamisti italiani.",
+          "link": "https://www.libraccio.it/libro/9788817128308.html",
+          "dove": "libreria"
         }
       ]
     },
@@ -30,25 +43,41 @@
           "titolo": "Il libro di Thoth",
           "autore": "Aleister Crowley",
           "tipo": "Libro",
+          "editore": "Cerchio della Luna",
+          "anno": "2025",
           "descrizione": "Il saggio di Crowley sui tarocchi, scritto per il mazzo di Thoth dipinto da Frieda Harris: ogni arcano letto con la Qabalah, l'astrologia e la legge di Thelema.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "link": "https://www.macrolibrarsi.it/libri/__il-libro-di-thoth-corso-pratico-avanzato-di-tarocchi-libro.php",
+          "dove": "libreria"
         },
         {
           "titolo": "La Bibbia di Satana",
           "autore": "Anton Szandor LaVey",
           "tipo": "Libro",
-          "descrizione": "Il testo fondante della Chiesa di Satana: il satanismo ateo di LaVey, tra individualismo, rifiuto della morale cristiana e rituale come psicodramma.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "editore": "Arcana",
+          "anno": "2007",
+          "descrizione": "Il testo fondante della Chiesa di Satana, uscito nel 1969: il satanismo ateo di LaVey, tra individualismo, rifiuto della morale cristiana e rituale come psicodramma.",
+          "link": "https://www.macrolibrarsi.it/libri/__la-bibbia-di-satana-libro.php",
+          "dove": "libreria"
         },
         {
-          "titolo": "La magia dei sigilli",
-          "autore": "animalibera.net",
-          "tipo": "Articolo",
-          "descrizione": "Una guida breve e pratica al sigillo di Austin Osman Spare: dall'intento scritto al simbolo da caricare e dimenticare, con i consigli di Grant Morrison.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "gratis"
+          "titolo": "La magia nera",
+          "autore": "Richard Cavendish",
+          "tipo": "Libro",
+          "editore": "Edizioni Mediterranee",
+          "anno": "1991",
+          "descrizione": "Un classico sulle arti oscure dell'Occidente, in due volumi: numerologia, Qabalah e nomi di potere, alchimia, evocazione dei demoni, stregoneria e messa nera.",
+          "link": "https://www.macrolibrarsi.it/libri/__la-magia-nera-vol-1-libro.php",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "La via oscura. Introduzione al sentiero della mano sinistra",
+          "autore": "Alberto Brandi",
+          "tipo": "Libro",
+          "editore": "Atanòr",
+          "anno": "2008",
+          "descrizione": "Un'introduzione alla via della mano sinistra, letta attraverso la Qabalah e il Tantra: dai riti tantrici alla stregoneria tradizionale, fino al Tempio di Set.",
+          "link": "https://www.ilgiardinodeilibri.it/libri/__la-via-oscura.php",
+          "dove": "libreria"
         }
       ]
     },
@@ -60,39 +89,42 @@
           "titolo": "Le porte della percezione. Paradiso e inferno",
           "autore": "Aldous Huxley",
           "tipo": "Libro",
+          "editore": "Mondadori",
+          "anno": "2024",
           "descrizione": "Huxley prende la mescalina e racconta come cambia il mondo davanti ai suoi occhi; nel secondo saggio segue le visioni fino all'arte che prova a evocarle. Il titolo viene da William Blake.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "link": "https://www.macrolibrarsi.it/libri/__le-porte-della-percezione-paradiso-e-inferno-aldous-huxley-libro.php",
+          "dove": "libreria"
         },
         {
-          "titolo": "Le tecniche di Gurdjieff",
-          "autore": "Gruppo H mi 12",
-          "tipo": "Libro",
-          "descrizione": "Un eserciziario per il lavoro su di sé secondo Gurdjieff: auto-osservazione, ricordo di sé, i centri dell'essere umano. L'ha scritto un gruppo di ricercatori italiani dopo cinque anni di pratica.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "biblioteca"
+          "titolo": "Terence McKenna",
+          "tipo": "Autore",
+          "descrizione": "L'etnobotanico che ha fatto delle piante psichedeliche una filosofia: i funghi all'origine della coscienza umana, il ritorno alle culture arcaiche, il tempo che corre verso una fine. Da cominciare con «Il cibo degli dei» e «Vere allucinazioni».",
+          "link": "https://www.macrolibrarsi.it/libri/__il-cibo-degli-dei-piano-b-edizioni-libro.php",
+          "dove": "libreria",
+          "etichetta": "Il cibo degli dei in libreria"
         },
         {
           "titolo": "Lettere sulla meditazione occulta",
           "autore": "Alice A. Bailey",
           "tipo": "Libro",
           "descrizione": "Le lettere che Bailey attribuisce al maestro tibetano Djwhal Khul: la meditazione come via per mettere la personalità in contatto con l'anima, con i suoi metodi e i suoi pericoli.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "link": "https://www.macrolibrarsi.it/libri/__lettere-sulla-meditazione-occulta-libro.php",
+          "dove": "libreria"
         },
         {
           "titolo": "L'illusione quale problema mondiale",
           "autore": "Alice A. Bailey",
           "tipo": "Libro",
+          "editore": "Anguana Edizioni",
           "descrizione": "Le nebbie che deformano la percezione: l'illusione della mente, l'annebbiamento delle emozioni, la maya dei sensi, nella persona e nell'umanità intera. E le tecniche per dissiparle.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "link": "https://www.macrolibrarsi.it/libri/__l-illusione-quale-problema-mondiale-libro.php",
+          "dove": "libreria"
         }
       ]
     },
     {
-      "titolo": "Il dolore di esistere",
-      "testo": "Una tesi scomoda e chi le risponde.",
+      "titolo": "Il peso dell'esistenza",
+      "testo": "Chi rifiuta la vita, chi la guarda in faccia, chi le dice sì.",
       "voci": [
         {
           "titolo": "Meglio non essere mai nati. Il dolore di venire al mondo",
@@ -101,8 +133,8 @@
           "editore": "Carbonio Editore",
           "anno": "2018",
           "descrizione": "Il saggio che ha rilanciato l'antinatalismo: per Benatar venire al mondo è sempre un danno, perché l'assenza di dolore è un bene anche se nessuno ne gode, mentre l'assenza di piacere non toglie niente a chi non esiste.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "editore"
+          "link": "https://www.illibraio.it/libri/meglio-non-essere-mai-nati-il-dolore-di-venire-al-mondo-9788899970192/",
+          "dove": "libreria"
         },
         {
           "titolo": "Meglio non essere mai nati",
@@ -111,8 +143,63 @@
           "editore": "Doppiozero",
           "anno": "2018",
           "descrizione": "Una lettura critica del libro di Benatar, con quello che lui non cita: da Sofocle a Nietzsche e Cioran.",
-          "link": "https://laviadelleombre.com/",
-          "dove": "gratis"
+          "link": "https://doppiozero.com/print/pdf/node/13109",
+          "dove": "gratis",
+          "etichetta": "Leggila gratis"
+        },
+        {
+          "titolo": "La nausea",
+          "autore": "Jean-Paul Sartre",
+          "tipo": "Romanzo",
+          "editore": "Einaudi",
+          "anno": "2014",
+          "descrizione": "Il diario di Antoine Roquentin, che davanti a una radice, a un sasso, alla propria mano scopre l'esistenza nuda e senza ragione delle cose, e ne prova nausea. Il primo romanzo di Sartre e il cuore del suo esistenzialismo.",
+          "link": "https://www.ibs.it/nausea-libro-jean-paul-sartre/e/9788806219192",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Friedrich Nietzsche",
+          "tipo": "Autore",
+          "descrizione": "Il filosofo col martello: la morte di Dio, la morale degli schiavi, il superuomo, l'eterno ritorno. Da «La gaia scienza» a «Così parlò Zarathustra», da «Al di là del bene e del male» all'«Anticristo».",
+          "link": "https://www.macrolibrarsi.it/autori/_friedrich-nietzsche.php",
+          "dove": "libreria",
+          "etichetta": "I suoi libri in libreria"
+        }
+      ]
+    },
+    {
+      "titolo": "Il gregge e i suoi pastori",
+      "testo": "Come si fabbricano il consenso e l'obbedienza: marchi, crisi, mondi perfetti.",
+      "voci": [
+        {
+          "titolo": "No Logo",
+          "autore": "Naomi Klein",
+          "tipo": "Libro",
+          "editore": "BUR",
+          "anno": "2012",
+          "descrizione": "Come i marchi hanno smesso di vendere prodotti per vendere identità, occupando spazi pubblici, scuole e immaginario, mentre la produzione scivolava nelle fabbriche sfruttate dall'altra parte del mondo.",
+          "link": "https://www.macrolibrarsi.it/libri/__no-logo-libro.php",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Shock economy. L'ascesa del capitalismo dei disastri",
+          "autore": "Naomi Klein",
+          "tipo": "Libro",
+          "editore": "BUR",
+          "anno": "2008",
+          "descrizione": "Come guerre, colpi di stato e catastrofi vengono usati per imporre riforme che nessuno accetterebbe a mente lucida: dal Cile di Pinochet all'Iraq, fino a New Orleans dopo l'uragano Katrina.",
+          "link": "https://www.macrolibrarsi.it/libri/__shock_economy_2.php",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Il mondo nuovo. Ritorno al mondo nuovo",
+          "autore": "Aldous Huxley",
+          "tipo": "Romanzo",
+          "editore": "Mondadori",
+          "descrizione": "Una società senza dolore: si nasce in provetta già divisi in caste, si viene condizionati nel sonno e si resta felici con il soma e i consumi. La distopia in cui il controllo non ha bisogno di catene, seguita dal saggio in cui Huxley, anni dopo, misura quanto ci siamo avvicinati.",
+          "link": "https://www.macrolibrarsi.it/autori/_aldous_huxley.php",
+          "dove": "libreria",
+          "etichetta": "Huxley in libreria"
         }
       ]
     }
