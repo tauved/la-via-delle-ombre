@@ -85,5 +85,10 @@
     "youtube": "https://www.youtube.com/@tauh616",
     "spotify": "https://open.spotify.com/artist/4wjw3C2aMvge2YdHKnvYYn",
     "telegram": "https://t.me/+4ZOcDRnDqZEzYjk0"
+  },
+  "biblioteca": {
+    "pubblica": false,
+    "testo": "I libri e gli scritti che TAUH consiglia a chi cammina sulla via delle ombre: miti antichi, gnosi, magia, coscienza.",
+    "nota": "Qui non trovi i PDF: ogni scheda porta dove leggerli gratis, quando l'autore li ha messi online, o dove trovarli in libreria. Molti si possono prendere in prestito nelle biblioteche pubbliche."
   }
 }

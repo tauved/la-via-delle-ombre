@@ -556,18 +556,42 @@ body::before {
 
 .musica {
   display: grid;
+  grid-template-areas: "testa" "brani" "canali" "fuori";
   gap: 2rem;
   align-items: start;
 }
 
+.musica-testa {
+  grid-area: testa;
+}
+
+.musica-brani {
+  grid-area: brani;
+}
+
+.musica-canali {
+  grid-area: canali;
+}
+
+.musica-fuori {
+  grid-area: fuori;
+}
+
 @media (min-width: 900px) {
   .lettore {
-    min-height: 22rem;
+    min-height: 16rem;
   }
 
   .musica {
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap: 3.5rem;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: "testa fuori" "canali fuori" "brani brani";
+    gap: 1.75rem 3.5rem;
+  }
+
+  .musica-brani .brani {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 0.5rem;
   }
 }
 
@@ -1738,8 +1762,8 @@ body:has(.ascolto) {
   margin-top: 0;
 }
 
-.musica-fuori .canali {
-  margin-top: 0.5rem;
+.musica .canali {
+  margin-top: 0;
 }
 
 .brani {
@@ -2121,6 +2145,112 @@ body:has(.ascolto) {
 
 .stato-chiaro {
   color: var(--bianco);
+}
+
+/* ------------------------------------------------------------ biblioteca */
+
+.scaffale {
+  padding-bottom: clamp(2.5rem, 6vw, 3.5rem);
+}
+
+.scaffale:last-of-type {
+  padding-bottom: clamp(4rem, 9vw, 6rem);
+}
+
+.scaffale-testa {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--filo);
+}
+
+.scaffale-testa h2 {
+  font-size: clamp(1.5rem, 3.6vw, 2rem);
+}
+
+.scaffale-testa p {
+  color: var(--grigio);
+}
+
+.libri {
+  display: grid;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  .libri {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.libro {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border-radius: 16px;
+  background: var(--viola-notte);
+  box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.55);
+}
+
+.libro-segno {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3.75rem;
+  border-radius: 1.5rem 1.5rem 4px 4px;
+  background: linear-gradient(180deg, var(--viola), #33246b);
+  box-shadow: inset 0 0 0 1px rgba(207, 254, 126, 0.35);
+  color: var(--lime);
+  font: 700 1.55rem/1 var(--titoli);
+  padding-top: 0.35rem;
+}
+
+.libro-testo {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.libro-tipo {
+  color: var(--lime);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.libro-titolo {
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--bianco);
+}
+
+.libro-autore {
+  color: var(--lime);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.libro-edizione {
+  color: var(--grigio);
+  font-size: 0.85rem;
+}
+
+.libro-descrizione {
+  margin-top: 0.3rem;
+  font-size: 0.95rem;
+}
+
+.libro .bottone {
+  margin-top: 0.65rem;
 }
 
 /* ------------------------------------------------------------ dettagli */

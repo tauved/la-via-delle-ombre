@@ -16,6 +16,7 @@ contenuti/
   musica/                    i brani del lettore (MP3), le loro copertine e musica.json
   artwork/                   le immagini da scaricare e artwork.json
   ebook/<nome>/              un ebook per cartella, con ebook.json
+  biblioteca/                i libri consigliati, con i link (biblioteca.json)
 src/                         stile.css, app.js, immagini del sito e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
 strumenti/                   script per aggiungere caroselli
@@ -132,6 +133,37 @@ Ogni ebook ha una cartella in `contenuti/ebook/`, per esempio `contenuti/ebook/l
 Se c'è un solo formato basta `"file": "nome.pdf"`. Gli ebook si ordinano per data, dal più recente. Finché la cartella è vuota la pagina Ebook mostra «In arrivo».
 
 Tutto quello che sta sotto `/scarica/` (artwork ed ebook) il browser lo scarica invece di aprirlo.
+
+Negli ebook vanno solo testi tuoi, o di autori che ti hanno dato il permesso: i libri di altri, anche se in rete girano gratis, vanno nella Biblioteca con un link.
+
+### Biblioteca
+
+La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli: ogni scheda ha un link a dove trovarli in modo legale (gratis dall'autore o dall'editore, in libreria o in biblioteca). Sta tutto in `contenuti/biblioteca/biblioteca.json`, diviso in sezioni:
+
+```json
+{
+  "sezioni": [
+    {
+      "titolo": "Magia e satanismo",
+      "testo": "Una riga sotto il titolo della sezione (facoltativa).",
+      "voci": [
+        {
+          "titolo": "Il libro di Thoth",
+          "autore": "Aleister Crowley",
+          "tipo": "Libro",
+          "editore": "Nome dell'editore",
+          "anno": "2004",
+          "descrizione": "Due righe su perché leggerlo.",
+          "link": "https://…",
+          "dove": "editore"
+        }
+      ]
+    }
+  ]
+}
+```
+
+`dove` decide la scritta del bottone: `gratis` («Leggilo gratis»), `editore` («Dall'editore»), `libreria` («In libreria») o `biblioteca` («In biblioteca»). Per una scritta diversa usa `"etichetta"`. I link si aprono in un'altra scheda. L'intro della pagina è in `contenuti/sito.json`, alla voce `"biblioteca"`; lì `"pubblica": false` nasconde la pagina e la voce del menu.
 
 ### Il gioco
 

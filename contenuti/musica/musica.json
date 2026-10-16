@@ -1,14 +1,18 @@
 {
   "brani": [
-    { "titolo": "Non ho un cuore", "file": "non-ho-un-cuore.mp3", "copertina": "non-ho-un-cuore.webp" },
-    { "titolo": "Siamo tutti soli", "file": "siamo-tutti-soli.mp3" },
-    { "titolo": "Opus Dei", "file": "opus-dei.mp3" },
-    { "titolo": "Poe", "file": "poe.mp3" },
-    { "titolo": "Falene", "file": "falene.mp3", "copertina": "falene.webp" },
-    { "titolo": "Futuro nero", "file": "futuro-nero.mp3" },
-    { "titolo": "La carne è debole", "file": "la-carne-e-debole.mp3", "copertina": "la-carne-e-debole.webp" },
-    { "titolo": "Per levarti il sorriso", "file": "per-levarti-il-sorriso.mp3", "copertina": "per-levarti-il-sorriso.webp" },
-    { "titolo": "Demoni", "file": "demoni.mp3", "copertina": "demoni.webp" },
-    { "titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco" }
+    {"titolo": "Non ho un cuore", "file": "non-ho-un-cuore.mp3", "copertina": "non-ho-un-cuore.webp"},
+    {"titolo": "Siamo tutti soli", "file": "siamo-tutti-soli.mp3"},
+    {"titolo": "Opus Dei", "file": "opus-dei.mp3"},
+    {"titolo": "Poe", "file": "poe.mp3"},
+    {"titolo": "Falene", "file": "falene.mp3", "copertina": "falene.webp"},
+    {"titolo": "Futuro nero", "file": "futuro-nero.mp3"},
+    {"titolo": "La carne è debole", "file": "la-carne-e-debole.mp3", "copertina": "la-carne-e-debole.webp"},
+    {"titolo": "Per levarti il sorriso", "file": "per-levarti-il-sorriso.mp3", "copertina": "per-levarti-il-sorriso.webp"},
+    {"titolo": "Demoni", "file": "demoni.mp3", "copertina": "demoni.webp"},
+    {"titolo": "Liberami", "file": "liberami.mp3", "copertina": "liberami.webp"},
+    {"titolo": "Lecter", "file": "lecter.mp3", "copertina": "lecter.webp"},
+    {"titolo": "Brum brum", "file": "brum-brum.mp3"},
+    {"titolo": "Toxic Avenger", "file": "toxic-avenger.mp3"},
+    {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco"}
   ]
 }

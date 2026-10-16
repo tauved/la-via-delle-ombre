@@ -279,6 +279,23 @@ async function caricaArtwork() {
   });
 }
 
+async function caricaBiblioteca() {
+  const file = path.join(CONTENUTI, "biblioteca", "biblioteca.json");
+  if (!existsSync(file)) return [];
+  const dati = await leggiJson(file);
+  return (Array.isArray(dati.sezioni) ? dati.sezioni : [])
+    .map((s, i) => {
+      if (!s.titolo) throw new ErroreContenuti(`In contenuti/biblioteca/biblioteca.json la sezione ${i + 1} deve avere «titolo».`);
+      const voci = (Array.isArray(s.voci) ? s.voci : []).map((v, k) => {
+        if (!v.titolo || !v.link) throw new ErroreContenuti(`Nella biblioteca la voce ${k + 1} di «${s.titolo}» deve avere «titolo» e «link».`);
+        if (!/^https?:\/\//.test(v.link)) throw new ErroreContenuti(`Nella biblioteca il link di «${v.titolo}» deve iniziare con https://`);
+        return v;
+      });
+      return { ...s, voci };
+    })
+    .filter((s) => s.voci.length);
+}
+
 // ---------------------------------------------------------------- impaginazione comune
 
 function testata(pagina, attiva) {
@@ -290,6 +307,7 @@ function testata(pagina, attiva) {
     voce("/gioco/", "Gioco", "gioco"),
     raccolte.opere.length ? voce("/artwork/", "Artwork", "artwork") : "",
     voce("/ebook/", "Ebook", "ebook"),
+    raccolte.biblioteca.length ? voce("/biblioteca/", "Biblioteca", "biblioteca") : "",
   ].join("");
   return `<a class="salta" href="#contenuto">Vai al contenuto</a>
 <header class="testata" data-testata>
@@ -517,10 +535,12 @@ function paginaHome(caroselli) {
   <section class="sezione" id="musica" aria-labelledby="titolo-musica">
     <div class="via" style="--pos: 30%" aria-hidden="true"></div>
     <div class="colonna musica">
-      <div>
+      <div class="musica-testa">
         <h2 id="titolo-musica">Ascolta</h2>
         <p>${esc(musica.testo || "")}</p>
-        ${raccolte.brani.length ? `<ol class="brani" role="list">
+      </div>
+      ${raccolte.brani.length ? `<div class="musica-brani">
+        <ol class="brani" role="list">
           ${raccolte.brani
             .map((b, i) => {
               const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
@@ -532,14 +552,14 @@ function paginaHome(caroselli) {
             })
             .join("\n          ")}
         </ol>
-        <p class="brani-aiuto">La musica continua mentre giri per il sito.</p>` : ""}
-      </div>
+        <p class="brani-aiuto">La musica continua mentre giri per il sito.</p>
+      </div>` : ""}
+      <ul class="canali musica-canali" role="list">
+        ${canaliMusica.join("\n        ")}
+      </ul>
       <div class="musica-fuori">
       ${lettoreSpotify}
       ${lettoreYoutube}
-        <ul class="canali" role="list">
-          ${canaliMusica.join("\n          ")}
-        </ul>
       </div>
     </div>
   </section>
@@ -564,7 +584,7 @@ function paginaHome(caroselli) {
     <div class="colonna">
       <div class="sezione-testa">
         <div>
-          <h2 id="titolo-scarica">Da scaricare</h2>
+          <h2 id="titolo-scarica">${raccolte.biblioteca.length ? "Da leggere e da scaricare" : "Da scaricare"}</h2>
           <p>${esc(sito.scarica?.testo || "")}</p>
         </div>
       </div>
@@ -577,6 +597,10 @@ function paginaHome(caroselli) {
           ${raccolte.ebook[0]?.urlCopertina ? `<img src="${indirizzo(raccolte.ebook[0].urlCopertina, pagina)}" width="${raccolte.ebook[0].copertinaW || 540}" height="${raccolte.ebook[0].copertinaH || 760}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
           <span class="porta-testo"><strong>Ebook</strong><span>${raccolte.ebook.length ? (raccolte.ebook.length === 1 ? "1 ebook gratuito" : `${raccolte.ebook.length} ebook gratuiti`) : "In arrivo"}</span></span>
         </a>
+        ${raccolte.biblioteca.length ? `<a class="porta" href="${indirizzo("/biblioteca/", pagina)}">
+          <img src="${indirizzo(media.gioco600, pagina)}" width="600" height="750" alt="" loading="lazy" decoding="async">
+          <span class="porta-testo"><strong>Biblioteca</strong><span>${voceBiblioteca(raccolte.biblioteca)}</span></span>
+        </a>` : ""}
       </div>
     </div>
   </section>`}
@@ -861,7 +885,9 @@ function paginaEbook() {
     <p>${esc(e.in_arrivo || "")}</p>
     <div class="azioni">
       ${link.telegram ? `<a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale Telegram</a>` : ""}
-      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia i caroselli</a>
+      ${raccolte.biblioteca.length
+        ? `<a class="bottone filo" href="${indirizzo("/biblioteca/", pagina)}">Intanto sfoglia la biblioteca</a>`
+        : `<a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia i caroselli</a>`}
     </div>
   </div>`;
   const corpo = `<main id="contenuto" class="colonna">
@@ -877,6 +903,69 @@ function paginaEbook() {
     descrizione: e.testo || "Gli ebook di TAUH, da scaricare gratis.",
     immagine: ebook[0]?.urlCopertina || media.ogHome,
     attiva: "ebook",
+    corpo,
+  });
+}
+
+const voceBiblioteca = (sezioni) => {
+  const n = sezioni.reduce((s, x) => s + x.voci.length, 0);
+  return n === 1 ? "1 lettura consigliata" : `${n} letture consigliate`;
+};
+
+// Prima lettera del titolo, per il segno in cima a ogni scheda della biblioteca.
+const iniziale = (titolo) =>
+  String(titolo)
+    .normalize("NFD")
+    .replace(/[^\p{L}\p{N}]/gu, "")
+    .charAt(0)
+    .toUpperCase();
+
+function paginaBiblioteca() {
+  const pagina = "/biblioteca/";
+  const b = sito.biblioteca || {};
+  const etichette = { gratis: "Leggilo gratis", editore: "Dall'editore", libreria: "In libreria", biblioteca: "In biblioteca" };
+  const schedaLibro = (v) => {
+    const edizione = [v.editore, v.anno].filter(Boolean).join(", ");
+    return `<li class="libro">
+        <span class="libro-segno" aria-hidden="true">${esc(iniziale(v.titolo))}</span>
+        <div class="libro-testo">
+          ${v.tipo ? `<span class="libro-tipo">${esc(v.tipo)}</span>` : ""}
+          <h3 class="libro-titolo">${esc(v.titolo)}</h3>
+          ${v.autore ? `<p class="libro-autore">${esc(v.autore)}</p>` : ""}
+          ${edizione ? `<p class="libro-edizione">${esc(edizione)}</p>` : ""}
+          ${v.descrizione ? `<p class="libro-descrizione">${esc(v.descrizione)}</p>` : ""}
+          <a class="bottone filo stretto" href="${esc(v.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(v.etichetta || etichette[v.dove] || "Dove trovarlo")}<span class="nascosto"> (si apre in un'altra scheda)</span></a>
+        </div>
+      </li>`;
+  };
+  const corpo = `<main id="contenuto" class="colonna">
+  <header class="archivio-testa">
+    <h1>Biblioteca</h1>
+    ${b.testo ? `<p>${esc(b.testo)}</p>` : ""}
+    ${b.nota ? `<p class="licenza">${esc(b.nota)}</p>` : ""}
+  </header>
+  ${raccolte.biblioteca
+    .map(
+      (s, i) => `<section class="scaffale" aria-labelledby="scaffale-${i + 1}">
+    <div class="scaffale-testa">
+      <h2 id="scaffale-${i + 1}">${esc(s.titolo)}</h2>
+      ${s.testo ? `<p>${esc(s.testo)}</p>` : ""}
+    </div>
+    <ul class="libri" role="list">
+      ${s.voci.map(schedaLibro).join("\n      ")}
+    </ul>
+  </section>`,
+    )
+    .join("\n  ")}
+</main>`;
+  return documento({
+    pagina,
+    titolo: "Biblioteca",
+    descrizione: b.testo || "I libri e gli articoli consigliati da TAUH.",
+    immagine: media.ogHome,
+    larghezzaImmagine: 1200,
+    altezzaImmagine: 630,
+    attiva: "biblioteca",
     corpo,
   });
 }
@@ -903,7 +992,7 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
-const raccolte = { brani: [], ebook: [], opere: [], slugCaroselli: new Set() };
+const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -947,6 +1036,7 @@ async function principale() {
   const brani = await caricaMusica();
   const ebook = await caricaEbook();
   const opere = await caricaArtwork();
+  raccolte.biblioteca = sito.biblioteca?.pubblica === false ? [] : await caricaBiblioteca();
 
   await rm(USCITA, { recursive: true, force: true });
   await mkdir(path.join(USCITA, "assets"), { recursive: true });
@@ -1042,6 +1132,7 @@ async function principale() {
     ["/gioco/", paginaGioco()],
     ...(raccolte.opere.length ? [["/artwork/", paginaArtwork()]] : []),
     ["/ebook/", paginaEbook()],
+    ...(raccolte.biblioteca.length ? [["/biblioteca/", paginaBiblioteca()]] : []),
     ["/404.html", pagina404()],
   ];
   for (const [percorso, html] of pagine) await scrivi(percorso, html);

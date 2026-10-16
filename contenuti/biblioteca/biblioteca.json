@@ -1,0 +1,120 @@
+{
+  "sezioni": [
+    {
+      "titolo": "Miti e gnosi",
+      "testo": "La creazione nata dal caos e il dio minore che ha imprigionato il mondo.",
+      "voci": [
+        {
+          "titolo": "Enūma eliš. Il mito babilonese della creazione",
+          "autore": "Alberto Elli",
+          "tipo": "Libro",
+          "descrizione": "Il poema babilonese delle origini, in sette tavolette: Tiamat, il caos delle acque primordiali, e Marduk che dal suo corpo squartato ricava il cielo e la terra. Elli lo presenta dal testo cuneiforme alla traduzione, con il commento di ogni tavoletta.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "gratis"
+        },
+        {
+          "titolo": "Abraxas, numero 0",
+          "autore": "Rivista di diffusione del pensiero gnostico",
+          "tipo": "Rivista",
+          "descrizione": "Il numero d'esordio di una rivista digitale sullo gnosticismo: il demiurgo cieco, il simbolo di Abraxas, il Caino gnostico, la nostalgia del Pleroma.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "gratis"
+        }
+      ]
+    },
+    {
+      "titolo": "Magia e satanismo",
+      "testo": "Simboli, rituali e la volontà che li muove.",
+      "voci": [
+        {
+          "titolo": "Il libro di Thoth",
+          "autore": "Aleister Crowley",
+          "tipo": "Libro",
+          "descrizione": "Il saggio di Crowley sui tarocchi, scritto per il mazzo di Thoth dipinto da Frieda Harris: ogni arcano letto con la Qabalah, l'astrologia e la legge di Thelema.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        },
+        {
+          "titolo": "La Bibbia di Satana",
+          "autore": "Anton Szandor LaVey",
+          "tipo": "Libro",
+          "descrizione": "Il testo fondante della Chiesa di Satana: il satanismo ateo di LaVey, tra individualismo, rifiuto della morale cristiana e rituale come psicodramma.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        },
+        {
+          "titolo": "La magia dei sigilli",
+          "autore": "animalibera.net",
+          "tipo": "Articolo",
+          "descrizione": "Una guida breve e pratica al sigillo di Austin Osman Spare: dall'intento scritto al simbolo da caricare e dimenticare, con i consigli di Grant Morrison.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "gratis"
+        }
+      ]
+    },
+    {
+      "titolo": "Coscienza e percezione",
+      "testo": "Allargare la percezione e lavorare su di sé.",
+      "voci": [
+        {
+          "titolo": "Le porte della percezione. Paradiso e inferno",
+          "autore": "Aldous Huxley",
+          "tipo": "Libro",
+          "descrizione": "Huxley prende la mescalina e racconta come cambia il mondo davanti ai suoi occhi; nel secondo saggio segue le visioni fino all'arte che prova a evocarle. Il titolo viene da William Blake.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        },
+        {
+          "titolo": "Le tecniche di Gurdjieff",
+          "autore": "Gruppo H mi 12",
+          "tipo": "Libro",
+          "descrizione": "Un eserciziario per il lavoro su di sé secondo Gurdjieff: auto-osservazione, ricordo di sé, i centri dell'essere umano. L'ha scritto un gruppo di ricercatori italiani dopo cinque anni di pratica.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "biblioteca"
+        },
+        {
+          "titolo": "Lettere sulla meditazione occulta",
+          "autore": "Alice A. Bailey",
+          "tipo": "Libro",
+          "descrizione": "Le lettere che Bailey attribuisce al maestro tibetano Djwhal Khul: la meditazione come via per mettere la personalità in contatto con l'anima, con i suoi metodi e i suoi pericoli.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        },
+        {
+          "titolo": "L'illusione quale problema mondiale",
+          "autore": "Alice A. Bailey",
+          "tipo": "Libro",
+          "descrizione": "Le nebbie che deformano la percezione: l'illusione della mente, l'annebbiamento delle emozioni, la maya dei sensi, nella persona e nell'umanità intera. E le tecniche per dissiparle.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        }
+      ]
+    },
+    {
+      "titolo": "Il dolore di esistere",
+      "testo": "Una tesi scomoda e chi le risponde.",
+      "voci": [
+        {
+          "titolo": "Meglio non essere mai nati. Il dolore di venire al mondo",
+          "autore": "David Benatar",
+          "tipo": "Libro",
+          "editore": "Carbonio Editore",
+          "anno": "2018",
+          "descrizione": "Il saggio che ha rilanciato l'antinatalismo: per Benatar venire al mondo è sempre un danno, perché l'assenza di dolore è un bene anche se nessuno ne gode, mentre l'assenza di piacere non toglie niente a chi non esiste.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "editore"
+        },
+        {
+          "titolo": "Meglio non essere mai nati",
+          "autore": "Francesca Rigotti",
+          "tipo": "Recensione",
+          "editore": "Doppiozero",
+          "anno": "2018",
+          "descrizione": "Una lettura critica del libro di Benatar, con quello che lui non cita: da Sofocle a Nietzsche e Cioran.",
+          "link": "https://laviadelleombre.com/",
+          "dove": "gratis"
+        }
+      ]
+    }
+  ]
+}
