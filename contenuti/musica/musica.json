@@ -5,7 +5,7 @@
     {"titolo": "Opus Dei", "file": "opus-dei.mp3"},
     {"titolo": "Poe", "file": "poe.mp3"},
     {"titolo": "Falene", "file": "falene.mp3", "copertina": "falene.webp"},
-    {"titolo": "Futuro nero", "file": "futuro-nero.mp3"},
+    {"titolo": "Futuro nero", "file": "futuro-nero.mp3", "copertina": "futuro-nero.webp"},
     {"titolo": "La carne è debole", "file": "la-carne-e-debole.mp3", "copertina": "la-carne-e-debole.webp"},
     {"titolo": "Per levarti il sorriso", "file": "per-levarti-il-sorriso.mp3", "copertina": "per-levarti-il-sorriso.webp"},
     {"titolo": "Demoni", "file": "demoni.mp3", "copertina": "demoni.webp"},
@@ -13,6 +13,7 @@
     {"titolo": "Lecter", "file": "lecter.mp3", "copertina": "lecter.webp"},
     {"titolo": "Brum brum", "file": "brum-brum.mp3"},
     {"titolo": "Toxic Avenger", "file": "toxic-avenger.mp3"},
+    {"titolo": "Colpirli tutti per non rieducare più nessuno", "file": "colpirli-tutti.mp3", "copertina": "colpirli-tutti.webp", "nota": "feat. Perry Watt"},
     {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco"}
   ]
 }

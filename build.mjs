@@ -296,6 +296,22 @@ async function caricaBiblioteca() {
     .filter((s) => s.voci.length);
 }
 
+function caricaMerch() {
+  const m = sito.merch;
+  if (!m || !Array.isArray(m.articoli) || !m.articoli.length) return [];
+  const dir = path.join(CONTENUTI, "merch");
+  return m.articoli.map((a, i) => {
+    if (!a.titolo) throw new ErroreContenuti(`In sito.json, alla voce "merch", l'articolo ${i + 1} deve avere «titolo».`);
+    const immagini = (Array.isArray(a.immagini) ? a.immagini : []).map((im) => (typeof im === "string" ? { file: im } : im));
+    for (const im of immagini) {
+      if (!im.file || !existsSync(path.join(dir, im.file))) throw new ErroreContenuti(`Manca l'immagine contenuti/merch/${im.file || "?"} per «${a.titolo}».`);
+    }
+    return { ...a, immagini, dir };
+  });
+}
+
+const ebookAttivi = () => sito.ebook?.pubblica !== false;
+
 // ---------------------------------------------------------------- impaginazione comune
 
 function testata(pagina, attiva) {
@@ -306,8 +322,9 @@ function testata(pagina, attiva) {
     voce("/#musica", "Musica", "musica"),
     voce("/gioco/", "Gioco", "gioco"),
     raccolte.opere.length ? voce("/artwork/", "Artwork", "artwork") : "",
-    voce("/ebook/", "Ebook", "ebook"),
+    ebookAttivi() ? voce("/ebook/", "Ebook", "ebook") : "",
     raccolte.biblioteca.length ? voce("/biblioteca/", "Biblioteca", "biblioteca") : "",
+    raccolte.merch.length ? voce("/#merch", "Merch", "merch") : "",
   ].join("");
   return `<a class="salta" href="#contenuto">Vai al contenuto</a>
 <header class="testata" data-testata>
@@ -322,6 +339,7 @@ function piede(pagina) {
     ["Instagram", link.instagram],
     ["YouTube", link.youtube],
     ["Spotify", link.spotify],
+    ["TikTok", link.tiktok],
     ["Telegram", link.telegram],
   ].filter(([, url]) => url);
   return `<footer class="piede">
@@ -489,7 +507,7 @@ function paginaHome(caroselli) {
     ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
-  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0);
+  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0) + (raccolte.merch.length ? 1 : 0);
   let nodo = 0;
   const via = () => {
     const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
@@ -581,7 +599,7 @@ function paginaHome(caroselli) {
             })
             .join("\n          ")}
         </ol>
-        <p class="brani-aiuto">La musica continua mentre giri per il sito.</p>
+        <p class="brani-aiuto">La musica continua mentre giri per il sito.${link.telegram ? ` I pezzi li scarichi gratis dal <a href="${esc(link.telegram)}" rel="me noopener">canale Telegram</a>.` : ""}</p>
       </div>` : ""}
       <ul class="canali musica-canali" role="list">
         ${canaliMusica.join("\n        ")}
@@ -622,10 +640,10 @@ function paginaHome(caroselli) {
           <img src="${indirizzo(raccolte.opere[0].urlAnteprima, pagina)}" width="${raccolte.opere[0].anteprimaW || 540}" height="${raccolte.opere[0].anteprimaH || 675}" alt="" loading="lazy" decoding="async">
           <span class="porta-testo"><strong>Artwork</strong><span>${raccolte.opere.length === 1 ? "1 immagine" : `${raccolte.opere.length} immagini`} in alta risoluzione</span></span>
         </a>` : ""}
-        <a class="porta" href="${indirizzo("/ebook/", pagina)}">
+        ${ebookAttivi() ? `<a class="porta" href="${indirizzo("/ebook/", pagina)}">
           ${raccolte.ebook[0]?.urlCopertina ? `<img src="${indirizzo(raccolte.ebook[0].urlCopertina, pagina)}" width="${raccolte.ebook[0].copertinaW || 540}" height="${raccolte.ebook[0].copertinaH || 760}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
           <span class="porta-testo"><strong>Ebook</strong><span>${raccolte.ebook.length ? (raccolte.ebook.length === 1 ? "1 ebook gratuito" : `${raccolte.ebook.length} ebook gratuiti`) : "In arrivo"}</span></span>
-        </a>
+        </a>` : ""}
         ${raccolte.biblioteca.length ? `<a class="porta" href="${indirizzo("/biblioteca/", pagina)}">
           <img src="${indirizzo(media.gioco600, pagina)}" width="600" height="750" alt="" loading="lazy" decoding="async">
           <span class="porta-testo"><strong>Biblioteca</strong><span>${voceBiblioteca(raccolte.biblioteca)}</span></span>
@@ -645,6 +663,34 @@ function paginaHome(caroselli) {
           ${link.instagram ? `<a class="bottone filo" href="${esc(link.instagram)}" rel="me noopener">Segui TAUH su Instagram</a>` : ""}
         </div>
       </div>
+    </div>
+  </section>` : ""}
+
+  ${raccolte.merch.length ? `<section class="sezione" id="merch" aria-labelledby="titolo-merch">
+    ${via()}
+    <div class="colonna">
+      <div class="sezione-testa">
+        <div>
+          <h2 id="titolo-merch">${esc(sito.merch.titolo || "Merch")}</h2>
+          ${sito.merch.testo ? `<p>${esc(sito.merch.testo)}</p>` : ""}
+        </div>
+      </div>
+      <ul class="merch" role="list">
+        ${raccolte.merch
+          .map(
+            (a) => `<li class="maglia">
+          <div class="maglia-foto">
+            ${a.immagini.map((im) => `<img src="${indirizzo(im.url, pagina)}" width="${im.larghezza || 800}" height="${im.altezza || 1000}" alt="${esc(im.alt || "")}" loading="lazy" decoding="async">`).join("\n            ")}
+          </div>
+          <div class="maglia-testo">
+            <h3>${esc(a.titolo)}</h3>
+            ${a.dettagli ? `<p>${esc(a.dettagli)}</p>` : ""}
+            ${sito.merch.link ? `<a class="bottone primario" href="${esc(sito.merch.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sito.merch.bottone || "Chiedi in DM su Instagram")}</a>` : ""}
+          </div>
+        </li>`,
+          )
+          .join("\n        ")}
+      </ul>
     </div>
   </section>` : ""}
 </main>`;
@@ -850,7 +896,7 @@ function paginaArtwork() {
       </button>
       <div class="opera-testo">
         <h2 class="opera-titolo">${esc(o.titolo)}</h2>
-        ${o.versione ? `<p class="opera-versione">Versione ${esc(o.versione)}</p>` : ""}
+        ${o.versione ? `<p class="opera-versione">${esc(o.versione)}</p>` : ""}
         ${o.carosello && raccolte.slugCaroselli.has(o.carosello) ? `<a class="opera-fonte" href="${indirizzo(`/caroselli/${o.carosello}/`, pagina)}">Dal carosello</a>` : ""}
         ${o.descrizione ? `<p>${esc(o.descrizione)}</p>` : ""}
         <a class="bottone primario stretto" href="${indirizzo(o.urlFile, pagina)}" download="${esc(nome)}">${icona.scarica}Scarica</a>
@@ -1021,7 +1067,7 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
-const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], slugCaroselli: new Set() };
+const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1063,7 +1109,8 @@ async function copiaConImpronta(sorgente, cartella, nome) {
 async function principale() {
   const caroselli = await caricaCaroselli();
   const brani = await caricaMusica();
-  const ebook = await caricaEbook();
+  const ebook = ebookAttivi() ? await caricaEbook() : [];
+  const merch = caricaMerch();
   const opere = await caricaArtwork();
   raccolte.biblioteca = sito.biblioteca?.pubblica === false ? [] : await caricaBiblioteca();
 
@@ -1094,7 +1141,7 @@ async function principale() {
     gioco1080: await versioneImg("gioco-1080.webp"),
     soglia: await versioneImg("soglia-900.webp"),
     ogHome: await versioneImg("og-home.jpg"),
-    copertinaBrano: await versioneImg("copertina-tauh-512.webp"),
+    copertinaBrano: await versioneImg("copertina-riserva-512.webp"),
   });
   const copertinaGioco = sito.gioco?.immagine;
   if (copertinaGioco && existsSync(path.join(RADICE, "src", "img", `${copertinaGioco}-1280.webp`))) {
@@ -1164,13 +1211,22 @@ async function principale() {
     });
   }
 
+  for (const a of merch) {
+    for (const im of a.immagini) {
+      const { url, dati } = await copiaConImpronta(path.join(a.dir, im.file), "media/merch", im.file);
+      const dim = dimensioniImmagine(dati);
+      Object.assign(im, { url, larghezza: dim?.w, altezza: dim?.h });
+    }
+    raccolte.merch.push(a);
+  }
+
   const pagine = [
     ["/", paginaHome(caroselli)],
     ["/caroselli/", paginaArchivio(caroselli)],
     ...caroselli.map((c, i) => [`/caroselli/${c.slug}/`, paginaCarosello(c, i, caroselli)]),
     ["/gioco/", paginaGioco()],
     ...(raccolte.opere.length ? [["/artwork/", paginaArtwork()]] : []),
-    ["/ebook/", paginaEbook()],
+    ...(ebookAttivi() ? [["/ebook/", paginaEbook()]] : []),
     ...(raccolte.biblioteca.length ? [["/biblioteca/", paginaBiblioteca()]] : []),
     ["/404.html", pagina404()],
   ];

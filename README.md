@@ -1,6 +1,6 @@
 # La via delle ombre
 
-Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere, gli artwork e gli ebook da scaricare, il canale Telegram e il gioco.
+Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere, gli artwork da scaricare, la biblioteca, il merch, il canale Telegram e il gioco.
 È un sito statico (HTML, CSS e JavaScript senza librerie) generato da un piccolo script e pubblicato su Cloudflare.
 
 ## Com'è fatto
@@ -15,7 +15,8 @@ contenuti/
     og.jpg                   anteprima per i link condivisi (facoltativa)
   musica/                    i brani del lettore (MP3), le loro copertine e musica.json
   artwork/                   le immagini da scaricare e artwork.json
-  ebook/<nome>/              un ebook per cartella, con ebook.json
+  merch/                     le foto e i disegni delle magliette
+  ebook/<nome>/              un ebook per cartella, con ebook.json (pagina per ora nascosta)
   biblioteca/                i libri consigliati, con i link (biblioteca.json)
 src/                         stile.css, app.js, immagini del sito e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
@@ -64,7 +65,7 @@ Per togliere un carosello cancella la sua cartella.
 
 ### Cambiare testi e link
 
-Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify e Telegram.
+Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito).
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
 ### Un'uscita in arrivo (pre-save)
@@ -104,7 +105,7 @@ I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in 
 Per aggiungere un brano:
 
 1. Esporta l'MP3 (a 192 kbps basta e avanza; ogni file deve stare sotto i 25 MB) e mettilo in `contenuti/musica/`.
-2. Se vuoi la copertina, mettila nella stessa cartella: un'immagine quadrata JPG o WebP da 512×512. Senza copertina il brano usa il logo di TAUH.
+2. Se vuoi la copertina, mettila nella stessa cartella: un'immagine quadrata JPG o WebP da 512×512. Senza copertina il brano usa la foto in bianco e nero del caprone (`src/img/copertina-riserva-512.webp`).
 3. Aggiungi una riga a `musica.json`. `"nota"` è facoltativa e compare sotto il titolo, accanto alla durata (per esempio «con …» per una collaborazione).
 4. Commit e push.
 
@@ -120,18 +121,20 @@ Le immagini da scaricare stanno in `contenuti/artwork/`, elencate in `artwork.js
 {
   "opere": [
     { "titolo": "Demoni", "file": "demoni.jpg", "anteprima": "demoni-600.webp", "grande": "demoni-1600.webp" },
-    { "titolo": "Demoni", "versione": "orizzontale", "file": "demoni-orizzontale.jpg", "anteprima": "demoni-orizzontale-600.webp", "grande": "demoni-orizzontale-1600.webp" }
+    { "titolo": "Per levarti il sorriso", "versione": "Variant", "file": "per-levarti-il-sorriso-viola.jpg", "anteprima": "per-levarti-il-sorriso-viola-600.webp", "grande": "per-levarti-il-sorriso-viola-1600.webp" }
   ]
 }
 ```
 
 - `file` è l'immagine in alta risoluzione che si scarica (JPG o PNG).
 - `anteprima` (600 px) e `grande` (1600 px, quella che si apre toccando l'immagine) sono facoltative ma rendono la pagina molto più leggera: se mancano il sito usa il file grande. Claude le prepara da solo.
-- `versione` compare sotto il titolo («Versione orizzontale») e nel nome del file scaricato. Si può aggiungere anche `"descrizione"`.
+- `versione` compare sotto il titolo e nel nome del file scaricato: per le versioni con colori diversi si usa «Variant». Si può aggiungere anche `"descrizione"`.
 
 Chi scarica riceve il file con un nome chiaro, per esempio «TAUH - Demoni.jpg».
 
 ### Ebook
+
+Per ora la pagina Ebook è nascosta: in `contenuti/sito.json`, alla voce `"ebook"`, c'è `"pubblica": false`. Per riaccenderla metti `true`.
 
 Ogni ebook ha una cartella in `contenuti/ebook/`, per esempio `contenuti/ebook/la-via-della-mano-sinistra/`, con dentro il PDF (o anche l'EPUB), la copertina e un file `ebook.json`:
 
@@ -154,6 +157,31 @@ Se c'è un solo formato basta `"file": "nome.pdf"`. Gli ebook si ordinano per da
 Tutto quello che sta sotto `/scarica/` (artwork ed ebook) il browser lo scarica invece di aprirlo.
 
 Negli ebook vanno solo testi tuoi, o di autori che ti hanno dato il permesso: i libri di altri, anche se in rete girano gratis, vanno nella Biblioteca con un link.
+
+### Merch
+
+In fondo alla home c'è la sezione Merch con le magliette; nel menu la voce Merch porta lì. Le immagini stanno in `contenuti/merch/` e il resto in `contenuti/sito.json`, alla voce `"merch"`:
+
+```json
+"merch": {
+  "titolo": "Merch",
+  "testo": "Le magliette di TAUH…",
+  "link": "https://ig.me/m/tauh616",
+  "bottone": "Chiedi in DM su IG",
+  "articoli": [
+    {
+      "titolo": "Xenomorfo",
+      "dettagli": "T-shirt nera, serigrafia a 4 colori.",
+      "immagini": [
+        { "file": "xenomorfo-maglietta.webp", "alt": "Descrizione della foto" },
+        { "file": "xenomorfo-disegno.webp", "alt": "Descrizione del disegno" }
+      ]
+    }
+  ]
+}
+```
+
+Il bottone apre una chat con TAUH su Instagram (`ig.me/m/tauh616`). Le immagini vanno bene in verticale (4:5), per esempio 800×1000. Per togliere la sezione cancella la voce `"merch"`.
 
 ### Biblioteca
 

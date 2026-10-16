@@ -29,7 +29,7 @@
   },
   "telegram": {
     "titolo": "Il canale Telegram",
-    "testo": "Su Telegram trovi i testi completi che accompagnano ogni carosello, con le fonti."
+    "testo": "Entra nel canale Telegram per scaricare gratis i pezzi di TAUH e leggere gli approfondimenti di ogni carosello, con le fonti."
   },
   "gioco": {
     "disponibile": true,
@@ -80,13 +80,14 @@
     ]
   },
   "scarica": {
-    "testo": "Artwork ed ebook di TAUH, gratis e senza registrazione, e i libri che consigliamo."
+    "testo": "Gli artwork di TAUH da scaricare gratis, senza registrazione, e i libri che consigliamo."
   },
   "artwork": {
     "testo": "Le copertine dei brani di TAUH in alta risoluzione. Scaricale gratis, senza registrazione.",
     "licenza": "Puoi usarle come sfondo o stamparle per te. Per altri usi scrivi a TAUH su Instagram."
   },
   "ebook": {
+    "pubblica": false,
     "testo": "Testi della via delle ombre da leggere quando vuoi. Si scaricano gratis, senza registrazione.",
     "in_arrivo": "Saranno gratuiti da scaricare. Li annunciamo sul canale Telegram appena sono pronti."
   },
@@ -94,11 +95,48 @@
     "instagram": "https://www.instagram.com/tauh616/",
     "youtube": "https://www.youtube.com/@tauh616",
     "spotify": "https://open.spotify.com/artist/4wjw3C2aMvge2YdHKnvYYn",
+    "tiktok": "https://www.tiktok.com/@tauh616",
     "telegram": "https://t.me/+4ZOcDRnDqZEzYjk0"
   },
   "biblioteca": {
     "pubblica": true,
     "testo": "I libri e gli scritti che TAUH consiglia a chi cammina sulla via delle ombre: miti antichi, gnosi, magia, coscienza.",
     "nota": "Qui non trovi i PDF: ogni scheda porta dove leggerli gratis, quando l'autore o l'editore li hanno messi online, o dove trovarli in libreria. Molti si possono prendere in prestito nelle biblioteche pubbliche."
+  },
+  "merch": {
+    "titolo": "Merch",
+    "testo": "Le magliette di TAUH, stampate in serigrafia con colori a base acqua. Per taglie, prezzi e spedizione chiedi in DM su Instagram.",
+    "link": "https://ig.me/m/tauh616",
+    "bottone": "Chiedi in DM su IG",
+    "articoli": [
+      {
+        "titolo": "Donna col caprone",
+        "dettagli": "T-shirt nera, serigrafia a 2 colori.",
+        "immagini": [
+          {
+            "file": "caprone-maglietta.webp",
+            "alt": "La maglietta stampata: logo TAUH rosso e una donna con la corona di spine, i serpenti e un teschio di caprone"
+          },
+          {
+            "file": "caprone-disegno.webp",
+            "alt": "Il disegno della maglietta con la donna col caprone"
+          }
+        ]
+      },
+      {
+        "titolo": "Xenomorfo",
+        "dettagli": "T-shirt nera, serigrafia a 4 colori.",
+        "immagini": [
+          {
+            "file": "xenomorfo-maglietta.webp",
+            "alt": "La maglietta stampata: logo TAUH verde e uno xenomorfo seduto su un mucchio di teschi"
+          },
+          {
+            "file": "xenomorfo-disegno.webp",
+            "alt": "Il disegno della maglietta con lo xenomorfo"
+          }
+        ]
+      }
+    ]
   }
 }

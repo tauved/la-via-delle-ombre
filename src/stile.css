@@ -2344,6 +2344,59 @@ body:has(.ascolto) {
   font-weight: 600;
 }
 
+/* ------------------------------------------------------------ merch */
+
+.merch {
+  display: grid;
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 900px) {
+  .merch {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.maglia {
+  display: grid;
+  gap: 1.1rem;
+  align-content: start;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border-radius: 18px;
+  background: var(--viola-notte);
+  box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.55);
+}
+
+.maglia-foto {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+}
+
+.maglia-foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: contain;
+  border-radius: 10px;
+  background: var(--nero);
+}
+
+.maglia-testo {
+  display: grid;
+  gap: 0.6rem;
+  justify-items: start;
+}
+
+.maglia-testo h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
 /* ------------------------------------------------------------ dettagli */
 
 html:not(.js) .ascolto {

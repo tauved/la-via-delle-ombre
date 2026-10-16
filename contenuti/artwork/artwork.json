@@ -7,6 +7,12 @@
       "grande": "non-ho-un-cuore-1600.webp"
     },
     {
+      "titolo": "Futuro nero",
+      "file": "futuro-nero.jpg",
+      "anteprima": "futuro-nero-600.webp",
+      "grande": "futuro-nero-1600.webp"
+    },
+    {
       "titolo": "Colpirli tutti per non rieducare più nessuno",
       "file": "colpirli-tutti.jpg",
       "anteprima": "colpirli-tutti-600.webp",
@@ -29,20 +35,13 @@
       "file": "per-levarti-il-sorriso-viola.jpg",
       "anteprima": "per-levarti-il-sorriso-viola-600.webp",
       "grande": "per-levarti-il-sorriso-viola-1600.webp",
-      "versione": "viola"
+      "versione": "Variant"
     },
     {
       "titolo": "Demoni",
       "file": "demoni.jpg",
       "anteprima": "demoni-600.webp",
       "grande": "demoni-1600.webp"
-    },
-    {
-      "titolo": "Demoni",
-      "file": "demoni-orizzontale.jpg",
-      "anteprima": "demoni-orizzontale-600.webp",
-      "grande": "demoni-orizzontale-1600.webp",
-      "versione": "orizzontale"
     },
     {
       "titolo": "Danse Macabre",
@@ -55,6 +54,13 @@
       "file": "liberami.jpg",
       "anteprima": "liberami-600.webp",
       "grande": "liberami-1600.webp"
+    },
+    {
+      "titolo": "Beelzebù",
+      "file": "beelzebu.jpg",
+      "anteprima": "beelzebu-600.webp",
+      "grande": "beelzebu-1600.webp",
+      "descrizione": "L'illustrazione di Liberami, senza scritte."
     },
     {
       "titolo": "Lecter",
