@@ -1,0 +1,243 @@
+{
+  "titolo": "La via delle ombre",
+  "sottotitolo": "Mai nel gregge del Parassita",
+  "descrizione": "Mai nel gregge del Parassita. Il Parassita, la luce e perché ho scelto di sbattezzarmi.",
+  "data": "2026-10-04T17:24",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "La via delle ombre",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "LA VIA DELLE OMBRE"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Mai nel gregge del Parassita"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Parassita, la luce e perché ho scelto di sbattezzarmi."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Il dio abramitico",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "PARASSITA"
+        },
+        {
+          "tipo": "nota",
+          "html": "un egregore"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il dio abramitico"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Penso che il dio delle religioni abramitiche sia in realtà un essere parassitario: <strong>un egregore che si nutre delle anime</strong> di chi sceglie di entrare nel suo «paradiso»."
+        },
+        {
+          "tipo": "box",
+          "html": "Egregore: in esoterismo, un'entità nata dalla fede collettiva di un gruppo, che di quella fede si nutre."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Dopo la morte",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "LUCE"
+        },
+        {
+          "tipo": "nota",
+          "html": "asettica"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Dopo la morte"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Credo che dopo la morte la scelta del percorso spetti a noi. La luce, in realtà, è solo un modo asettico di diventare <strong>nutrimento per il Parassita</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Chi si consegna non viene salvato: viene consumato."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Mi ha cercato",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "BUIO"
+        },
+        {
+          "tipo": "nota",
+          "html": "è lì che ti cerca"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Mi ha cercato"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ne parlo così perché, nei miei momenti bui, ha cercato <strong>la mia dedizione e la mia conversione</strong>. Si è palesato in modo più o meno velato, o tramite i suoi scherani in terra."
+        },
+        {
+          "tipo": "box",
+          "html": "Si nutre delle debolezze e pretende una dedizione completa: è così che si prende l'anima."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Il battesimo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CULLA"
+        },
+        {
+          "tipo": "nota",
+          "html": "il primo accesso"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il battesimo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Con il battesimo il Parassita ha <strong>libero accesso</strong>: può avvicinarti e contarti tra i suoi fedeli, prima ancora che tu possa scegliere."
+        },
+        {
+          "tipo": "box",
+          "html": "Ti viene imposto fin dalla culla. Liberartene è un lavoro tuo."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "La differenza",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SCELTA"
+        },
+        {
+          "tipo": "nota",
+          "html": "non imposizione"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La differenza"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Satana, in qualsiasi modo tu lo veda, è diverso: può sceglierti, ma <strong>in larga parte sei tu a scegliere</strong>, o a sentire il richiamo verso la sua figura."
+        },
+        {
+          "tipo": "box",
+          "html": "Uno ti viene imposto dalla culla. L'altro lo scegli tu."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Il mio consiglio",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SBATTEZZO"
+        },
+        {
+          "tipo": "nota",
+          "html": "la via d'uscita"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il mio consiglio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Sbattezzatevi.</strong> Io l'ho fatto intorno ai 20 anni e non me ne sono mai pentito."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Basta una raccomandata alla parrocchia del battesimo con la copia di un documento. Il battesimo non si cancella, ma nel registro viene annotato che non fai più parte della Chiesa cattolica."
+        },
+        {
+          "tipo": "box",
+          "html": "Dai 16 anni puoi farlo da solo. Non devi dare motivazioni e non devi nulla alla parrocchia."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Se il parroco vi convoca",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "COLLOQUIO"
+        },
+        {
+          "tipo": "nota",
+          "html": "facoltativo"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Se il parroco vi convoca"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il parroco o la diocesi potrebbero invitarvi a un colloquio per convincervi a ritirare la richiesta. <strong>Non siete obbligati ad andare</strong>: lo ha stabilito il Garante della privacy."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Io però consiglio di andarci comunque, a esporre le vostre ragioni: il confronto è sempre bello."
+        },
+        {
+          "tipo": "box",
+          "html": "E il parroco non può raccontarlo alla vostra famiglia: la richiesta è riservata."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Scegli la tua via",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "MAI"
+        },
+        {
+          "tipo": "nota",
+          "html": "nel gregge del Parassita"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Scegli la tua via"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nessuno ti ha chiesto il permesso quando ti hanno messo nel suo gregge. Uscirne è un atto di volontà, e comincia con una lettera."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Scrivimi in DM e ti mando il modulo dello sbattezzo."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,253 @@
+{
+  "titolo": "Oltre il Velo della Follia",
+  "sottotitolo": "La culla del Caos",
+  "descrizione": "La culla del Caos. Lovecraft, Tiamat e la via della mano sinistra.",
+  "data": "2026-10-07",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Oltre il Velo della Follia",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "OLTRE IL VELO DELLA FOLLIA"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La culla del Caos"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Lovecraft, Tiamat e la via della mano sinistra."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Non solo nichilismo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ORRORE · COSMICO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Non solo nichilismo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'orrore cosmico di Lovecraft viene spesso letto come la massima espressione del nichilismo moderno: un universo freddo e indifferente, in cui l'umanità è solo un granello di polvere."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ma attraverso la lente della mitologia antica e dell'esoterismo emerge <strong>un disegno diverso</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "I Grandi Antichi non sono solo mostri tentacolari: incarnano archetipi antichissimi."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "La madre del caos",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "TIAMAT · LE ACQUE DEL CAOS"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La madre del caos"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nel mito babilonese dell'Enûma Eliš, Tiamat è la dea primordiale delle acque salate, spesso raffigurata come un drago: <strong>il caos informe da cui tutto ha origine</strong>."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Marduk la sconfigge e dal suo corpo, diviso in due, plasma il cielo e la terra: il mondo ordinato in cui viviamo."
+        },
+        {
+          "tipo": "box",
+          "html": "Il nostro mondo è costruito sul cadavere del caos."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Un archetipo che ritorna",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CTHULHU · SOGNA NEGLI ABISSI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Un archetipo che ritorna"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Tiamat ricorda da vicino le entità acquatiche e abissali di Lovecraft, a partire da Cthulhu. Entrambi riposano negli abissi: <strong>un caos primigenio che l'ordine ha solo sigillato</strong> fuori dal reale, senza mai distruggerlo."
+        },
+        {
+          "tipo": "box",
+          "html": "L'acqua è il grembo dei mostri: il subconscio inesplorato dove la logica si dissolve e da cui tutto fu generato."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Il finale cambia tutto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ORDINE · UN'ILLUSIONE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il finale cambia tutto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La differenza sta nel finale. Nel mito babilonese l'ordine di Marduk trionfa per sempre sul caos, e nasce la realtà in cui viviamo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In Lovecraft l'ordine è un'illusione fragile e temporanea. <strong>Cthulhu non è morto: sogna, in attesa.</strong> E al centro dell'universo gorgoglia Azathoth, il dio cieco e idiota."
+        },
+        {
+          "tipo": "box",
+          "html": "Il caos non è un'anomalia: è la vera regola del cosmo."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Le due vie",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SINISTRA · IL SENTIERO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Le due vie"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nelle religioni della mano destra, quelle ortodosse e dogmatiche come islam, cristianesimo ed ebraismo, l'obiettivo è sottomettersi all'ordine cosmico e a un Dio creatore."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Sentiero della Mano Sinistra punta invece all'<strong>antinomismo</strong>: rompere i dogmi, esplorare l'oscurità e cercare l'autodeificazione attraverso la conoscenza proibita."
+        },
+        {
+          "tipo": "box",
+          "html": "Una via chiede di inchinarsi. L'altra, di diventare dio."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "I cultisti di Lovecraft",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CULTO · DEL CAOS PRIMORDIALE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "I cultisti di Lovecraft"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "I cultisti di Lovecraft agiscono come gli adepti della mano sinistra: rigettano la morale umana e le divinità per <strong>attingere al potere del caos primordiale</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "«Ph'nglui mglw'nafh Cthulhu R'lyeh wgah'nagl fhtagn» — Nella sua casa a R'lyeh, il morto Cthulhu attende sognando."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Follia o iniziazione",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FOLLIA · O RISVEGLIO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Follia o iniziazione"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«La cosa più misericordiosa al mondo è l'incapacità della mente umana di mettere in relazione tutti i suoi contenuti.» H.P. Lovecraft"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nei racconti di Lovecraft scoprire la verità sull'universo porta alla pazzia. Nell'esoterismo della mano sinistra affrontare il caos, spesso simboleggiato proprio dal ritorno a Tiamat, è <strong>l'iniziazione suprema</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Ciò che per l'uomo comune è terrore, per l'iniziato è risveglio: la liberazione dai limiti della condizione umana."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Lo sciamano involontario",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SCIAMANO · INVOLONTARIO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Lo sciamano involontario"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Pur essendo un materialista razionale, Lovecraft ha fatto da sciamano per l'era moderna: ha pescato nell'inconscio collettivo e ha riportato a galla <strong>Tiamat, rivestita di orrori cosmici</strong>."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Molte delle sue creazioni vengono dal mondo del sogno, una dimensione terza tra la realtà e l'aldilà. Ne parleremo in un altro approfondimento."
+        },
+        {
+          "tipo": "box",
+          "html": "Non è un'idea nuova: già nel 1972 l'occultista Kenneth Grant sosteneva che i miti di Lovecraft fossero rivelazioni psichiche travestite da narrativa."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "La culla del Caos",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CULLA · DA CUI TUTTO PROVIENE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La culla del Caos"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "I culti immaginati da Lovecraft sono lo specchio letterario delle correnti della mano sinistra."
+        },
+        {
+          "tipo": "domanda",
+          "html": "La vera conoscenza non è nella luce dell'ordine costituito, ma nell'oscurità dell'abisso da cui tutti proveniamo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "E tu, da che parte del velo stai?"
+        }
+      ]
+    }
+  ]
+}

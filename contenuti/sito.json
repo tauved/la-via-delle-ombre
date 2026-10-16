@@ -1,0 +1,38 @@
+{
+  "nome": "La via delle ombre",
+  "artista": "TAUH",
+  "url": "",
+  "descrizione": "Il sito di TAUH: i caroselli sulla via della mano sinistra da sfogliare e leggere, la musica e un gioco da provare nel browser.",
+  "apertura": {
+    "titolo": "La via delle ombre",
+    "motto": "Mai nel gregge del Parassita.",
+    "testo": "Caroselli, musica e un gioco firmati TAUH."
+  },
+  "caroselli": {
+    "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",
+    "in_home": 8
+  },
+  "musica": {
+    "testo": "La musica di TAUH su Spotify e i video su YouTube.",
+    "spotify_artista": "4wjw3C2aMvge2YdHKnvYYn",
+    "youtube_video": ""
+  },
+  "telegram": {
+    "titolo": "Il canale Telegram",
+    "testo": "Su Telegram trovi i testi completi che accompagnano ogni carosello, con le fonti."
+  },
+  "gioco": {
+    "disponibile": false,
+    "titolo": "Il gioco",
+    "testo": "Un gioco della via delle ombre, da giocare qui nel browser, senza installare niente.",
+    "in_arrivo": "Lo stiamo ancora forgiando. Quando apre lo annunciamo sul canale Telegram.",
+    "percorso": "/gioco/play/",
+    "proporzioni": "16 / 9"
+  },
+  "link": {
+    "instagram": "https://www.instagram.com/tauh616/",
+    "youtube": "https://www.youtube.com/@tauh616",
+    "spotify": "https://open.spotify.com/artist/4wjw3C2aMvge2YdHKnvYYn",
+    "telegram": "https://t.me/+4ZOcDRnDqZEzYjk0"
+  }
+}

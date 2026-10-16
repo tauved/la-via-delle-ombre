@@ -1,0 +1,319 @@
+{
+  "titolo": "Religioni abramitiche",
+  "sottotitolo": "Tre fedi, un solo padre",
+  "descrizione": "Tre fedi, un solo padre. Quali sono, perché si chiamano così e il loro lato oscuro.",
+  "data": "2026-09-27",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Religioni abramitiche",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "RELIGIONI ABRAMITICHE"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Tre fedi, un solo padre"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Quali sono, perché si chiamano così e il loro lato oscuro."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Quali sono",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "TRE"
+        },
+        {
+          "tipo": "nota",
+          "html": "religioni, un solo dio"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Quali sono"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ebraismo, Cristianesimo e Islam: i tre grandi monoteismi nati nel Vicino Oriente."
+        },
+        {
+          "tipo": "nota",
+          "html": "Ebraismo — Testo sacro: la Torah Circa 15 milioni di fedeli"
+        },
+        {
+          "tipo": "nota",
+          "html": "Cristianesimo — Testo sacro: la Bibbia Oltre 2 miliardi di fedeli"
+        },
+        {
+          "tipo": "nota",
+          "html": "Islam — Testo sacro: il Corano Circa 2 miliardi di fedeli"
+        },
+        {
+          "tipo": "box",
+          "html": "Insieme contano più di metà della popolazione mondiale."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Perché «abramitiche»",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ABRAMO"
+        },
+        {
+          "tipo": "nota",
+          "html": "il capostipite"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Perché «abramitiche»"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Tutte e tre riconoscono in Abramo il proprio capostipite spirituale: il patriarca che, secondo la tradizione, strinse per primo il patto con l'unico dio. <strong>O meglio, con il Parassita.</strong>"
+        },
+        {
+          "tipo": "nota",
+          "html": "Ebraismo — Il padre del popolo d'Israele tramite Isacco e Giacobbe"
+        },
+        {
+          "tipo": "nota",
+          "html": "Cristianesimo — Il padre di tutti i credenti secondo san Paolo"
+        },
+        {
+          "tipo": "nota",
+          "html": "Islam — Il profeta Ibrahim, antenato degli arabi tramite Ismaele"
+        },
+        {
+          "tipo": "box",
+          "html": "Stesso padre, stesso dio. E ognuna convinta di esserne l'unica erede legittima."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Il cortocircuito",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "DOGMA"
+        },
+        {
+          "tipo": "nota",
+          "html": "e potere"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il cortocircuito"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Hanno dato all'umanità basi etiche, filosofiche e artistiche fondamentali. Ma anche le sue storture."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Alla radice c'è la pretesa di possedere <strong>l'unica verità divina rivelata</strong>. Quando questo dogma si salda al potere temporale, la fede diventa autoritarismo, intolleranza, violenza e freno all'evoluzione."
+        },
+        {
+          "tipo": "box",
+          "html": "I tratti problematici sono gli stessi in tutte e tre. Eccoli."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "L'esclusività",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ERETICO"
+        },
+        {
+          "tipo": "nota",
+          "html": "infedele, impuro"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L'esclusività"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ognuna si considera l'unica religione vera. Chi crede in altro diventa «eretico», «infedele» o «impuro»: un'etichetta che per secoli ha giustificato <strong>discriminazione, persecuzione e annientamento</strong> di chi la pensava diversamente."
+        },
+        {
+          "tipo": "box",
+          "html": "Se la verità è una sola, chi la pensa diversamente è un nemico."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "La donna e il corpo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "COLPA"
+        },
+        {
+          "tipo": "nota",
+          "html": "sulla donna e sul corpo"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La donna e il corpo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Le tre religioni hanno preso le strutture patriarcali del Vicino Oriente antico e le hanno trasformate in legge divina nei testi sacri. Il risultato: secoli di <strong>subordinazione della donna</strong>, demonizzazione del corpo e condanna delle minoranze sessuali e di genere."
+        },
+        {
+          "tipo": "box",
+          "html": "Non hanno inventato il patriarcato: lo hanno reso sacro. E quindi intoccabile."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Dogma contro libertà",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VETO"
+        },
+        {
+          "tipo": "nota",
+          "html": "su scienza e leggi"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Dogma contro libertà"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'ortodossia ha spesso ostacolato la ricerca scientifica e la libertà filosofica, trattando il dissenso intellettuale come una minaccia all'ordine divino."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "E ancora oggi interferisce con la politica: <strong>eutanasia, suicidio assistito, aborto</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Leggi che valgono per tutti, dettate dalla fede di alcuni."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Ebraismo",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "EBRAISMO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Nazionalismo religioso"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il sionismo religioso e il movimento dei coloni usano le promesse territoriali della Torah per giustificare l'occupazione e gli insediamenti in Cisgiordania, a scapito dei diritti dei palestinesi."
+        },
+        {
+          "tipo": "titolo",
+          "html": "Chiusura e ortodossia"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nelle comunità ultra-ortodosse (haredi) vigono una rigida segregazione di genere, il divieto dei matrimoni misti e l'emarginazione sociale di chi sceglie di andarsene."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Cristianesimo",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "CRISTIANESIMO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Violenza ed egemonia"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Crociate, Inquisizione e guerre di religione: secoli di massacri e persecuzioni, come lo sterminio dei Catari. Il cristianesimo è stato anche il braccio ideologico del colonialismo, dalla distruzione delle culture native americane alla legittimazione della tratta degli schiavi."
+        },
+        {
+          "tipo": "titolo",
+          "html": "Abusi di potere"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La copertura sistematica degli abusi sui minori nella Chiesa cattolica mostra un'istituzione che ha messo la propria tutela prima della protezione degli indifesi."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Islam",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "ISLAM"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Teocrazia e diritti negati"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In diversi Paesi a maggioranza musulmana la Sharia è fonte primaria del diritto penale: pene corporali, libertà delle donne drasticamente ridotte, fino alla pena di morte per apostasia, blasfemia o omosessualità."
+        },
+        {
+          "tipo": "titolo",
+          "html": "Fondamentalismo e terrorismo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Movimenti estremisti hanno strappato il concetto di jihad dal suo contesto, dando vita al terrorismo transnazionale e a regimi teocratici più o meno violenti."
+        }
+      ]
+    },
+    {
+      "immagine": "11.webp",
+      "titolo": "Perché ne parlo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "RADICI"
+        },
+        {
+          "tipo": "nota",
+          "html": "della nostra morale"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Perché ne parlo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Disprezzo tutti e tre i grandi monoteismi: credo abbiano plasmato il mondo marcio in cui viviamo. Perfino la morale di molti atei beve dallo stesso pozzo."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Questa è solo un'infarinatura: sto ancora studiando e approfondirò ogni tema nei prossimi post. Da quale parto?"
+        }
+      ]
+    }
+  ]
+}

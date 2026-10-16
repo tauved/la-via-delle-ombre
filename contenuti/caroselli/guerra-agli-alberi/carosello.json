@@ -1,0 +1,233 @@
+{
+  "titolo": "Guerra agli alberi",
+  "sottotitolo": "Dal bosco sacro alla croce",
+  "descrizione": "Dal bosco sacro alla croce. Come il legame diretto con il sacro è stato sradicato, albero dopo albero.",
+  "data": "2026-09-29",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Guerra agli alberi",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "LA GUERRA AGLI ALBERI"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dal bosco sacro alla croce"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Come il legame diretto con il sacro è stato sradicato, albero dopo albero."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Un legame diretto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "PRIMA"
+        },
+        {
+          "tipo": "nota",
+          "html": "delle chiese"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Un legame diretto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Secondo me, prima che le religioni organizzate prendessero il sopravvento, il nostro legame con il divino era <strong>diretto, tangibile e radicato nella natura</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "E il suo simbolo più potente era l'albero."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Templi viventi",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ALBERO"
+        },
+        {
+          "tipo": "nota",
+          "html": "tra terra e cielo"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Templi viventi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Gli alberi non erano semplici piante, ma templi viventi: radici ancorate alla terra e rami protesi al cielo, un ponte naturale tra il nostro mondo e le energie superiori."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nei boschi sacri si trovavano comunione e saggezza: un contatto diretto con il sacro, <strong>senza bisogno di intermediari</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Già nel I secolo Tacito scriveva che i Germani non chiudevano i loro dèi tra le pareti: consacravano boschi e foreste."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Una minaccia",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "POTERE"
+        },
+        {
+          "tipo": "nota",
+          "html": "e controllo"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Una minaccia"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Questa spiritualità immanente era una minaccia per chi voleva costruire un potere basato sul controllo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Credo che la Chiesa abbia capito che, per imporre il proprio dominio, doveva <strong>sradicare questo legame</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Se il sacro è ovunque, nessuno può possederlo."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Abbattere e bruciare",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "NANTES"
+        },
+        {
+          "tipo": "nota",
+          "html": "fine IX secolo"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Abbattere e bruciare"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per me il momento emblematico è il Concilio di Nantes. Lì arriva una direttiva chiara: abbattere e bruciare gli alberi venerati dal popolo. Non un semplice disboscamento, ma una <strong>cancellazione culturale</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "«Arbores daemonibus consecratae… radicitus excidantur atque comburantur» — Gli alberi consacrati ai demoni siano estirpati dalle radici e bruciati."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "E spesso, dove c'era un albero sacro, sorgeva una cappella: un simbolo vivo e libero sostituito da uno artificiale e controllato."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Precisazione",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "895?"
+        },
+        {
+          "tipo": "nota",
+          "html": "una data incerta"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Precisazione"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il nome corretto è <strong>Concilio di Nantes</strong>, in latino Namnetense. La data è incerta: di solito si indica la fine del IX secolo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Lo conosciamo soprattutto da raccolte successive, come quelle di Reginone di Prüm e Burcardo di Worms. Per alcuni storici quei canoni vengono da istruzioni vescovili, più che da un vero concilio."
+        },
+        {
+          "tipo": "box",
+          "html": "Il canone parla di alberi e pietre, non di cappelle. La sostituzione però è documentata altrove: nel 723 san Bonifacio abbatté la quercia di Thor e con il suo legno costruì un oratorio."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Dall'albero alla croce",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CROCE"
+        },
+        {
+          "tipo": "nota",
+          "html": "legno morto"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Dall'albero alla croce"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il passo finale è stato sostituire il simbolo stesso: all'albero, vivo e pulsante, si è sostituita la croce. <strong>Legno morto</strong>, l'antitesi dell'albero."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'albero è un ciclo di vita, morte e rinascita accessibile a tutti. La croce è un simbolo il cui significato è gestito e interpretato da un'istituzione."
+        },
+        {
+          "tipo": "box",
+          "html": "Non a caso un inno del VI secolo la chiama «arbor una nobilis», l'unico albero nobile: nessun bosco, dice, ne produce uno uguale."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Una guerra per l'anima",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ANIMA"
+        },
+        {
+          "tipo": "nota",
+          "html": "il vero bersaglio"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Una guerra per l'anima"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ci hanno tolto la possibilità di trovare il sacro in un bosco per costringerci a cercarlo solo nelle loro chiese: un'esperienza libera trasformata in un atto di sottomissione."
+        },
+        {
+          "tipo": "domanda",
+          "html": "La guerra contro gli alberi è stata una guerra per il controllo della nostra anima."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "E tu, dove lo cerchi il sacro?"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "titolo": "Liber Chaotica",
+  "sottotitolo": "Il Satanismo del Caos",
+  "descrizione": "Il Satanismo del Caos. «Nulla è vero, tutto è permesso.».",
+  "data": "2026-10-06T18:57",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Liber Chaotica",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "LIBER CHAOTICA"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Satanismo del Caos"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Nulla è vero, tutto è permesso.»"
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "L'Avversario",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CAOS"
+        },
+        {
+          "tipo": "nota",
+          "html": "fonte di ogni creazione"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L'Avversario"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Satanismo del Caos non è una religione nel senso tradizionale: è una <strong>meta-pratica</strong>. Rifiuta il Satana biblico come semplice «nemico di Dio» e abbraccia l'archetipo dell'Avversario: chi mette in discussione, chi si ribella all'ordine imposto, chi vede nel Caos primordiale la fonte di ogni creazione."
+        },
+        {
+          "tipo": "box",
+          "html": "L'individuo è l'unico centro dell'universo morale e magico. Non esiste peccato: solo la conseguenza dell'azione."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "I tre pilastri",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "TRIPODE"
+        },
+        {
+          "tipo": "nota",
+          "html": "sincretico"
+        },
+        {
+          "tipo": "titolo",
+          "html": "I tre pilastri"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La pratica si regge su un tripode sincretico che ogni praticante, il <strong>Caote</strong> o Operatore, può assemblare liberamente."
+        },
+        {
+          "tipo": "nota",
+          "html": "L'Ombra — Demonologia e Goetia"
+        },
+        {
+          "tipo": "nota",
+          "html": "La Terra — Neopaganesimo e culti antichi"
+        },
+        {
+          "tipo": "nota",
+          "html": "Il Metodo — Chaos Magick"
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "L'Ombra",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "GOETIA"
+        },
+        {
+          "tipo": "nota",
+          "html": "l'ombra"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Demonologia e Goetia"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non vediamo i demoni della Goetia come mostri esterni da temere, ma come complessi psicologici o forze primordiali dell'inconscio, da evocare, contrattare e integrare."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'evocazione non serve a vendere l'anima ma a sbloccare potenziale latente: <strong>Bael</strong> per l'invisibilità sociale, <strong>Paimon</strong> per la conoscenza."
+        },
+        {
+          "tipo": "box",
+          "html": "Non mostri da temere: parti di te da integrare."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "La Terra",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "CTONIO"
+        },
+        {
+          "tipo": "nota",
+          "html": "la terra"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Culti antichi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Studiamo le radici precristiane e riconosciamo la potenza degli antichi dèi, divinità ctonie, titani, spiriti della natura selvaggia, come manifestazioni della <strong>natura non addomesticata</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Il rito avviene nei boschi, nelle rovine o nella mente. Non nelle cattedrali."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Il Metodo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "METODO"
+        },
+        {
+          "tipo": "nota",
+          "html": "chaos magick"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La fede è uno strumento"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Se credere in Astaroth ti serve oggi per ottenere un risultato, <strong>credici ciecamente</strong>. Domani potrai scartarlo per usare una runa vichinga o un sigillo cibernetico."
+        },
+        {
+          "tipo": "box",
+          "html": "Conta l'efficacia, non la verità dogmatica."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Nessuna gerarchia",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ANARCHIA"
+        },
+        {
+          "tipo": "nota",
+          "html": "la regola d'oro"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Nessuna gerarchia"
+        },
+        {
+          "tipo": "nota",
+          "html": "Nessun maestro — Chi si proclama Sommo Sacerdote o Maestro è un impostore o un tiranno: va ignorato o deriso. Ognuno è sacerdote di sé stesso."
+        },
+        {
+          "tipo": "nota",
+          "html": "Nessun dogma — Non ci sono bibbie sacre, solo manuali tecnici. Prendi ciò che funziona, scarta ciò che è inutile."
+        },
+        {
+          "tipo": "nota",
+          "html": "Responsabilità totale — Non c'è nessuna autorità a cui dare la colpa: la tua vita è nelle tue mani. Se la magia fallisce, migliora la tecnica."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "La tecnica del Caos",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "GNOSI"
+        },
+        {
+          "tipo": "nota",
+          "html": "non prega, agisce"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La tecnica del Caos"
+        },
+        {
+          "tipo": "nota",
+          "html": "Sigillazione — Codifica un desiderio in un simbolo astratto, caricalo con la Gnosi, uno stato alterato di coscienza raggiunto con meditazione, eccitazione o trance, poi dimenticalo e lascialo agire nel subconscio."
+        },
+        {
+          "tipo": "nota",
+          "html": "Psicodramma rituale — Paramenti, candele nere e formule latine non hanno potere intrinseco: la loro teatralità inganna la mente razionale e lascia passare la volontà magica."
+        },
+        {
+          "tipo": "nota",
+          "html": "Decondizionamento — Distruggi i tabù imposti da società, famiglia e religione di nascita. L'obiettivo è la libertà mentale assoluta."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "L'etica dell'Avversario",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SOVRANITÀ"
+        },
+        {
+          "tipo": "nota",
+          "html": "l'unica legge"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L'etica dell'Avversario"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non esistendo leggi divine, l'etica è personale. Il Satanismo del Caos suggerisce però il principio della <strong>Sovranità</strong>:"
+        },
+        {
+          "tipo": "nota",
+          "html": "I — Non violare la volontà altrui, se non per legittima difesa."
+        },
+        {
+          "tipo": "nota",
+          "html": "II — Rispetta chi ti rispetta."
+        },
+        {
+          "tipo": "nota",
+          "html": "III — Sii spietato con chi cerca di opprimerti."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Benvenuto nel Caos",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ABISSO"
+        },
+        {
+          "tipo": "nota",
+          "html": "da guardare da soli"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Benvenuto nel Caos"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Satanismo del Caos è la via per chi non cerca un pastore. È pericoloso, perché chiede di guardare nell'abisso senza nessuno che ti tenga la mano: la via della <strong>solitudine gloriosa</strong> e del potere personale."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Io sono il mio unico Dio, il mio unico Demone, il mio unico Maestro."
+        }
+      ]
+    }
+  ]
+}

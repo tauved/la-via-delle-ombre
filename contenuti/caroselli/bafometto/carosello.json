@@ -1,0 +1,185 @@
+{
+  "titolo": "Bafometto",
+  "sottotitolo": "Non è il diavolo",
+  "descrizione": "Non è il diavolo. La vera origine e il vero significato di uno dei simboli più fraintesi di sempre.",
+  "data": "2026-09-26",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Bafometto",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "BAFOMETTO"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non è il diavolo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La vera origine e il vero significato di uno dei simboli più fraintesi di sempre."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Il nome (1098)",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "1098"
+        },
+        {
+          "tipo": "nota",
+          "html": "Assedio di Antiochia"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il nome nasce da un errore"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per la maggior parte degli studiosi, «Bafometto» è una storpiatura medievale di «Mahomet», cioè <strong>Maometto</strong>: nei testi occitani compare proprio come «Bafomet»."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La prima attestazione è in una lettera del crociato Anselmo di Ribemont: racconta che i turchi invocavano a gran voce «Baphometh»."
+        },
+        {
+          "tipo": "box",
+          "html": "Nessun demone, quindi: solo un nome storpiato."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "I Templari (1307)",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "1307"
+        },
+        {
+          "tipo": "nota",
+          "html": "Regno di Francia"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L'accusa ai Templari"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il 13 ottobre il re Filippo IV fa arrestare i Templari di Francia. Tra le accuse c'è quella di venerare un idolo: <strong>una testa barbuta chiamata Bafometto</strong>. Molte «confessioni» vengono estorte con la tortura."
+        },
+        {
+          "tipo": "nota",
+          "html": "1312 — Papa Clemente V sopprime l'ordine"
+        },
+        {
+          "tipo": "nota",
+          "html": "1314 — Il Gran Maestro Jacques de Molay muore sul rogo"
+        },
+        {
+          "tipo": "box",
+          "html": "Per la maggior parte degli storici erano accuse costruite ad arte: il re era pesantemente indebitato con l'ordine."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Éliphas Lévi (1856)",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "1856"
+        },
+        {
+          "tipo": "nota",
+          "html": "Parigi"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il volto arriva nell'Ottocento"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per secoli Bafometto resta solo un nome legato a un idolo misterioso. La figura che tutti conoscono, con testa di caprone, ali, seno femminile e una torcia tra le corna, la disegna l'occultista francese <strong>Éliphas Lévi</strong> per il suo libro «Dogma e rituale dell'alta magia»."
+        },
+        {
+          "tipo": "box",
+          "html": "Lévi non voleva ritrarre il diavolo: per lui era un simbolo dell'Assoluto, in cui ogni dettaglio ha un significato."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Il significato",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SOLVE"
+        },
+        {
+          "tipo": "nota",
+          "html": "sciogli"
+        },
+        {
+          "tipo": "nota",
+          "html": "COAGULA"
+        },
+        {
+          "tipo": "nota",
+          "html": "unisci"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il vero significato"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Sono le due parole latine scritte sulle braccia della figura di Lévi: il motto alchemico della trasformazione. Un braccio indica l'alto, l'altro il basso. Il messaggio è l'equilibrio tra gli opposti."
+        },
+        {
+          "tipo": "box",
+          "html": "Maschile —  — Femminile"
+        },
+        {
+          "tipo": "box",
+          "html": "Umano —  — Animale"
+        },
+        {
+          "tipo": "box",
+          "html": "Luce —  — Ombra"
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Il diavolo (1966)",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "1966"
+        },
+        {
+          "tipo": "nota",
+          "html": "San Francisco"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Com'è diventato «il diavolo»"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La fama satanica arriva tardi. A fine Ottocento lo scrittore Léo Taxil inventa una bufala: i massoni adorerebbero Bafometto. Nel 1909 la carta del Diavolo dei tarocchi Rider-Waite si ispira al disegno di Lévi. Nel 1966 nasce la Chiesa di Satana, che sceglie come simbolo il «Sigillo di Bafometto»."
+        },
+        {
+          "tipo": "domanda",
+          "html": "In origine era un nome storpiato e un simbolo di equilibrio. Il diavolo è arrivato dopo."
+        }
+      ]
+    }
+  ]
+}

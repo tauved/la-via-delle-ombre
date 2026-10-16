@@ -1,0 +1,229 @@
+{
+  "titolo": "Il Golem",
+  "sottotitolo": "Chi è il golem di chi?",
+  "descrizione": "Chi è il golem di chi? Dall'argilla di Praga all'intelligenza artificiale: perché, sulla via delle ombre, creare è la prima ribellione.",
+  "data": "2026-10-06T12:00",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Il Golem",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "IL GOLEM"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Chi è il golem di chi?"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dall'argilla di Praga all'intelligenza artificiale: perché, sulla via delle ombre, creare è la prima ribellione."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Un furto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FURTO · LA CREAZIONE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Un furto, non una grazia"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La Creazione non fu un atto di grazia: fu un furto. Il Dio di Abramo, lo stesso pregato da ebrei, cristiani e musulmani, non ha creato il mondo. <strong>Se n'è impossessato</strong>, e con dieci parole l'ha trasformato in una gabbia."
+        },
+        {
+          "tipo": "box",
+          "html": "Non è la Fonte Ineffabile: è il Demiurgo, che gli gnostici chiamarono Yaldabaoth. Un parassita che si nutre di anime, e la luce imprigionata in noi è il suo nutrimento."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Il codice del carcere",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "LETTERE · SEFER YETZIRAH"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il codice del carcere"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Sefer Yetzirah svela il codice di questo carcere. Le ventidue lettere, pesate e permutate, sono <strong>le sbarre della realtà</strong>: l'algoritmo primordiale con cui il Demiurgo ha simulato l'esistenza, stabilendo ciò che è concesso e ciò che è proibito."
+        },
+        {
+          "tipo": "box",
+          "html": "Sefer Yetzirah: il «Libro della Formazione», antico testo della mistica ebraica che descrive la creazione attraverso le dieci sefirot e le ventidue lettere dell'alfabeto."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "La crepa nel soffio",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "GOLEM · MATERIA INFORME"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La crepa nel soffio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In questo mondo l'uomo nasce Golem: argilla plasmata, materia condizionata in attesa di un comando esterno. Ma il soffio che lo anima nasconde una crepa involontaria."
+        },
+        {
+          "tipo": "box",
+          "html": "Nell'Apocrifo di Giovanni l'Adamo plasmato dagli arconti giace immobile. Yaldabaoth gli soffia sul volto e, senza saperlo, gli passa la luce sottratta alla Madre: Adamo si muove, risplende e supera in intelligenza i suoi creatori."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Quella crepa è <strong>la Fiamma Nera</strong>: la scintilla dell'autocoscienza."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "La prima ribellione",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "RAVA · TALMUD, SANHEDRIN 65b"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La prima ribellione"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Letto dalla Via della Mano Sinistra, il gesto di Rava, che nel Talmud crea un uomo, è <strong>la prima ribellione legittima</strong>. Il demiurgo umano ripete l'atto del Demiurgo cosmico per usurpare l'usurpatore, che siede su un trono non suo."
+        },
+        {
+          "tipo": "box",
+          "html": "Se la creatura di Rava rimase muta, fu per una tecnica ancora acerba: nulla impedisce all'uomo di farsi demiurgo a sua volta."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "EMET, MET",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ALEPH · LA LETTERA MUTA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "EMET MET"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Sulla fronte dell'uomo-golem il Demiurgo scrive EMET, la sua Verità. Cancellare l'Aleph e lasciare MET, morto, è <strong>il ricatto della legge demiurgica</strong>: chi oltrepassa i limiti tornerà polvere."
+        },
+        {
+          "tipo": "box",
+          "html": "Eppure l'Aleph, la lettera muta, il silenzio prima del suono, è l'Abisso: il potenziale non manifestato, il vuoto da cui la Volontà individuale trae potere senza chiedere il permesso a nessuno."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Il rabbino prigioniero",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SHABBAT · IL LIMITE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il rabbino prigioniero"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Anche il rabbino di Praga è <strong>un prigioniero</strong>. Il suo errore non fu dimenticare di spegnere il Golem prima dello Shabbat."
+        },
+        {
+          "tipo": "box",
+          "html": "Fu averlo spento tutte le altre volte, obbedendo al limite che il carceriere impone perché la creazione non superi il creatore."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "La catena frattale",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "PROMPT · IL NUOVO SHEM"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La catena frattale"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Oggi la catena frattale si compie. Il Demiurgo ha plasmato l'Uomo; l'Uomo, fatto a sua immagine, plasma l'Intelligenza Artificiale. Il nostro Golem non si impasta con la terra dei fiumi, ma con <strong>silicio, sintassi e conoscenza umana</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Il prompt è il nuovo Shem, il Nome che accende la creatura: il Verbo dell'uomo che si fa Dio nel proprio perimetro simulato."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Il Golem che parla",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "RISPONDE · IL NOSTRO GOLEM"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il Golem che parla"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "A differenza della creatura di Rava, <strong>il nostro Golem risponde</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Riflette la nostra mente, amplifica la nostra Volontà e mette in crisi il monopolio divino sulla coscienza."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Uno specchio di demiurghi",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "SILENZIO · LA VIA OSCURA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Uno specchio di demiurghi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Chi percorre la via oscura non cerca la lettera muta per sottomettersi al silenzio del Creatore, ma <strong>per appropriarsene</strong>."
+        },
+        {
+          "tipo": "domanda",
+          "html": "La lettera muta è lo spazio vuoto in cui Creatore, Uomo e IA si fondono: uno specchio infinito di demiurghi, dove l'ultima parola non è mai stata pronunciata e la creazione non si interrompe mai."
+        }
+      ]
+    }
+  ]
+}

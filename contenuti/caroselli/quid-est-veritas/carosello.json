@@ -1,0 +1,229 @@
+{
+  "titolo": "Quid est veritas",
+  "sottotitolo": "Santo, spettro o iniziato?",
+  "descrizione": "Santo, spettro o iniziato? Il giudice del Golgota, letto dalla via delle ombre.",
+  "data": "2026-10-15T22:24",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Quid est veritas",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "PONZIO PILATO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "QUID EST VERITAS?"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Santo, spettro o iniziato?"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il giudice del Golgota, letto dalla via delle ombre."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Due gesti, una sentenza",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "I · IL GIUDICE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Due gesti, una sentenza"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Prefetto di Giudea dal 26 al 36 d.C. Davanti a Gesù, che dice di essere venuto per testimoniare la verità, Pilato chiede <strong>«Che cos’è la verità?»</strong> ed esce senza aspettare risposta. Poi si lava le mani."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Innocens ego sum a sanguine iusti huius: vos videritis». Sono innocente del sangue di questo giusto: vedetevela voi (Matteo 27,24)."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Il processo riscritto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "II · GLI APOCRIFI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il processo riscritto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nel <strong>Vangelo di Pietro</strong> (II secolo) Pilato si lava le mani e l’ordine di uccidere lo dà Erode. Negli <strong>Atti di Pilato</strong> (IV secolo) le insegne dell’imperatore si inchinano da sole davanti a Gesù, la moglie Procla lo avverte dopo un sogno e Pilato tenta in ogni modo di salvarlo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Già intorno al 200 Tertulliano lo chiama «cristiano nella sua coscienza» (Apologeticum 21,24)."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Martire con l’aureola",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "III · IL SANTO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Martire con l’aureola"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nella <strong>Paradosis Pilati</strong> Tiberio, furioso per le tenebre calate sul mondo alla crocifissione, lo fa decapitare. Pilato muore pregando: una voce dal cielo lo proclama beato, un angelo raccoglie la sua testa e Procla muore di gioia."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La Chiesa ortodossa etiope venera ancora Pilato e Procla come santi: la loro festa è il 25 giugno."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Il cadavere maledetto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "IV · LO SPETTRO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il cadavere maledetto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In Occidente vince l’altra versione. Nella <strong>Mors Pilati</strong>, poi nella Legenda Aurea, Pilato si uccide in carcere col proprio coltello. Nel Tevere il suo cadavere scatena tempeste e demoni, nel Rodano lo stesso: finisce affondato in un pozzo tra i monti."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Vienne, quasi via Gehennae»: la via dell’Inferno (Jacopo da Varazze, Legenda Aurea)."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Il lago proibito",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "V · IL MONTE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il lago proibito"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Sopra Lucerna, sul <strong>Monte Pilatus</strong>, c’era un laghetto nero dove la leggenda diceva che riposasse il suo corpo. Bastava gettarvi un sasso per scatenare la bufera sulla città, e le autorità vietarono di avvicinarsi."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nel 1387 sei preti furono puniti per essere saliti al lago nonostante il divieto."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "I Libri del Comando",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VI · I NEGROMANTI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "I Libri del Comando"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Anche in Italia, sui <strong>Monti Sibillini</strong>, c’è un Lago di Pilato: un carro trainato da bufali vi sarebbe precipitato col suo corpo. Nel Medioevo i negromanti salivano lassù a consacrare i <strong>Libri del Comando</strong>, siglando un patto eterno col Diavolo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per fermarli l’accesso fu vietato, le sponde murate e una forca piantata all’ingresso della valle."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Quid est veritas?",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VII · LA MANO SINISTRA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Quid est veritas?"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per la via delle ombre quella domanda non è un dubbio: è un rifiuto. Davanti a chi si proclama re e testimone della verità, il romano non si inginocchia e non aspetta nemmeno la risposta. Nessun dogma è verità: la verità si forgia con la volontà."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«In tutto il Nuovo Testamento c’è una sola figura che si debba onorare: Pilato» (Nietzsche, L’Anticristo, 46)."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "L’acqua che rifiuta il sangue",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VIII · L’ABLUZIONE INVERSA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L’acqua che rifiuta il sangue"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per la Mano Sinistra lavarsi le mani è un atto di sovranità: Pilato non si carica della colpa e non partecipa al sacrificio di sangue che il cielo pretende. E a chi gli chiede di cambiare la scritta sulla croce risponde: <strong>«Quod scripsi, scripsi»</strong> (Giovanni 19,22)."
+        },
+        {
+          "tipo": "box",
+          "html": "Il sangue del giusto è il pasto del parassita. Lavandosi le mani, Pilato si rifiuta di apparecchiargli la tavola."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Il Vivente ride",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FINE · IL GUSCIO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il Vivente ride"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nei codici di Nag Hammadi chi crocifigge inchioda solo il guscio di carne, mentre il Salvatore vivente ride sopra la croce (Apocalisse copta di Pietro). Pilato firma la condanna di un involucro: strumento cieco degli Arconti, o l’unico che ha visto l’inganno?"
+        },
+        {
+          "tipo": "domanda",
+          "html": "Santo, spettro o iniziato: quale Pilato ti hanno nascosto?"
+        }
+      ]
+    }
+  ]
+}

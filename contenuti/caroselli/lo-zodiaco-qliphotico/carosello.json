@@ -1,0 +1,235 @@
+{
+  "titolo": "Lo Zodiaco Qliphotico",
+  "sottotitolo": "I dodici Principi che spezzano le catene dell’Heimarmene",
+  "descrizione": "I dodici Principi che spezzano le catene dell’Heimarmene. Trova il Principe del tuo segno.",
+  "data": "2026-10-15T22:09",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Lo Zodiaco Qliphotico",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "ASTROLOGIA ANTICOSMICA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "LO ZODIACO QLIPHOTICO"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "I dodici Principi che spezzano le catene dell’Heimarmene"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Trova il Principe del tuo segno"
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "La prigione delle stelle",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "I · HEIMARMENE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La prigione delle stelle"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Sulla via della Mano Sinistra lo Zodiaco non è una scienza sacra: è la rete del destino che i greci chiamavano <strong>Heimarmene</strong>. Dodici arconti legano ogni anima nata nella materia al ciclo infinito di creazione e ritorno."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Sono legati da misure, tempi e momenti: il Destino è signore di tutto.» Apocrifo di Giovanni"
+        },
+        {
+          "tipo": "box",
+          "html": "È la gabbia del parassita che si è preso la creazione: le stelle sono le sue sbarre."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "I dodici Principi",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "II · LA LUCE NERA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "I dodici Principi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per liberare lo spirito dalla prigione del destino, la <strong>Luce Nera</strong> si manifesta in dodici Principi qliphotici: l’antitesi esatta dei dodici arconti dello Zodiaco."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Recidono i fili del destino, spezzano la legge di causa ed effetto, il <strong>karma</strong>, e aprono a chi pratica mutamenti che nessuna stella ha scritto."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Da dove vengono i nomi",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "III · I NOMI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Da dove vengono i nomi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non sono un’invenzione recente: Crowley li elenca nel <strong>Liber 777</strong> (1909), uno per segno, tra gli Ordini delle Qliphoth."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Sono costruiti su parole ebraiche: Shichiriron su <em>shachor</em>, nero; Necheshiron su <em>nachash</em>, serpente; Bahimiron su <em>behemah</em>, bestia, la radice di Behemoth."
+        },
+        {
+          "tipo": "box",
+          "html": "La corrente anticosmica li legge al rovescio: non demoni da scacciare, ma chiavi per uscire dalla gabbia."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Chi spezza gli inizi",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "IV · ARIETE · TORO · GEMELLI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Chi spezza gli inizi"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Ariete · Ba’airiron</strong>, il Gregge. Drago-serpente alato con testa d’ariete: spezza l’impulso primordiale della creazione."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Toro · Adimiron</strong>, i Sanguinosi. Drago di sangue con testa di toro: scardina la stabilità della materia."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Gemelli · Tzalalimiron</strong>, i Fragorosi. Drago a due teste: disfa la dualità della mente cosmica con la corrente dell’Altra Parte."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Chi divora la luce",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "V · CANCRO · LEONE · VERGINE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Chi divora la luce"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Cancro · Shichiriron</strong>, i Neri. Drago marino d’ombra: divora la luce illusoria del cosmo e scioglie i legami astrali."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Leone · Shalehbiron</strong>, i Fiammeggianti. Drago dalla testa di leone: brucia il falso ego con la Fiamma Nera."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Vergine · Tzaphiriron</strong>, i Graffiatori. Drago dal volto umano, coronato di Luce Nera: smaschera la falsa purezza."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "Chi infrange l’equilibrio",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VI · BILANCIA · SCORPIONE · SAGITTARIO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Chi infrange l’equilibrio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Bilancia · A’abiriron</strong>, gli Argillosi. Gigante a teste di drago che squarcia il proprio guscio: infrange la falsa giustizia del parassita."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Scorpione · Necheshthiron</strong>, i Bronzei. Drago in scaglie di bronzo e coda di scorpione: il suo veleno uccide il destino."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Sagittario · Necheshiron</strong>, i Serpentini. Serpenti neri, alati e cornuti: aprono la fuga e portano i doni del Nachash."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Chi dissolve il reale",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VII · CAPRICORNO · ACQUARIO · PESCI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Chi dissolve il reale"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Capricorno · Dagdagiron</strong>, i Pesciformi. Drago marino dalla testa di capra: squarcia le fondamenta dell’illusione materiale."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Acquario · Bahimiron</strong>, i Bestiali. Ibrido squamato di mammut e ippopotamo: porta la gnosi della bestia primordiale."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Pesci · Nashimiron</strong>, le Donne Maligne. Sirena dal corpo di drago: scioglie l’ultima illusione nelle acque di <strong>Tehom</strong>, l’abisso (Genesi 1,2)."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Le stelle si spezzano",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FINE · LE STELLE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Le stelle si spezzano"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Su questa via l’astrologia non serve a sapere cosa ti accadrà. Serve a riconoscere le <strong>catene</strong> che ti legano e a evocare il Principe che può reciderle."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il parassita ha scritto il tuo destino nelle stelle. Chi percorre la via delle ombre non lo legge: lo spezza."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Qual è il tuo segno, e quale catena vuoi spezzare per prima?"
+        }
+      ]
+    }
+  ]
+}

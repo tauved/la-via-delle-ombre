@@ -1,0 +1,237 @@
+{
+  "titolo": "Samael",
+  "sottotitolo": "Il Veleno di Dio",
+  "descrizione": "Il Veleno di Dio. Dove la logica si spezza e il veleno diventa cura.",
+  "data": "2026-10-11",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Samael",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "LA QLIPHA DI HOD"
+        },
+        {
+          "tipo": "titolo",
+          "html": "SAMAEL"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Veleno di Dio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dove la logica si spezza e il veleno diventa cura."
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Il nome",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "I · IL NOME"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Sam + El: il Veleno di Dio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In ebraico <strong>sam</strong> è il veleno ed <strong>El</strong> è Dio: Samael, il Veleno di Dio. Ma <em>sam</em> è anche il farmaco. Come il <strong>pharmakon</strong> dei Greci, la stessa parola è insieme veleno e rimedio."
+        },
+        {
+          "tipo": "box",
+          "html": "«Sam chayim, sam mitah» — Elisir di vita o veleno di morte: così il Talmud descrive la Torah. Lo stesso farmaco, a seconda di chi lo riceve."
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "L’Avversario",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "II · L’AVVERSARIO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il cavaliere del serpente"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per il midrash Samael era il più grande principe del cielo, con <strong>dodici ali</strong>. Scese in Eden con le sue schiere, scelse il serpente come cavalcatura e attraverso di lui sedusse Eva."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Targum lo vuole padre di Caino. Per la Cabala medievale la sua sposa è <strong>Lilith</strong>: insieme regnano sulla Sitra Achra, l’Altro Lato."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "L’Angelo della Morte",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "III · L’ANGELO DELLA MORTE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La goccia di fiele"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il Talmud descrive l’Angelo della Morte <strong>pieno di occhi</strong>, con la spada sguainata e una goccia di fiele sospesa sulla punta. La tradizione gli dà un nome: Samael il malvagio, capo di tutti i satana."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il morente lo vede, trema, apre la bocca: la goccia cade. Da essa muore, da essa si corrompe, da essa il suo volto diventa <strong>verde</strong>."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Il demiurgo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "IV · IL DEMIURGO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L’artefice e l’usurpatore"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nei testi gnostici di <strong>Nag Hammadi</strong> Samael è il Demiurgo, l’artefice che plasma il mondo materiale. Ma il vanto che gli attribuiscono, «Io sono Dio e non ce n’è altri», è una frase di <strong>Yahweh</strong>: viene dal libro di Isaia."
+        },
+        {
+          "tipo": "box",
+          "html": "Il vero creatore del mondo materiale è Samael. Yahweh, il parassita, se n’è solo impossessato: si è proclamato unico dio e ha fatto della creazione una gabbia di anime."
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "L’Albero della Notte",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "V · LE QLIPHOTH"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L’Albero della Notte"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Le <strong>Qliphoth</strong> sono i «gusci». Per la Cabala di Luria sono i cocci dei vasi che si spezzarono sotto la luce divina, trattenendone le scintille. Insieme formano il rovescio dell’Albero della Vita."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ogni sephira ha la sua ombra. Samael è l’ombra di <strong>Hod</strong>, l’ottava sfera: il punto in cui la mente comincia a cedere."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "L’Anti-Hod",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VI · L’ANTI-HOD"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il lato oscuro dell’intelletto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<strong>Hod</strong>, lo Splendore, è la sfera di Mercurio: logica, linguaggio, la parola che ordina il mondo. Samael ne è il riflesso nero, l’<strong>intelligenza oscura</strong>."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Qui la logica umana non vale. La verità si torce in paradosso, la scienza si fa magia e la lucidità scivola nella follia."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Il veleno",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VII · IL VELENO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Uccidere l’illusione"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il veleno di Samael non uccide l’iniziato: uccide l’illusione. Avvelena il <strong>dogma</strong>, la morale ereditata, i confini della logica: le sbarre con cui il dio parassita ci tiene prigionieri."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Per vedere la realtà dall’altro lato bisogna prima essere avvelenati: sembrare <strong>folli</strong> agli occhi del mondo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Tutto è veleno e nulla è senza veleno: solo la dose fa sì che non lo sia.» Paracelso"
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "La prova",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VIII · LA PROVA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La Notte Oscura della Mente"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La prova di Samael è la più dura per gli <strong>intellettuali</strong>: una notte oscura come quella di san Giovanni della Croce, ma nella mente. Si dubita del cammino, del maestro, della propria sanità."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il pensiero si rivolta contro se stesso. Chi non ha radici si smarrisce: la psicologia transpersonale la chiama <strong>emergenza spirituale</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Il veleno cura solo chi sa dosarlo: disciplina, corpo, lucidità. Senza radici non è iniziazione, è naufragio."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Bere dal calice di Samael",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FINE · IL CALICE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Bere dal calice di Samael"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Samael non offre consolazione: offre lucidità. Il suo calice toglie le bende dagli occhi, e chi ha visto non può più tornare cieco."
+        },
+        {
+          "tipo": "domanda",
+          "html": "E tu, avresti il coraggio di dubitare di tutto, perfino di te stesso?"
+        }
+      ]
+    }
+  ]
+}

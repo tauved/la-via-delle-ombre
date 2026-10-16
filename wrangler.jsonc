@@ -1,0 +1,11 @@
+// Configurazione di Cloudflare Workers: il sito è fatto solo di file statici.
+// La cartella dist/ la crea «npm run build».
+{
+  "name": "la-via-delle-ombre",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

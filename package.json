@@ -1,0 +1,17 @@
+{
+  "name": "la-via-delle-ombre",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Il sito di TAUH: caroselli, musica e il gioco.",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "anteprima": "node build.mjs --anteprima",
+    "dev": "node build.mjs && npx wrangler dev",
+    "deploy": "node build.mjs && npx wrangler deploy",
+    "nuovo-carosello": "node strumenti/nuovo-carosello.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
