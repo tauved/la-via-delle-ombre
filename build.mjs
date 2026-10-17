@@ -867,9 +867,9 @@ function paginaHome(caroselli) {
           ${grazie.voci.map((v) => `<li><span class="grazie-chi">${esc(v.chi)}</span>${v.per ? `<span class="grazie-per">${esc(v.per)}</span>` : ""}</li>`).join("\n          ")}
         </ul>` : ""}
         ${grazie.sostenitori.length ? `<div class="grazie-sostenitori">
-          <h3>${esc(grazie.sostenitori_titolo || "Chi sostiene la Via delle Ombre")}</h3>
+          <h3>${esc(grazie.sostenitori_titolo || "Sostenitori")}</h3>
           <ul class="sostenitori" role="list">
-            ${grazie.sostenitori.map((s) => `<li>${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.nome)}</a>` : esc(s.nome)}</li>`).join("\n            ")}
+            ${grazie.sostenitori.map((s) => `<li${s.nota ? ` class="con-nota"` : ""}>${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.nome)}</a>` : `<span>${esc(s.nome)}</span>`}${s.nota ? `<span class="sostenitore-nota">${esc(s.nota)}</span>` : ""}</li>`).join("\n            ")}
           </ul>
         </div>` : ""}
       </div>

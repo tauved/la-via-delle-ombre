@@ -2663,10 +2663,40 @@ body:has(.ascolto) {
 }
 
 .sostenitori li {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2rem 0.6rem;
   padding: 0.35rem 0.8rem;
   border-radius: 999px;
   box-shadow: inset 0 0 0 1px rgba(207, 254, 126, 0.45);
   font-size: 0.9rem;
+}
+
+/* la scritta piccola accanto al nome, per esempio «Primo sostenitore» */
+.sostenitore-nota {
+  padding-left: 0.6rem;
+  border-left: 1px solid rgba(207, 254, 126, 0.35);
+  color: var(--lime);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* sul telefono nome e scritta non stanno su una riga: la scritta va sotto il nome */
+@media (max-width: 479px) {
+  .sostenitori li.con-nota {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.55rem 1rem 0.6rem;
+    border-radius: 16px;
+  }
+
+  .con-nota .sostenitore-nota {
+    padding-left: 0;
+    border-left: 0;
+  }
 }
 
 .sostenitori a {

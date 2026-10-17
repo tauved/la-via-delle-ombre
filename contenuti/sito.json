@@ -174,8 +174,10 @@
       { "chi": "Enrico Palma Mask", "per": "per aver creato la mia maschera" },
       { "chi": "40oz studio e Thinkgood", "per": "per aver reso concrete le mie idee" }
     ],
-    "sostenitori_titolo": "Chi sostiene la Via delle Ombre",
-    "sostenitori": []
+    "sostenitori_titolo": "Sostenitori",
+    "sostenitori": [
+      { "nome": "Piero Missarelli", "nota": "Primo sostenitore" }
+    ]
   },
   "social": {
     "titolo": "I miei social",

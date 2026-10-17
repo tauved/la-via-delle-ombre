@@ -248,14 +248,15 @@ Dopo «Sostienimi» c'è la sezione Ringraziamenti, alla voce `"ringraziamenti"`
   "voci": [
     { "chi": "Perry Watt", "per": "per avermi tirato fuori dal mio Loculo" }
   ],
-  "sostenitori_titolo": "Chi sostiene la Via delle Ombre",
+  "sostenitori_titolo": "Sostenitori",
   "sostenitori": [
+    { "nome": "Nome Cognome", "nota": "Primo sostenitore" },
     { "nome": "@profilo", "link": "https://www.instagram.com/profilo/" }
   ]
 }
 ```
 
-In `"sostenitori"` vanno le persone che hanno donato e hanno lasciato il loro profilo nella causale: compaiono sotto i ringraziamenti, ognuna col suo link (il link è facoltativo, basta anche solo `"@profilo"`). Finché l'elenco è vuoto, quella parte non si vede.
+In `"sostenitori"` vanno le persone che hanno donato e hanno lasciato il loro profilo nella causale: compaiono sotto i ringraziamenti, ognuna in una pastiglia col suo nome. Il link è facoltativo (basta anche solo `"@profilo"`); `"nota"` è una scritta piccola in verde accanto al nome, anche questa facoltativa. Finché l'elenco è vuoto, quella parte non si vede.
 
 ### Manifesto
 
