@@ -620,12 +620,28 @@ function paginaHome(caroselli) {
     </div>
   </section>`
     : "";
+  // Per i motori di ricerca: il nome del sito (quello che Google mostra sopra il risultato)
+  // e l'artista, collegato ai suoi profili.
+  const radice = sito.url ? `${sito.url.replace(/\/$/, "")}/` : "";
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "MusicGroup",
-    name: sito.artista,
-    ...(sito.url ? { url: sito.url } : {}),
-    sameAs: Object.values(link).filter(Boolean),
+    "@graph": [
+      {
+        "@type": "WebSite",
+        name: sito.nome,
+        alternateName: sito.artista,
+        inLanguage: "it",
+        ...(radice ? { url: radice } : {}),
+      },
+      {
+        "@type": "MusicGroup",
+        name: sito.artista,
+        ...(sito.url ? { url: sito.url } : {}),
+        ...(sito.url ? { image: assoluto(media.ogHome), logo: assoluto(media.logoGrande) } : {}),
+        description: sito.descrizione,
+        sameAs: Object.values(link).filter(Boolean),
+      },
+    ],
   };
 
   const corpo = `<main id="contenuto">
@@ -1487,9 +1503,11 @@ async function principale() {
   const robots = ["User-agent: *", "Allow: /"];
   if (sito.url && !ANTEPRIMA) {
     const indirizzi = pagine.map(([p]) => p).filter((p) => p !== "/404.html");
+    // per i caroselli, la data di pubblicazione
+    const date = new Map(caroselli.filter((c) => c.data).map((c) => [`/caroselli/${c.slug}/`, c.data.slice(0, 10)]));
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${indirizzi.map((p) => `  <url><loc>${esc(assoluto(p))}</loc></url>`).join("\n")}
+${indirizzi.map((p) => `  <url><loc>${esc(assoluto(p))}</loc>${date.has(p) ? `<lastmod>${date.get(p)}</lastmod>` : ""}</url>`).join("\n")}
 </urlset>
 `;
     await writeFile(path.join(USCITA, "sitemap.xml"), xml);
