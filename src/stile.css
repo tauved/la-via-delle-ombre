@@ -1888,6 +1888,17 @@ body:has(.ascolto) {
   font-size: 0.85rem;
 }
 
+/* solo nel browser interno di Instagram, Facebook e TikTok */
+.brani-app {
+  margin-top: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  border-left: 2px solid var(--lime);
+  border-radius: 0 8px 8px 0;
+  background: rgba(103, 76, 192, 0.18);
+  color: var(--bianco);
+  font-size: 0.85rem;
+}
+
 /* cambio di pagina senza fermare la musica */
 
 .in-viaggio body::after {

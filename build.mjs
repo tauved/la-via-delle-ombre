@@ -641,6 +641,7 @@ function paginaHome(caroselli) {
             .join("\n          ")}
         </ol>
         <p class="brani-aiuto">La musica continua mentre giri per il sito.${link.telegram ? ` I pezzi li scarichi gratis dal <a href="${esc(link.telegram)}" rel="me noopener">canale Telegram</a>.` : ""}</p>
+        <p class="brani-app" data-avviso-app hidden>Dentro <span data-nome-app>questa app</span> la musica si ferma quando esci dall'app o spegni lo schermo. Per ascoltarla anche così, apri il sito nel browser dal menu ⋯ in alto.</p>
       </div>` : ""}
       <ul class="canali musica-canali" role="list">
         ${canaliMusica.join("\n        ")}

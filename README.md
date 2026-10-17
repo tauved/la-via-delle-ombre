@@ -108,6 +108,9 @@ Prima della data il sito mostra quanti giorni mancano; dal giorno dell'uscita sc
 
 In basso a destra c'è il lettore «Ascolta TAUH». La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, alla voce Ascolta, c'è l'elenco dei brani.
 
+- **A schermo spento**: in Safari e Chrome la musica continua anche col telefono bloccato o mentre si usa un'altra app. Nel browser interno di Instagram, Facebook e TikTok invece si ferma quando si esce dall'app (lo decide l'app, il sito non può farci niente): lì, sotto l'elenco dei brani, compare un avviso che spiega di aprire il sito nel browser.
+- **Un player alla volta**: se chi visita carica il player di Spotify, il lettore del sito si ferma e si chiude; se poi fa ripartire la musica del sito, il player di Spotify torna al bottone «Carica il player» (così si ferma anche lui).
+
 I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in cui suonano (il primo è quello che parte con «Ascolta TAUH»):
 
 ```json

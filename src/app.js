@@ -178,6 +178,12 @@ const lettore = (() => {
     i = ((i % brani.length) + brani.length) % brani.length;
     if (chiuso(i)) i = vicino(i);
     if (i < 0) return;
+    // Safari su iPhone (iOS 17 e dopo): è musica, deve continuare anche a schermo spento
+    try {
+      if (navigator.audioSession && navigator.audioSession.type !== "playback") navigator.audioSession.type = "playback";
+    } catch {
+      /* non supportato */
+    }
     if (i !== indice || !audio.getAttribute("src")) carica(i);
     attivo = true;
     const promessa = audio.play();
@@ -190,6 +196,13 @@ const lettore = (() => {
   }
 
   const pausa = () => audio.pause();
+  // si ferma e torna al bottone «Ascolta TAUH»
+  function chiudi() {
+    audio.pause();
+    attivo = false;
+    aggiorna();
+    salva();
+  }
   const prossimo = () => {
     const i = vicino(indice);
     if (i >= 0) avvia(i);
@@ -336,6 +349,7 @@ const lettore = (() => {
   return {
     avvia,
     pausa,
+    chiudi,
     stato,
     inAscolto: () => !audio.paused,
     ascolta(f, signal) {
@@ -389,14 +403,19 @@ function menu(signal) {
 // ---------------------------------------------------------------- player esterni
 // Spotify e YouTube si caricano solo quando la persona preme il bottone.
 
+// Un player alla volta: aprendo Spotify (o YouTube) il lettore del sito si ferma e si
+// chiude; se poi riparte la musica del sito, il player esterno torna al suo bottone.
 function incorporati(signal) {
+  const aperti = new Map();
   for (const box of $$("[data-incorpora]")) {
     const bottone = $("button", box);
     if (!bottone) continue;
+    const originale = [...box.childNodes];
     bottone.addEventListener(
       "click",
       () => {
-        lettore?.pausa();
+        lettore?.chiudi();
+        aperti.set(box, originale);
         const frame = document.createElement("iframe");
         frame.src = box.dataset.incorpora;
         frame.title = box.dataset.titolo || "Player";
@@ -409,6 +428,14 @@ function incorporati(signal) {
       { signal },
     );
   }
+  lettore?.ascolta(({ suona }) => {
+    if (!suona || !aperti.size) return;
+    for (const [box, originale] of aperti) {
+      box.replaceChildren(...originale);
+      box.classList.remove("caricato");
+    }
+    aperti.clear();
+  }, signal);
 }
 
 // ---------------------------------------------------------------- binario delle copertine
@@ -818,6 +845,26 @@ function elencoBrani(signal) {
   }, signal);
 }
 
+// ---------------------------------------------------------------- browser dentro le app
+// Nel browser interno di Instagram, Facebook e TikTok la musica si ferma quando si esce
+// dall'app o si spegne lo schermo (lo decide l'app): sotto i brani compare come evitarlo.
+
+const appOspite = (() => {
+  const ua = navigator.userAgent || "";
+  if (/Instagram/i.test(ua)) return "Instagram";
+  if (/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) return "Facebook";
+  if (/musical_ly|TikTok|BytedanceWebview|ByteLocale/i.test(ua)) return "TikTok";
+  return "";
+})();
+
+function avvisoApp() {
+  const avviso = $("[data-avviso-app]");
+  if (!avviso || !appOspite) return;
+  const nome = $("[data-nome-app]", avviso);
+  if (nome) nome.textContent = appOspite;
+  avviso.hidden = false;
+}
+
 // ---------------------------------------------------------------- avvio delle parti
 
 let spegniPagina = null;
@@ -825,7 +872,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {
