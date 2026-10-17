@@ -781,7 +781,7 @@ function paginaHome(caroselli) {
         <div class="sostieni-testo">
           <h2 id="titolo-sostieni">${esc(sostieni.titolo || "Sostienimi")}</h2>
           ${sostieni.testo ? `<p>${esc(sostieni.testo)}</p>` : ""}
-          <div class="sostieni-azioni${media.sostieniQr ? " con-qr" : ""}">
+          <div class="sostieni-azioni">
             <a class="bottone primario sostieni-bottone" href="${esc(sostieni.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sostieni.bottone || "Dona con PayPal")}</a>
             ${media.sostieniQr ? `<figure class="sostieni-qr">
               <img src="${indirizzo(media.sostieniQr, pagina)}" width="148" height="148" alt="Codice QR per donare con PayPal" loading="lazy" decoding="async">

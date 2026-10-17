@@ -2515,14 +2515,10 @@ body:has(.ascolto) {
   font-size: 0.88rem;
 }
 
-/* con il mouse si inquadra il codice col telefono; sul telefono si tocca il bottone */
+/* il codice da inquadrare col telefono serve solo su computer */
 @media (hover: hover) and (pointer: fine) {
   .sostieni-qr {
     display: flex;
-  }
-
-  .sostieni-azioni.con-qr .sostieni-bottone {
-    display: none;
   }
 }
 

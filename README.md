@@ -225,15 +225,15 @@ Dopo il Merch c'è il riquadro «Sostienimi», con il sigillo della pietra filos
 "sostieni": {
   "titolo": "Sostienimi",
   "testo": "Puoi donare alla Via delle Ombre…",
-  "link": "https://www.paypal.com/qrcodes/p2pqrc/…",
+  "link": "https://paypal.me/Tauved",
   "bottone": "Dona con PayPal",
   "sigillo": "pietra-filosofale.webp",
   "qr": "paypal-qr.svg",
-  "qr_testo": "Inquadra il codice col telefono e dona con PayPal."
+  "qr_testo": "Oppure inquadra il codice col telefono."
 }
 ```
 
-Il sigillo si prende da `contenuti/social/`. Il link adesso è quello del codice QR di PayPal: dal telefono apre l'app di PayPal. Con il mouse, al posto del bottone compare il codice QR (`contenuti/sostieni/paypal-qr.svg`) da inquadrare col telefono. Se il link cambia (per esempio con un link PayPal.me), il codice QR va rifatto con il link nuovo, oppure si toglie la riga `"qr"`: allora il bottone compare anche su computer. Per togliere il riquadro cancella la voce `"sostieni"`.
+Il sigillo si prende da `contenuti/social/`. Il bottone apre la pagina PayPal.me di TAUH in un'altra scheda. Su computer, accanto al bottone, c'è anche il codice QR (`contenuti/sostieni/paypal-qr.svg`, nei colori del sito) per donare dal telefono; sul telefono il codice non compare. Se il link cambia, il codice QR va rifatto con il link nuovo (lo fa Claude), oppure si toglie la riga `"qr"`. Per togliere il riquadro cancella la voce `"sostieni"`.
 
 ### Ringraziamenti
 

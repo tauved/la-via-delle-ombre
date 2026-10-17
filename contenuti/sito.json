@@ -145,11 +145,11 @@
   "sostieni": {
     "titolo": "Sostienimi",
     "testo": "Puoi donare alla Via delle Ombre per far crescere sia il progetto TAUH che tutto ciò che ci gravita attorno. Nel caso, ti ringrazio e ti chiedo di lasciarmi il tuo profilo social favorito nella causale: entrerai nei ringraziamenti e otterrai dei bonus. In ogni caso vorrei dirti che sei benvenuto nella Via delle Ombre e che il tuo supporto è essenziale in qualsiasi forma.",
-    "link": "https://www.paypal.com/qrcodes/p2pqrc/7EPP45PM5JNX8",
+    "link": "https://paypal.me/Tauved",
     "bottone": "Dona con PayPal",
     "sigillo": "pietra-filosofale.webp",
     "qr": "paypal-qr.svg",
-    "qr_testo": "Inquadra il codice col telefono e dona con PayPal."
+    "qr_testo": "Oppure inquadra il codice col telefono."
   },
   "ringraziamenti": {
     "titolo": "Ringraziamenti",
