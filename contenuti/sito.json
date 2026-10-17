@@ -2,11 +2,11 @@
   "nome": "La via delle ombre",
   "artista": "TAUH",
   "url": "https://laviadelleombre.com",
-  "descrizione": "Il sito di TAUH: la musica da ascoltare, i caroselli sulla via della mano sinistra da sfogliare, le copertine da scaricare e un gioco da provare nel browser.",
+  "descrizione": "Il sito di TAUH: la musica da ascoltare, le pillole di conoscenza sulla via della mano sinistra da sfogliare, le copertine da scaricare e un gioco da provare nel browser.",
   "apertura": {
     "titolo": "La via delle ombre",
     "motto": "Mai nel gregge del Parassita.",
-    "testo": "Musica, caroselli e un gioco firmati TAUH."
+    "testo": "Musica, pillole di conoscenza e un gioco firmati TAUH."
   },
   "uscita": {
     "titolo": "Come Dio",
@@ -22,6 +22,14 @@
     "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",
     "in_home": 8
   },
+  "sezioni_in_arrivo": {
+    "titolo": "In arrivo",
+    "testo": "Le prossime sezioni della Via delle Ombre.",
+    "voci": [
+      { "titolo": "Impara la Chaos Magick" },
+      { "titolo": "Impara a fare i sigilli" }
+    ]
+  },
   "musica": {
     "testo": "I brani di TAUH da ascoltare qui, mentre giri per il sito. Li trovi anche su Spotify e YouTube.",
     "spotify_artista": "4wjw3C2aMvge2YdHKnvYYn",
@@ -29,7 +37,7 @@
   },
   "telegram": {
     "titolo": "Il canale Telegram",
-    "testo": "Entra nel canale Telegram per scaricare gratis i pezzi di TAUH e leggere gli approfondimenti di ogni carosello, con le fonti."
+    "testo": "Entra nel canale Telegram per scaricare gratis i pezzi di TAUH e leggere gli approfondimenti di ogni pillola, con le fonti."
   },
   "gioco": {
     "disponibile": true,

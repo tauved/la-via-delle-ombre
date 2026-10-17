@@ -399,7 +399,7 @@ function testata(pagina, attiva) {
   const voce = (href, nome, chiave) =>
     `<a href="${indirizzo(href, pagina)}"${attiva === chiave ? ' aria-current="page"' : ""}>${nome}</a>`;
   const voci = [
-    voce("/caroselli/", "Caroselli", "caroselli"),
+    voce("/caroselli/", "Pillole di conoscenza", "caroselli"),
     voce("/#musica", "Musica", "musica"),
     voce("/gioco/", "Gioco", "gioco"),
     raccolte.opere.length ? voce("/artwork/", "Artwork", "artwork") : "",
@@ -588,8 +588,10 @@ function paginaHome(caroselli) {
   const sostieni = raccolte.sostieni;
   const grazie = raccolte.grazie;
   const manifesto = puntiManifesto();
+  const prossime = (Array.isArray(sito.sezioni_in_arrivo?.voci) ? sito.sezioni_in_arrivo.voci : []).filter((v) => v?.titolo);
   const quanteSezioni =
     4 +
+    (prossime.length ? 1 : 0) +
     (uscita ? 1 : 0) +
     (link.telegram ? 1 : 0) +
     (raccolte.merch.length ? 1 : 0) +
@@ -657,7 +659,7 @@ function paginaHome(caroselli) {
     ${sito.apertura?.motto ? `<p class="motto">${esc(sito.apertura.motto)}</p>` : ""}
     ${sito.apertura?.testo ? `<p class="apertura-testo">${esc(sito.apertura.testo)}</p>` : ""}
     <div class="azioni">
-      <a class="bottone primario" href="${indirizzo("/caroselli/", pagina)}">Sfoglia i caroselli</a>
+      <a class="bottone primario" href="${indirizzo("/caroselli/", pagina)}">Sfoglia le pillole di conoscenza</a>
       <a class="bottone" href="${indirizzo("/#musica", pagina)}">Ascolta</a>
     </div>
   </section>
@@ -683,7 +685,7 @@ function paginaHome(caroselli) {
     ${via()}
     <div class="colonna sezione-testa">
       <div>
-        <h2 id="titolo-caroselli">Caroselli</h2>
+        <h2 id="titolo-caroselli">Pillole di conoscenza</h2>
         <p>${esc(sito.caroselli?.testo || "")}</p>
       </div>
       <div class="frecce">
@@ -695,9 +697,30 @@ function paginaHome(caroselli) {
       ${recenti.map((c, i) => `<li>${scheda(c, pagina, { lazy: i > 2 })}</li>`).join("\n      ")}
     </ul>
     <div class="colonna sezione-piede">
-      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Tutti i ${caroselli.length} caroselli, ${totaleTavole} tavole</a>
+      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Tutte le ${caroselli.length} pillole, ${totaleTavole} tavole</a>
     </div>
   </section>
+
+  ${prossime.length ? `<section class="sezione" id="in-arrivo" aria-labelledby="titolo-in-arrivo">
+    ${via()}
+    <div class="colonna">
+      <div class="sezione-testa">
+        <div>
+          <h2 id="titolo-in-arrivo">${esc(sito.sezioni_in_arrivo.titolo || "In arrivo")}</h2>
+          ${sito.sezioni_in_arrivo.testo ? `<p>${esc(sito.sezioni_in_arrivo.testo)}</p>` : ""}
+        </div>
+      </div>
+      <ul class="prossime" role="list">
+        ${prossime
+          .map((v) =>
+            v.link
+              ? `<li><a class="prossima aperta" href="${esc(v.link)}"><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</a></li>`
+              : `<li><div class="prossima"><span class="prossima-icona">${icona.lucchetto}</span><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}<span class="prossima-stato">In arrivo</span></div></li>`,
+          )
+          .join("\n        ")}
+      </ul>
+    </div>
+  </section>` : ""}
 
   <section class="sezione" id="musica" aria-labelledby="titolo-musica">
     ${via()}
@@ -916,13 +939,13 @@ function paginaHome(caroselli) {
 function paginaArchivio(caroselli) {
   const pagina = "/caroselli/";
   const totaleTavole = caroselli.reduce((s, c) => s + c.tavole.length, 0);
-  const esito = `${caroselli.length} caroselli, dal più recente`;
+  const esito = `${caroselli.length} pillole, dalla più recente`;
   const corpo = `<main id="contenuto" class="colonna">
   <header class="archivio-testa">
-    <h1>Caroselli</h1>
-    <p>${caroselli.length} caroselli e ${totaleTavole} tavole. Si sfogliano come su Instagram e accanto c'è il testo di ogni tavola.</p>
+    <h1>Pillole di conoscenza</h1>
+    <p>${caroselli.length} pillole e ${totaleTavole} tavole. Si sfogliano come su Instagram e accanto c'è il testo di ogni tavola.</p>
     <div class="cerca">
-      <label class="nascosto" for="cerca">Cerca nei caroselli</label>
+      <label class="nascosto" for="cerca">Cerca nelle pillole</label>
       ${icona.cerca}
       <input id="cerca" type="search" placeholder="Cerca: Samael, golem, dogma…" autocomplete="off" data-cerca>
     </div>
@@ -931,12 +954,12 @@ function paginaArchivio(caroselli) {
   <ul class="griglia" role="list">
     ${caroselli.map((c, i) => `<li data-testo="${esc(c.ricerca)}">${scheda(c, pagina, { lazy: i > 3 })}</li>`).join("\n    ")}
   </ul>
-  <p class="vuoto" data-vuoto hidden>Nessun carosello parla di «<span data-parola></span>». Prova con un'altra parola.</p>
+  <p class="vuoto" data-vuoto hidden>Nessuna pillola parla di «<span data-parola></span>». Prova con un'altra parola.</p>
 </main>`;
   return documento({
     pagina,
-    titolo: "Caroselli",
-    descrizione: `Tutti i ${caroselli.length} caroselli di TAUH, da sfogliare tavola per tavola e da leggere.`,
+    titolo: "Pillole di conoscenza",
+    descrizione: `Tutte le ${caroselli.length} pillole di conoscenza di TAUH, da sfogliare tavola per tavola e da leggere.`,
     immagine: caroselli[0] ? fileMedia(caroselli[0], caroselli[0].og) : media.ogHome,
     attiva: "caroselli",
     corpo,
@@ -957,7 +980,7 @@ function paginaCarosello(c, indice, caroselli) {
     </a>`
       : "";
   const corpo = `<main id="contenuto" class="colonna carosello">
-  <a class="indietro" href="${indirizzo("/caroselli/", pagina)}">${icona.sinistra}Tutti i caroselli</a>
+  <a class="indietro" href="${indirizzo("/caroselli/", pagina)}">${icona.sinistra}Tutte le pillole</a>
   <header class="carosello-testa">
     <h1>${esc(c.titolo)}</h1>
     ${c.sottotitolo ? `<p class="sottotitolo">${esc(c.sottotitolo)}</p>` : ""}
@@ -999,15 +1022,15 @@ function paginaCarosello(c, indice, caroselli) {
       .join("\n    ")}
   </section>` : ""}
 
-  ${precedente || successivo ? `<nav class="vicini" aria-label="Altri caroselli">
-    ${vicino(precedente, "Carosello precedente")}
-    ${vicino(successivo, "Carosello successivo")}
+  ${precedente || successivo ? `<nav class="vicini" aria-label="Altre pillole">
+    ${vicino(precedente, "Pillola precedente")}
+    ${vicino(successivo, "Pillola successiva")}
   </nav>` : ""}
 </main>`;
   return documento({
     pagina,
     titolo: c.titolo,
-    descrizione: c.descrizione || c.sottotitolo || `Il carosello «${c.titolo}» di TAUH, in ${n} tavole.`,
+    descrizione: c.descrizione || c.sottotitolo || `La pillola di conoscenza «${c.titolo}» di TAUH, in ${n} tavole.`,
     immagine: fileMedia(c, c.og),
     tipo: "article",
     attiva: "caroselli",
@@ -1102,7 +1125,7 @@ function paginaArtwork() {
       <div class="opera-testo">
         <h2 class="opera-titolo">${esc(o.titolo)}</h2>
         ${o.versione ? `<p class="opera-versione">${esc(o.versione)}</p>` : ""}
-        ${o.carosello && raccolte.slugCaroselli.has(o.carosello) ? `<a class="opera-fonte" href="${indirizzo(`/caroselli/${o.carosello}/`, pagina)}">Dal carosello</a>` : ""}
+        ${o.carosello && raccolte.slugCaroselli.has(o.carosello) ? `<a class="opera-fonte" href="${indirizzo(`/caroselli/${o.carosello}/`, pagina)}">Dalla pillola</a>` : ""}
         ${o.descrizione ? `<p>${esc(o.descrizione)}</p>` : ""}
         <a class="bottone primario stretto" href="${indirizzo(o.urlFile, pagina)}" download="${esc(nome)}">${icona.scarica}Scarica</a>
         <span class="opera-meta">${formato}${misure}, ${peso(o.peso)}</span>

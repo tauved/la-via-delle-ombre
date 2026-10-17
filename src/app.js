@@ -397,7 +397,7 @@ function menu(signal) {
     { signal },
   );
   document.addEventListener("click", (e) => aperto() && !testata.contains(e.target) && apri(false), { signal });
-  window.matchMedia("(min-width: 860px)").addEventListener("change", (e) => e.matches && apri(false), { signal });
+  window.matchMedia("(min-width: 920px)").addEventListener("change", (e) => e.matches && apri(false), { signal });
 }
 
 // ---------------------------------------------------------------- player esterni
@@ -629,8 +629,8 @@ function ricerca(signal) {
       if (ok) visibili += 1;
     }
     if (!parole.length) esito.textContent = testoEsito;
-    else if (visibili === 1) esito.textContent = `1 carosello su ${schede.length}`;
-    else esito.textContent = `${visibili} caroselli su ${schede.length}`;
+    else if (visibili === 1) esito.textContent = `1 pillola su ${schede.length}`;
+    else esito.textContent = `${visibili} pillole su ${schede.length}`;
     vuoto.hidden = visibili > 0;
     parolaVuota.textContent = campo.value.trim();
     const url = new URL(location.href);

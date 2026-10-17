@@ -1,6 +1,6 @@
 # La via delle ombre
 
-Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere, gli artwork da scaricare, la biblioteca, il merch, il canale Telegram e il gioco.
+Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere (sul sito si chiamano «Pillole di conoscenza»), gli artwork da scaricare, la biblioteca, il merch, il canale Telegram e il gioco.
 È un sito statico (HTML, CSS e JavaScript senza librerie) generato da un piccolo script e pubblicato su Cloudflare.
 
 ## Com'è fatto
@@ -45,6 +45,8 @@ Da lì in poi ogni push su GitHub ripubblica il sito da solo.
 Ogni modifica segue lo stesso giro: cambi i file, fai commit e push, Cloudflare ripubblica.
 
 ### Aggiungere un carosello
+
+Sul sito i caroselli si chiamano «Pillole di conoscenza» (nel menu, nella home e nella pagina che li raccoglie); gli indirizzi restano /caroselli/, così i link già condivisi continuano a funzionare.
 
 **Con Claude.** Nel progetto «Sito Tauh» chiedi di aggiungere al sito un carosello: Claude prende le tavole dal canvas, le converte, scrive i testi e fa il push sul repository.
 
@@ -271,7 +273,24 @@ Proprio in fondo alla home c'è il Manifesto: è chiuso e si apre toccandolo; la
 
 I punti si numerano da soli, con i numeri romani, nell'ordine in cui sono scritti. Per togliere il Manifesto (e la voce del menu) cancella la voce `"manifesto"`.
 
-L'ordine della home è: apertura, pre-save, Gioco, Caroselli, Ascolta, Da leggere e da scaricare, Telegram, Merch, Sostienimi, Ringraziamenti, I miei social, Manifesto.
+L'ordine della home è: apertura, pre-save, Gioco, Pillole di conoscenza, In arrivo, Ascolta, Da leggere e da scaricare, Telegram, Merch, Sostienimi, Ringraziamenti, I miei social, Manifesto.
+
+### Sezioni in arrivo
+
+Dopo le Pillole di conoscenza c'è «In arrivo», con le sezioni che verranno: per ora «Impara la Chaos Magick» e «Impara a fare i sigilli», col lucchetto. Si cambia in `contenuti/sito.json`, alla voce `"sezioni_in_arrivo"`:
+
+```json
+"sezioni_in_arrivo": {
+  "titolo": "In arrivo",
+  "testo": "Le prossime sezioni della Via delle Ombre.",
+  "voci": [
+    { "titolo": "Impara a fare i sigilli" },
+    { "titolo": "Impara la Chaos Magick", "link": "/chaos-magick/", "testo": "…" }
+  ]
+}
+```
+
+Una voce senza `"link"` compare col lucchetto e «In arrivo»; quando la sezione è pronta si aggiunge il `"link"` (e, se vuoi, un `"testo"`) e il riquadro diventa cliccabile. Per togliere tutta la parte cancella la voce `"sezioni_in_arrivo"`.
 
 ### Biblioteca
 
