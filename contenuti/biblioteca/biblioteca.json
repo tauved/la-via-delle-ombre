@@ -2,7 +2,7 @@
   "sezioni": [
     {
       "titolo": "Miti e scritture",
-      "testo": "Il mito babilonese della creazione, i libri sacri dei monoteismi e quelli dei loro eretici, da leggere alla fonte.",
+      "testo": "Il mito babilonese della creazione, i libri sacri dei monoteismi, gli apocrifi e i testi degli eretici, da leggere alla fonte.",
       "voci": [
         {
           "titolo": "Enūma eliš. Il mito babilonese della creazione",
@@ -22,6 +22,16 @@
           "link": "https://www.vatican.va/archive/ITA0001/_INDEX.HTM",
           "dove": "gratis",
           "etichetta": "Leggila gratis"
+        },
+        {
+          "titolo": "Il libro di Enoch",
+          "autore": "Autori vari",
+          "tipo": "Apocrifo",
+          "editore": "Cerchio della Luna",
+          "anno": "2017",
+          "descrizione": "Il libro attribuito a Enoch, il patriarca che secondo la Genesi «camminò con Dio» e scomparve, rimasto fuori dalla Bibbia tranne che per la Chiesa etiope: il Libro dei vigilanti, gli angeli caduti che si uniscono alle donne e insegnano agli uomini le arti proibite, poi l'astronomia, le visioni, le epistole e l'apocalisse di Noè.",
+          "link": "https://www.ibs.it/libro-di-enoch-libro-vari/e/9788869371967",
+          "dove": "libreria"
         },
         {
           "titolo": "Il Corano",
@@ -87,6 +97,16 @@
           "anno": "2008",
           "descrizione": "Un'introduzione alla via della mano sinistra, letta attraverso la Qabalah e il Tantra: dai riti tantrici alla stregoneria tradizionale, fino al Tempio di Set.",
           "link": "https://www.ilgiardinodeilibri.it/libri/__la-via-oscura.php",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Liber Null & Psiconauta. La pratica della magia del caos",
+          "autore": "Peter J. Carroll",
+          "tipo": "Libro",
+          "editore": "Spazio Interiore",
+          "anno": "2025",
+          "descrizione": "Uno dei testi da cui nasce la magia del caos: un sistema pratico di riti ed esercizi che prende da Austin Osman Spare, Lévi e Crowley, dallo sciamanesimo e dal paganesimo, e li rilegge con la fisica quantistica e la teoria del caos. La prima parte è per la pratica da soli, la seconda per i rituali di gruppo; magia bianca e nera senza morale, con la responsabilità lasciata a chi pratica.",
+          "link": "https://www.macrolibrarsi.it/libri/__liber-null-psiconauta-libro.php",
           "dove": "libreria"
         },
         {
@@ -209,7 +229,7 @@
     },
     {
       "titolo": "Il gregge e i suoi pastori",
-      "testo": "Come si fabbricano il consenso e l'obbedienza: chiese e conquiste, marchi, crisi, mondi perfetti.",
+      "testo": "Come si fabbricano il consenso e l'obbedienza: chiese, conquiste, regimi, marchi, crisi, mondi perfetti.",
       "voci": [
         {
           "titolo": "La messa è finita. Come liberarsi dal più subdolo dei parassiti, gli acutissimi strumenti di dominio in dotazione al clero",
@@ -231,6 +251,16 @@
           "descrizione": "Per Stannard la conquista delle Americhe è il più grande genocidio della storia, e comincia con Colombo: in vent'anni gli otto milioni di abitanti di Hispaniola erano scomparsi, uccisi da soldati, preti, cani da caccia e malattie. Dalle culture native prima degli europei alle guerre indiane negli Stati Uniti, fino al razzismo come parte mai superata della civiltà euro-americana.",
           "link": "https://www.bollatiboringhieri.it/libri/david-e-stannard-olocausto-americano-9788833939605/",
           "dove": "editore"
+        },
+        {
+          "titolo": "Satana e la svastica. Il nazismo e l'occulto",
+          "autore": "Francis King",
+          "tipo": "Libro",
+          "editore": "L'Età dell'Acquario",
+          "anno": "2008",
+          "descrizione": "Il nazismo fu solo un'ideologia politica o anche una religione nera? King segue le società esoteriche attorno a Hitler, Himmler e Rosenberg: la Thule, le teorie esoteriche e razziste di Madame Blavatsky, l'Ahnenerbe, fino alle previsioni del tempo ispirate a Hörbiger che, secondo lui, portarono Hitler all'errore fatale in Russia. Un classico sul lato occulto del Terzo Reich.",
+          "link": "https://www.macrolibrarsi.it/libri/__satana-e-la-svastica.php",
+          "dove": "libreria"
         },
         {
           "titolo": "No Logo",
