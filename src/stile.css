@@ -2812,7 +2812,7 @@ body:has(.ascolto) {
 }
 
 .manifesto[open] .manifesto-punti {
-  animation: affiora 0.5s ease both;
+  animation: manifesto-apre 0.5s ease both;
 }
 
 .manifesto-punti li {
@@ -2855,7 +2855,7 @@ body:has(.ascolto) {
   }
 }
 
-@keyframes affiora {
+@keyframes manifesto-apre {
   from {
     opacity: 0;
     transform: translateY(-6px);
