@@ -78,6 +78,16 @@
           "descrizione": "Un'introduzione alla via della mano sinistra, letta attraverso la Qabalah e il Tantra: dai riti tantrici alla stregoneria tradizionale, fino al Tempio di Set.",
           "link": "https://www.ilgiardinodeilibri.it/libri/__la-via-oscura.php",
           "dove": "libreria"
+        },
+        {
+          "titolo": "Sciamani d'Australia. Rito e iniziazione nella società aborigena",
+          "autore": "Adolphus Peter Elkin",
+          "tipo": "Libro",
+          "editore": "Raffaello Cortina Editore",
+          "anno": "2002",
+          "descrizione": "Le pratiche sacre e segrete degli aborigeni australiani, raccontate da uno dei grandi antropologi del Novecento: i riti con cui i giovani attraversano i primi gradi dell'iniziazione sciamanica, ognuno col suo sapere esoterico, fino ai karadji, i grandi iniziati che sanno far piovere, prevedere, guarire e uccidere in modo misterioso.",
+          "link": "https://www.ibs.it/sciamani-d-australia-rito-iniziazione-libro-adolphus-peter-elkin/e/9788870787795",
+          "dove": "libreria"
         }
       ]
     },
@@ -169,8 +179,29 @@
     },
     {
       "titolo": "Il gregge e i suoi pastori",
-      "testo": "Come si fabbricano il consenso e l'obbedienza: marchi, crisi, mondi perfetti.",
+      "testo": "Come si fabbricano il consenso e l'obbedienza: chiese e conquiste, marchi, crisi, mondi perfetti.",
       "voci": [
+        {
+          "titolo": "La messa è finita. Come liberarsi dal più subdolo dei parassiti, gli acutissimi strumenti di dominio in dotazione al clero",
+          "autore": "Michele Giovagnoli",
+          "tipo": "Libro",
+          "editore": "Uno Editori",
+          "anno": "2017",
+          "descrizione": "Per Giovagnoli, alchimista e scrittore, il clero è il più subdolo dei parassiti: il libro analizza come la Chiesa cattolica si è insinuata nella vita di tutti i giorni, nel corpo e nella psiche, dalla cultura al sesso all'economia, e indica le vie per sconnettersi dal suo dominio.",
+          "link": "https://libraccio.it/libro/9788899912543/michele-giovagnoli/messa-e-finita-come-liberarsi-dal-piu-subdolo-dei-parassiti-gli-acutissimi-strumenti-di-dominio-in-dotazione-al-clero.html",
+          "dove": "libreria",
+          "etichetta": "Esaurito: cercalo usato"
+        },
+        {
+          "titolo": "Olocausto americano. La conquista del Nuovo Mondo",
+          "autore": "David E. Stannard",
+          "tipo": "Libro",
+          "editore": "Bollati Boringhieri",
+          "anno": "2021",
+          "descrizione": "Per Stannard la conquista delle Americhe è il più grande genocidio della storia, e comincia con Colombo: in vent'anni gli otto milioni di abitanti di Hispaniola erano scomparsi, uccisi da soldati, preti, cani da caccia e malattie. Dalle culture native prima degli europei alle guerre indiane negli Stati Uniti, fino al razzismo come parte mai superata della civiltà euro-americana.",
+          "link": "https://www.bollatiboringhieri.it/libri/david-e-stannard-olocausto-americano-9788833939605/",
+          "dove": "editore"
+        },
         {
           "titolo": "No Logo",
           "autore": "Naomi Klein",
