@@ -349,6 +349,34 @@ function caricaSocial() {
     });
 }
 
+// Il riquadro delle donazioni dopo il Merch (sito.json, voce "sostieni").
+function caricaSostieni() {
+  const s = sito.sostieni;
+  if (!s?.link) return null;
+  if (!/^https:\/\//.test(s.link)) throw new ErroreContenuti(`In sito.json, alla voce "sostieni", il link deve iniziare con https://`);
+  if (s.sigillo && !existsSync(path.join(CONTENUTI, "social", s.sigillo))) {
+    throw new ErroreContenuti(`Manca il sigillo contenuti/social/${s.sigillo} per «${s.titolo || "Sostienimi"}».`);
+  }
+  if (s.qr && !existsSync(path.join(CONTENUTI, "sostieni", s.qr))) throw new ErroreContenuti(`Manca il codice QR contenuti/sostieni/${s.qr}.`);
+  return s;
+}
+
+// I ringraziamenti (sito.json, voce "ringraziamenti"): le persone da ringraziare e chi ha donato.
+function caricaRingraziamenti() {
+  const g = sito.ringraziamenti;
+  if (!g) return null;
+  const voci = (Array.isArray(g.voci) ? g.voci : []).filter((v) => v?.chi);
+  const sostenitori = (Array.isArray(g.sostenitori) ? g.sostenitori : [])
+    .map((v) => (typeof v === "string" ? { nome: v } : v))
+    .filter((v) => v?.nome)
+    .map((v) => {
+      if (v.link && !/^https?:\/\//.test(v.link)) throw new ErroreContenuti(`Nei ringraziamenti il link di «${v.nome}» deve iniziare con https://`);
+      return v;
+    });
+  if (!voci.length && !sostenitori.length) return null;
+  return { ...g, voci, sostenitori };
+}
+
 // ---------------------------------------------------------------- impaginazione comune
 
 function testata(pagina, attiva) {
@@ -538,7 +566,16 @@ function paginaHome(caroselli) {
     ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
-  const quanteSezioni = 4 + (uscita ? 1 : 0) + (link.telegram ? 1 : 0) + (raccolte.merch.length ? 1 : 0) + (raccolte.social.length ? 1 : 0);
+  const sostieni = raccolte.sostieni;
+  const grazie = raccolte.grazie;
+  const quanteSezioni =
+    4 +
+    (uscita ? 1 : 0) +
+    (link.telegram ? 1 : 0) +
+    (raccolte.merch.length ? 1 : 0) +
+    (sostieni ? 1 : 0) +
+    (grazie ? 1 : 0) +
+    (raccolte.social.length ? 1 : 0);
   let nodo = 0;
   const via = () => {
     const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
@@ -733,6 +770,49 @@ function paginaHome(caroselli) {
           )
           .join("\n        ")}
       </ul>
+    </div>
+  </section>` : ""}
+
+  ${sostieni ? `<section class="sezione" id="sostieni" aria-labelledby="titolo-sostieni">
+    ${via()}
+    <div class="colonna">
+      <div class="sostieni">
+        ${media.sostieniSigillo ? `<img class="sostieni-sigillo" src="${indirizzo(media.sostieniSigillo, pagina)}" width="360" height="360" alt="" loading="lazy" decoding="async">` : ""}
+        <div class="sostieni-testo">
+          <h2 id="titolo-sostieni">${esc(sostieni.titolo || "Sostienimi")}</h2>
+          ${sostieni.testo ? `<p>${esc(sostieni.testo)}</p>` : ""}
+          <div class="sostieni-azioni${media.sostieniQr ? " con-qr" : ""}">
+            <a class="bottone primario sostieni-bottone" href="${esc(sostieni.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sostieni.bottone || "Dona con PayPal")}</a>
+            ${media.sostieniQr ? `<figure class="sostieni-qr">
+              <img src="${indirizzo(media.sostieniQr, pagina)}" width="148" height="148" alt="Codice QR per donare con PayPal" loading="lazy" decoding="async">
+              <figcaption>${esc(sostieni.qr_testo || "Inquadra il codice col telefono per donare.")}</figcaption>
+            </figure>` : ""}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>` : ""}
+
+  ${grazie ? `<section class="sezione" id="ringraziamenti" aria-labelledby="titolo-ringraziamenti">
+    ${via()}
+    <div class="colonna">
+      <div class="sezione-testa">
+        <div>
+          <h2 id="titolo-ringraziamenti">${esc(grazie.titolo || "Ringraziamenti")}</h2>
+        </div>
+      </div>
+      <div class="grazie">
+        ${grazie.voci.length ? `${grazie.intro ? `<p class="grazie-intro">${esc(grazie.intro)}</p>` : ""}
+        <ul class="grazie-elenco" role="list">
+          ${grazie.voci.map((v) => `<li><span class="grazie-chi">${esc(v.chi)}</span>${v.per ? `<span class="grazie-per">${esc(v.per)}</span>` : ""}</li>`).join("\n          ")}
+        </ul>` : ""}
+        ${grazie.sostenitori.length ? `<div class="grazie-sostenitori">
+          <h3>${esc(grazie.sostenitori_titolo || "Chi sostiene la Via delle Ombre")}</h3>
+          <ul class="sostenitori" role="list">
+            ${grazie.sostenitori.map((s) => `<li>${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.nome)}</a>` : esc(s.nome)}</li>`).join("\n            ")}
+          </ul>
+        </div>` : ""}
+      </div>
     </div>
   </section>` : ""}
 
@@ -1132,7 +1212,7 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
-const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], slugCaroselli: new Set() };
+const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1339,6 +1419,14 @@ async function principale() {
   for (const v of social) {
     if (v.sigillo) v.url = (await copiaConImpronta(path.join(v.dir, v.sigillo), "media/social", v.sigillo)).url;
     raccolte.social.push(v);
+  }
+  raccolte.sostieni = caricaSostieni();
+  raccolte.grazie = caricaRingraziamenti();
+  if (raccolte.sostieni?.sigillo) {
+    media.sostieniSigillo = (await copiaConImpronta(path.join(CONTENUTI, "social", raccolte.sostieni.sigillo), "media/sostieni", raccolte.sostieni.sigillo)).url;
+  }
+  if (raccolte.sostieni?.qr) {
+    media.sostieniQr = (await copiaConImpronta(path.join(CONTENUTI, "sostieni", raccolte.sostieni.qr), "media/sostieni", raccolte.sostieni.qr)).url;
   }
 
   const pagine = [

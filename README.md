@@ -217,6 +217,44 @@ In fondo alla home c'è la sezione Merch con le magliette; nel menu la voce Merc
 
 Il bottone apre una chat con TAUH su Instagram (`ig.me/m/tauh616`). Le immagini vanno bene in verticale (4:5), per esempio 800×1000. Per togliere la sezione cancella la voce `"merch"`.
 
+### Sostienimi (donazioni)
+
+Dopo il Merch c'è il riquadro «Sostienimi», con il sigillo della pietra filosofale e il link per donare con PayPal. Si cambia in `contenuti/sito.json`, alla voce `"sostieni"`:
+
+```json
+"sostieni": {
+  "titolo": "Sostienimi",
+  "testo": "Puoi donare alla Via delle Ombre…",
+  "link": "https://www.paypal.com/qrcodes/p2pqrc/…",
+  "bottone": "Dona con PayPal",
+  "sigillo": "pietra-filosofale.webp",
+  "qr": "paypal-qr.svg",
+  "qr_testo": "Inquadra il codice col telefono e dona con PayPal."
+}
+```
+
+Il sigillo si prende da `contenuti/social/`. Il link adesso è quello del codice QR di PayPal: dal telefono apre l'app di PayPal. Con il mouse, al posto del bottone compare il codice QR (`contenuti/sostieni/paypal-qr.svg`) da inquadrare col telefono. Se il link cambia (per esempio con un link PayPal.me), il codice QR va rifatto con il link nuovo, oppure si toglie la riga `"qr"`: allora il bottone compare anche su computer. Per togliere il riquadro cancella la voce `"sostieni"`.
+
+### Ringraziamenti
+
+Dopo «Sostienimi» c'è la sezione Ringraziamenti, alla voce `"ringraziamenti"` di `contenuti/sito.json`. Ogni voce ha `"chi"` (in verde) e `"per"` (sotto):
+
+```json
+"ringraziamenti": {
+  "titolo": "Ringraziamenti",
+  "intro": "Ringrazio",
+  "voci": [
+    { "chi": "Perry Watt", "per": "per avermi tirato fuori dal mio Loculo" }
+  ],
+  "sostenitori_titolo": "Chi sostiene la Via delle Ombre",
+  "sostenitori": [
+    { "nome": "@profilo", "link": "https://www.instagram.com/profilo/" }
+  ]
+}
+```
+
+In `"sostenitori"` vanno le persone che hanno donato e hanno lasciato il loro profilo nella causale: compaiono sotto i ringraziamenti, ognuna col suo link (il link è facoltativo, basta anche solo `"@profilo"`). Finché l'elenco è vuoto, quella parte non si vede.
+
 ### Biblioteca
 
 La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli: ogni scheda ha un link a dove trovarli in modo legale (gratis dall'autore o dall'editore, in libreria o in biblioteca). Sta tutto in `contenuti/biblioteca/biblioteca.json`, diviso in sezioni:

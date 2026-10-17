@@ -142,6 +142,30 @@
   "piede": {
     "motto": "Dove vengono alla luce le ombre"
   },
+  "sostieni": {
+    "titolo": "Sostienimi",
+    "testo": "Puoi donare alla Via delle Ombre per far crescere sia il progetto TAUH che tutto ciò che ci gravita attorno. Nel caso, ti ringrazio e ti chiedo di lasciarmi il tuo profilo social favorito nella causale: entrerai nei ringraziamenti e otterrai dei bonus. In ogni caso vorrei dirti che sei benvenuto nella Via delle Ombre e che il tuo supporto è essenziale in qualsiasi forma.",
+    "link": "https://www.paypal.com/qrcodes/p2pqrc/7EPP45PM5JNX8",
+    "bottone": "Dona con PayPal",
+    "sigillo": "pietra-filosofale.webp",
+    "qr": "paypal-qr.svg",
+    "qr_testo": "Inquadra il codice col telefono e dona con PayPal."
+  },
+  "ringraziamenti": {
+    "titolo": "Ringraziamenti",
+    "intro": "Ringrazio",
+    "voci": [
+      { "chi": "Gli antichi", "per": "per avermi dato la forza" },
+      { "chi": "Samael", "per": "per avermi risvegliato" },
+      { "chi": "Gli amici", "per": "che ho trovato e le persone che ho ritrovato nel percorso" },
+      { "chi": "Perry Watt", "per": "per avermi tirato fuori dal mio Loculo" },
+      { "chi": "Alberto Ragone", "per": "per le grafiche dei singoli e il supporto all'estetica" },
+      { "chi": "Enrico Palma Mask", "per": "per aver creato la mia maschera" },
+      { "chi": "40oz studio e Thinkgood", "per": "per aver reso concrete le mie idee" }
+    ],
+    "sostenitori_titolo": "Chi sostiene la Via delle Ombre",
+    "sostenitori": []
+  },
   "social": {
     "titolo": "I miei social",
     "testo": "Tocca un sigillo e seguimi.",
