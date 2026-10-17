@@ -1863,6 +1863,25 @@ body:has(.ascolto) {
   opacity: 0.85;
 }
 
+/* «In arrivo»: non porta da nessuna parte, quindi non reagisce al passaggio del mouse */
+.brano-in-arrivo {
+  cursor: default;
+}
+
+.brano-in-arrivo:hover {
+  box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.55);
+}
+
+.brano-in-arrivo:hover .brano-copertina {
+  opacity: 0.6;
+}
+
+.brano-in-arrivo:hover .brano-icona {
+  background: none;
+  color: var(--lime);
+  box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45);
+}
+
 .brani-aiuto {
   margin-top: 0.75rem;
   color: var(--grigio);

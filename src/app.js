@@ -27,7 +27,8 @@ const sostituisciIndirizzo = (url) => {
 // ---------------------------------------------------------------- brani col lucchetto
 // Un brano con "bloccata_fino_al" in musica.json si ascolta solo dopo aver finito il
 // primo livello del gioco: la pagina del gioco lo segna nel browser con questa chiave
-// (lo script lo aggiunge build.mjs). Dal giorno indicato il brano è libero per tutti.
+// (lo script lo aggiunge build.mjs). Un brano con "in_arrivo" non si ascolta e basta.
+// In tutti e due i casi, dal giorno indicato il brano è libero per tutti.
 
 const CHIAVE_GIOCO = "tauh-incubo-livello-1";
 
@@ -47,7 +48,7 @@ const giocoFinito = () => {
   }
 };
 
-const libero = (bloccata) => !bloccata || giornoArrivato(bloccata) || giocoFinito();
+const libero = (bloccata, colGioco = false) => !bloccata || giornoArrivato(bloccata) || (colGioco && giocoFinito());
 
 // ================================================================ lettore della musica
 
@@ -87,7 +88,7 @@ const lettore = (() => {
   const ripieghi = new Map();
   const ascoltatori = new Set();
 
-  const chiuso = (i) => !libero(brani[i]?.bloccata);
+  const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco);
   // il primo brano ascoltabile dopo «da» (o prima, con passo -1); -1 se non ce ne sono
   const vicino = (da, passo = 1) => {
     for (let k = 1; k <= brani.length; k++) {
@@ -779,11 +780,11 @@ function uscita() {
 function elencoBrani(signal) {
   const bottoni = $$("[data-brano]");
   if (!bottoni.length || !lettore) return;
-  // brani col lucchetto: finché sono chiusi, al posto del bottone c'è il link al gioco
+  // brani col lucchetto: finché sono chiusi, al posto del bottone c'è il link al gioco o «In arrivo»
   const chiusi = $$("[data-bloccata]");
   const controlla = () => {
     for (const voce of chiusi) {
-      const aperto = libero(voce.dataset.bloccata);
+      const aperto = libero(voce.dataset.bloccata, "colGioco" in voce.dataset);
       const bottone = $("[data-brano]", voce);
       const verso = $("[data-sblocca]", voce);
       if (bottone) bottone.hidden = !aperto;

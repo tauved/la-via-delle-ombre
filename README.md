@@ -130,6 +130,12 @@ I brani di adesso hanno tutti lo stesso volume (circa −10 LUFS), così passand
 
 Per togliere un brano cancella la sua riga e il file.
 
+#### Brani in arrivo
+
+Con `"in_arrivo": "AAAA-MM-GG"` il brano compare nell'elenco con il lucchetto e «In arrivo» sotto il titolo, non si può ascoltare e il lettore lo salta. Dal giorno indicato (a mezzanotte) si sblocca da solo per tutti; dopo quella data la riga si può anche togliere. Il gioco non lo sblocca.
+
+Adesso ce l'ha «Edgar Allan Poe», fino al 15 novembre 2026.
+
 #### Brani col lucchetto
 
 Con `"bloccata_fino_al": "AAAA-MM-GG"` il brano ha il lucchetto: nell'elenco compare con «Finisci il primo livello del gioco per ascoltarla» e porta alla pagina del gioco, e il lettore lo salta. Chi finisce il primo livello lo sblocca: il browser se lo ricorda e il brano si ascolta come gli altri. Dal giorno indicato (a mezzanotte) il brano è libero per tutti, senza fare niente; dopo quella data la riga si può anche togliere.

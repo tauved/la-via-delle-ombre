@@ -238,15 +238,22 @@ async function caricaMusica() {
       if (existsSync(path.join(CONTENUTI, "musica", b.copertina))) copertina = path.join(CONTENUTI, "musica", b.copertina);
       else console.warn(`Manca la copertina contenuti/musica/${b.copertina}: per «${b.titolo}» uso quella di riserva.`);
     }
-    // Col lucchetto: fino a quel giorno si ascolta solo dopo aver finito il primo livello del gioco.
+    // "in_arrivo": fino a quel giorno non si ascolta, poi si sblocca da solo.
+    // "bloccata_fino_al": fino a quel giorno si ascolta solo dopo aver finito il primo livello del gioco.
     let bloccata = "";
-    if (b.bloccata_fino_al) {
-      if (!/^\d{4}-\d{2}-\d{2}$/.test(b.bloccata_fino_al)) {
-        throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «bloccata_fino_al» deve essere nel formato AAAA-MM-GG.`);
+    let colGioco = false;
+    for (const [campo, gioco] of [["in_arrivo", false], ["bloccata_fino_al", true]]) {
+      const data = b[campo];
+      if (!data) continue;
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+        throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «${campo}» deve essere nel formato AAAA-MM-GG.`);
       }
-      if (b.bloccata_fino_al > oggiItalia()) bloccata = b.bloccata_fino_al;
+      if (!bloccata && data > oggiItalia()) {
+        bloccata = data;
+        colGioco = gioco;
+      }
     }
-    return { ...b, sorgente, sorgenteCopertina: copertina, bloccata };
+    return { ...b, sorgente, sorgenteCopertina: copertina, bloccata, colGioco };
   });
 }
 
@@ -382,7 +389,7 @@ function barraAscolto(pagina) {
     file: indirizzo(b.url, pagina),
     copertina: indirizzo(b.urlCopertina, pagina),
     durata: Math.round(b.durata * 10) / 10,
-    ...(b.bloccata ? { bloccata: b.bloccata } : {}),
+    ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true } : {}) } : {}),
   }));
   const primo = raccolte.brani.find((b) => !b.bloccata) || raccolte.brani[0];
   return `<div class="ascolto" data-lettore>
@@ -622,10 +629,14 @@ function paginaHome(caroselli) {
               const bottone = `<button class="brano" type="button" data-brano="${i}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
           </button>`;
               if (!b.bloccata) return `<li>${bottone}</li>`;
-              // col lucchetto: finché non si sblocca, al posto del bottone c'è il link al gioco (app.js li scambia)
-              return `<li data-bloccata="${b.bloccata}">${bottone}
-          <a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
-          </a></li>`;
+              // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
+              const chiuso = b.colGioco
+                ? `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
+          </a>`
+                : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
+          </div>`;
+              return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}>${bottone}
+          ${chiuso}</li>`;
             })
             .join("\n          ")}
         </ol>
@@ -1194,7 +1205,7 @@ async function adattaGioco(brani) {
     html = senzaGoogle;
     aggiunte.push(`<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`);
   }
-  const bloccati = brani.filter((b) => b.bloccata);
+  const bloccati = brani.filter((b) => b.bloccata && b.colGioco);
   if (bloccati.length) aggiunte.push(scriptSblocco(bloccati, pagina));
   if (!aggiunte.length) return;
   const testa = aggiunte.join("\n");
