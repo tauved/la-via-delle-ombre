@@ -35,7 +35,7 @@ Per generare il sito basta Node 20 o più recente: `npm run build`. Non ci sono 
    - Build command: `npm run build`
    - Deploy command: `npx wrangler deploy` (è già quello predefinito)
 4. Premi **Save and Deploy**. Dopo un minuto il sito è online su un indirizzo `….workers.dev`.
-5. Per usare un tuo dominio: apri il Worker, poi **Settings** e la sezione dei domini, e aggiungi un *custom domain*.
+5. I domini sono scritti in `wrangler.jsonc`, alla voce `routes` (ognuno con `"custom_domain": true`): adesso `laviadelleombre.com` e `www.laviadelleombre.com`. A ogni pubblicazione Cloudflare li collega al Worker e crea da solo i record DNS e i certificati. Per aggiungere un dominio (deve essere su Cloudflare) scrivilo lì e fai il push. Non aggiungerli dal pannello di Cloudflare: a ogni pubblicazione restano collegati solo i domini scritti nel file. Con la voce `routes` l'indirizzo `….workers.dev` del punto 4 si spegne.
 6. Quando conosci l'indirizzo definitivo, scrivilo in `contenuti/sito.json` alla voce `"url"` (per esempio `"https://tauh616.com"`) e fai il push: servono per la mappa del sito e per le anteprime dei link su Telegram e Instagram.
 
 Da lì in poi ogni push su GitHub ripubblica il sito da solo.
