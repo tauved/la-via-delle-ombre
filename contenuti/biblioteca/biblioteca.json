@@ -2,7 +2,7 @@
   "sezioni": [
     {
       "titolo": "Miti e scritture",
-      "testo": "Il mito babilonese della creazione e i libri sacri dei monoteismi, da leggere alla fonte.",
+      "testo": "Il mito babilonese della creazione, i libri sacri dei monoteismi e quelli dei loro eretici, da leggere alla fonte.",
       "voci": [
         {
           "titolo": "Enūma eliš. Il mito babilonese della creazione",
@@ -31,6 +31,16 @@
           "anno": "2001",
           "descrizione": "Il libro sacro dell'Islam: 114 sure che secondo la tradizione furono rivelate a Maometto, nella traduzione con commento di uno dei grandi islamisti italiani.",
           "link": "https://www.libraccio.it/libro/9788817128308.html",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "La cena segreta. Trattati e rituali catari",
+          "autore": "A cura di Francesco Zambon",
+          "tipo": "Libro",
+          "editore": "Adelphi",
+          "anno": "1997",
+          "descrizione": "I testi dei catari, gli eretici dualisti del Medioevo, che fino al Novecento si conoscevano quasi solo dalle carte dell'Inquisizione: trattati sui due creatori e i due mondi, rituali, un commento esoterico al Padre nostro e la Cena segreta, l'apocrifo che racconta il loro mito della creazione. Una gnosi dentro il cristianesimo, che la Chiesa perseguitò fino al rogo di Montségur, nel 1244.",
+          "link": "https://www.ibs.it/cena-segreta-trattati-rituali-catari-libro-vari/e/9788845912719",
           "dove": "libreria"
         }
       ]
@@ -168,12 +178,32 @@
           "dove": "libreria"
         },
         {
+          "titolo": "L'orologiaio cieco",
+          "autore": "Richard Dawkins",
+          "tipo": "Libro",
+          "editore": "Mondadori",
+          "anno": "2017",
+          "descrizione": "L'evoluzione è cieca: non vede avanti, non pianifica, non ha uno scopo, eppure costruisce organi precisissimi. Il classico di Dawkins risponde a chi vedeva nella natura un orologio e quindi un orologiaio: la selezione naturale basta da sola, senza un progettista.",
+          "link": "https://www.mondadori.it/libri/lorologiaio-cieco-richard-dawkins/",
+          "dove": "editore"
+        },
+        {
           "titolo": "Friedrich Nietzsche",
           "tipo": "Autore",
           "descrizione": "Il filosofo col martello: la morte di Dio, la morale degli schiavi, il superuomo, l'eterno ritorno. Da «La gaia scienza» a «Così parlò Zarathustra», da «Al di là del bene e del male» all'«Anticristo».",
           "link": "https://www.macrolibrarsi.it/autori/_friedrich-nietzsche.php",
           "dove": "libreria",
           "etichetta": "I suoi libri in libreria"
+        },
+        {
+          "titolo": "L'orda del controvento",
+          "autore": "Alain Damasio",
+          "tipo": "Romanzo",
+          "editore": "Mondadori",
+          "anno": "2024",
+          "descrizione": "Una terra battuta da venti che non si fermano mai e di cui nessuno conosce l'origine. Ventitré persone, addestrate fin dall'infanzia, partono per risalirli fino all'Estrema Vetta: sono la trentaquattresima Orda, e delle trentatré prima di loro non si sa più nulla. Un romanzo-mondo sul senso di andare controvento, premiato col Grand Prix de l'Imaginaire.",
+          "link": "https://www.mondadori.it/libri/lorda-del-controvento-alain-damasio/",
+          "dove": "editore"
         }
       ]
     },
@@ -231,6 +261,40 @@
           "link": "https://www.macrolibrarsi.it/autori/_aldous_huxley.php",
           "dove": "libreria",
           "etichetta": "Huxley in libreria"
+        }
+      ]
+    },
+    {
+      "titolo": "Racconti dall'abisso",
+      "testo": "L'orrore da Poe a Lovecraft, fino a Ligotti: chi ha guardato a lungo nell'abisso.",
+      "voci": [
+        {
+          "titolo": "Obscura. Tutti i racconti",
+          "autore": "Edgar Allan Poe",
+          "tipo": "Racconti",
+          "editore": "Mondadori",
+          "anno": "2018",
+          "descrizione": "Tutti i racconti di Poe in un volume a cura di Giuseppe Lippi, con le illustrazioni di Màlleus: l'angoscia, il terrore e l'intelligenza fredda che indaga il buio, da «Il gatto nero» a «La caduta della casa Usher». Per Lovecraft è da qui che nasce il racconto dell'orrore moderno.",
+          "link": "https://www.ibs.it/obscura-tutti-racconti-libro-edgar-allan-poe-malleus/e/9788804687047",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Tutti i racconti",
+          "autore": "Howard P. Lovecraft",
+          "tipo": "Racconti",
+          "editore": "Mondadori",
+          "anno": "2017",
+          "descrizione": "Tutta la narrativa di Lovecraft in un volume a cura di Giuseppe Lippi, dai primi racconti ai capolavori e alle collaborazioni: Cthulhu, il Necronomicon, Arkham. Un «Edgar Poe cosmico», in cui le forze che schiacciano l'uomo non sono malvagie ma indifferenti, come la natura di Leopardi.",
+          "link": "https://www.comix21.it/fantasy/4030-Tutti-racconti-Howard-P-Lovecraft.html",
+          "dove": "libreria"
+        },
+        {
+          "titolo": "Thomas Ligotti",
+          "tipo": "Autore",
+          "descrizione": "L'erede di Poe e Lovecraft, maestro dell'orrore filosofico: nei suoi racconti il mondo è un teatro di marionette e la coscienza una maledizione. Da «Teatro grottesco» e «Nottuario» a «La cospirazione contro la razza umana», il saggio in cui difende il pessimismo e l'antinatalismo.",
+          "link": "https://www.unilibro.it/libri/f/autore/ligotti_thomas",
+          "dove": "libreria",
+          "etichetta": "I suoi libri in libreria"
         }
       ]
     }
