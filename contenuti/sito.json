@@ -201,5 +201,51 @@
         "sigillo": "mercurio.webp"
       }
     ]
+  },
+  "manifesto": {
+    "titolo": "Manifesto",
+    "invito": "Tocca per aprirlo",
+    "punti": [
+      {
+        "titolo": "La vita è dannazione",
+        "testo": "Quello che vediamo come dono in realtà è portatore di sofferenza e dolore: siamo dannati e condannati a vivere."
+      },
+      {
+        "titolo": "Siamo il sacrificio all'esistenza",
+        "testo": "Nasci come tributo alla vita stessa, per poi morire e nutrire quindi il suo senso."
+      },
+      {
+        "titolo": "Dov'è il tuo dio ora?",
+        "testo": "Siamo stati abbandonati da un dio cieco e freddo, che ora non ci calcola se non per le nostre energie nell'aldilà."
+      },
+      {
+        "titolo": "L'oscurità è luce",
+        "testo": "La luce ci lascia ciechi; l'oscurità mostra il vero e il reale dietro la sua cortina."
+      },
+      {
+        "titolo": "Il male è puro, il bene è falso",
+        "testo": "Il bene nasconde secondi fini, il male no: è fine a se stesso, da lì la sua purezza."
+      },
+      {
+        "titolo": "Siamo uguali nella bara",
+        "testo": "La morte rende tutti finalmente uguali: non contano le differenze di stato sociale, gli obbiettivi ottenuti e le nostre preoccupazioni."
+      },
+      {
+        "titolo": "I veri vivi sono i morti",
+        "testo": "Dopo la morte inizia la vera esistenza: questa è solo una prova."
+      },
+      {
+        "titolo": "Luce a intermittenza, lucciole dell'esistenza",
+        "testo": "Affrontiamo periodi bui e di luce, ma solo nell'oscurità brilliamo davvero."
+      },
+      {
+        "titolo": "La morte è arte",
+        "testo": "È ciò che rende sostenibile l'esistenza sul pianeta e la valorizza; inoltre è esplosiva e improvvisa, come l'arte."
+      },
+      {
+        "titolo": "Disonora il padre, sii il tuo dio",
+        "testo": "Disonora il padre che ci ha cacciati e puniti per aver contravvenuto alle regole, per dirci che ci ama. Per cui ama te stesso e sii il tuo dio."
+      }
+    ]
   }
 }

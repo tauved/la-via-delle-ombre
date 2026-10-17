@@ -69,7 +69,7 @@ Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezio
 
 ### I miei social
 
-In fondo alla home, dopo il Merch, c'è la sezione «I miei social»: al posto dei loghi dei social ci sono i sigilli, e toccando il sigillo o il nome si apre il social. Si cambia in `contenuti/sito.json`, alla voce `"social"`:
+Verso il fondo della home, dopo i Ringraziamenti, c'è la sezione «I miei social»: al posto dei loghi dei social ci sono i sigilli, e toccando il sigillo o il nome si apre il social. Si cambia in `contenuti/sito.json`, alla voce `"social"`:
 
 ```json
 "social": {
@@ -194,7 +194,7 @@ Negli ebook vanno solo testi tuoi, o di autori che ti hanno dato il permesso: i 
 
 ### Merch
 
-In fondo alla home c'è la sezione Merch con le magliette; nel menu la voce Merch porta lì. Le immagini stanno in `contenuti/merch/` e il resto in `contenuti/sito.json`, alla voce `"merch"`:
+Verso il fondo della home c'è la sezione Merch con le magliette; nel menu la voce Merch porta lì. Le immagini stanno in `contenuti/merch/` e il resto in `contenuti/sito.json`, alla voce `"merch"`:
 
 ```json
 "merch": {
@@ -254,6 +254,24 @@ Dopo «Sostienimi» c'è la sezione Ringraziamenti, alla voce `"ringraziamenti"`
 ```
 
 In `"sostenitori"` vanno le persone che hanno donato e hanno lasciato il loro profilo nella causale: compaiono sotto i ringraziamenti, ognuna col suo link (il link è facoltativo, basta anche solo `"@profilo"`). Finché l'elenco è vuoto, quella parte non si vede.
+
+### Manifesto
+
+Proprio in fondo alla home c'è il Manifesto: è chiuso e si apre toccandolo; la voce Manifesto del menu lo apre e ci porta. Si cambia in `contenuti/sito.json`, alla voce `"manifesto"`:
+
+```json
+"manifesto": {
+  "titolo": "Manifesto",
+  "invito": "Tocca per aprirlo",
+  "punti": [
+    { "titolo": "La vita è dannazione", "testo": "Quello che vediamo come dono…" }
+  ]
+}
+```
+
+I punti si numerano da soli, con i numeri romani, nell'ordine in cui sono scritti. Per togliere il Manifesto (e la voce del menu) cancella la voce `"manifesto"`.
+
+L'ordine della home è: apertura, pre-save, Gioco, Caroselli, Ascolta, Da leggere e da scaricare, Telegram, Merch, Sostienimi, Ringraziamenti, I miei social, Manifesto.
 
 ### Biblioteca
 

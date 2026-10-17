@@ -845,6 +845,28 @@ function elencoBrani(signal) {
   }, signal);
 }
 
+// ---------------------------------------------------------------- manifesto
+// Il manifesto in fondo alla home è chiuso; si apre toccandolo o arrivando da un link a #manifesto
+// (per esempio la voce del menu).
+
+function manifesto(signal) {
+  const box = $("[data-manifesto]");
+  if (!box) return;
+  const apri = () => {
+    if (location.hash === "#manifesto") box.open = true;
+  };
+  apri();
+  window.addEventListener("hashchange", apri, { signal });
+  document.addEventListener(
+    "click",
+    (e) => {
+      const a = e.target.closest('a[href$="#manifesto"]');
+      if (a && new URL(a.href, location.href).pathname === location.pathname) box.open = true;
+    },
+    { signal },
+  );
+}
+
 // ---------------------------------------------------------------- browser dentro le app
 // Nel browser interno di Instagram, Facebook e TikTok la musica si ferma quando si esce
 // dall'app o si spegne lo schermo (lo decide l'app): sotto i brani compare come evitarlo.
@@ -872,7 +894,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

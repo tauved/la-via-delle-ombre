@@ -174,6 +174,7 @@ const icona = {
   pausa: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" fill="currentColor"/></svg>',
   prossimo: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5.5v13l9-6.5zM16 5.5h2.5v13H16z" fill="currentColor"/></svg>',
   scarica: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10.5l5 5 5-5M5 20h14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  apri: '<svg class="icona-apri" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   lucchetto: '<svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2" fill="currentColor"/><path d="M8 10.5V8a4 4 0 018 0v2.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   menu: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
   chiudi: '<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',
@@ -335,6 +336,21 @@ function caricaMerch() {
 
 const ebookAttivi = () => sito.ebook?.pubblica !== false;
 
+// I punti del manifesto in fondo alla home (sito.json, voce "manifesto").
+const puntiManifesto = () => (Array.isArray(sito.manifesto?.punti) ? sito.manifesto.punti.filter((p) => p?.titolo) : []);
+
+const romano = (n) => {
+  let resto = n;
+  let s = "";
+  for (const [valore, segno] of [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]]) {
+    while (resto >= valore) {
+      s += segno;
+      resto -= valore;
+    }
+  }
+  return s;
+};
+
 // I social della sezione in fondo alla home: ognuno con il suo sigillo al posto del logo.
 function caricaSocial() {
   const s = sito.social;
@@ -390,6 +406,7 @@ function testata(pagina, attiva) {
     ebookAttivi() ? voce("/ebook/", "Ebook", "ebook") : "",
     raccolte.biblioteca.length ? voce("/biblioteca/", "Biblioteca", "biblioteca") : "",
     raccolte.merch.length ? voce("/#merch", "Merch", "merch") : "",
+    puntiManifesto().length ? voce("/#manifesto", "Manifesto", "manifesto") : "",
   ].join("");
   return `<a class="salta" href="#contenuto">Vai al contenuto</a>
 <header class="testata" data-testata>
@@ -568,6 +585,7 @@ function paginaHome(caroselli) {
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
   const sostieni = raccolte.sostieni;
   const grazie = raccolte.grazie;
+  const manifesto = puntiManifesto();
   const quanteSezioni =
     4 +
     (uscita ? 1 : 0) +
@@ -575,7 +593,8 @@ function paginaHome(caroselli) {
     (raccolte.merch.length ? 1 : 0) +
     (sostieni ? 1 : 0) +
     (grazie ? 1 : 0) +
-    (raccolte.social.length ? 1 : 0);
+    (raccolte.social.length ? 1 : 0) +
+    (manifesto.length ? 1 : 0);
   let nodo = 0;
   const via = () => {
     const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
@@ -626,6 +645,21 @@ function paginaHome(caroselli) {
   </section>
 
   ${sezioneUscita}
+
+  <section class="sezione" id="gioco" aria-labelledby="titolo-gioco">
+    ${via()}
+    <div class="colonna">
+      <div class="gioco-invito">
+        ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
+        <div class="gioco-invito-testo">
+          ${gioco.disponibile ? "" : '<span class="stato">In arrivo</span>'}
+          <h2 id="titolo-gioco">${esc(gioco.titolo || "Il gioco")}</h2>
+          <p>${esc(gioco.testo || "")}</p>
+          ${giocoTesto}
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section class="sezione" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
     ${via()}
@@ -686,21 +720,6 @@ function paginaHome(caroselli) {
       <div class="musica-fuori">
       ${lettoreSpotify}
       ${lettoreYoutube}
-      </div>
-    </div>
-  </section>
-
-  <section class="sezione" id="gioco" aria-labelledby="titolo-gioco">
-    ${via()}
-    <div class="colonna">
-      <div class="gioco-invito">
-        ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
-        <div class="gioco-invito-testo">
-          ${gioco.disponibile ? "" : '<span class="stato">In arrivo</span>'}
-          <h2 id="titolo-gioco">${esc(gioco.titolo || "Il gioco")}</h2>
-          <p>${esc(gioco.testo || "")}</p>
-          ${giocoTesto}
-        </div>
       </div>
     </div>
   </section>
@@ -836,6 +855,29 @@ function paginaHome(caroselli) {
           )
           .join("\n        ")}
       </ul>
+    </div>
+  </section>` : ""}
+
+  ${manifesto.length ? `<section class="sezione" id="manifesto" aria-labelledby="titolo-manifesto">
+    ${via()}
+    <div class="colonna">
+      <details class="manifesto" data-manifesto>
+        <summary>
+          <h2 id="titolo-manifesto">${esc(sito.manifesto.titolo || "Manifesto")}</h2>
+          <span class="manifesto-invito"><span class="se-chiuso">${esc(sito.manifesto.invito || "Tocca per aprirlo")}</span><span class="se-aperto">Chiudi</span>${icona.apri}</span>
+        </summary>
+        <ol class="manifesto-punti" role="list">
+          ${manifesto
+            .map(
+              (p, i) => `<li>
+            <span class="manifesto-numero" aria-hidden="true">${romano(i + 1)}</span>
+            <h3>${esc(p.titolo)}</h3>
+            ${p.testo ? `<p>${esc(p.testo)}</p>` : ""}
+          </li>`,
+            )
+            .join("\n          ")}
+        </ol>
+      </details>
     </div>
   </section>` : ""}
 </main>`;
