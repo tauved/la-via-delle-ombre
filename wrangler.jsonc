@@ -3,6 +3,11 @@
 {
   "name": "la-via-delle-ombre",
   "compatibility_date": "2026-10-01",
+  // il sito risponde sia senza sia con www (Cloudflare crea da solo i record DNS)
+  "routes": [
+    { "pattern": "laviadelleombre.com", "custom_domain": true },
+    { "pattern": "www.laviadelleombre.com", "custom_domain": true }
+  ],
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page",
