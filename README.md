@@ -65,7 +65,7 @@ Per togliere un carosello cancella la sua cartella.
 
 ### Cambiare testi e link
 
-Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito). La frase in fondo a ogni pagina è alla voce `"piede"`.
+Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, Apple Music (`"apple_music"`), TIDAL (`"tidal"`), TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito). Spotify, Apple Music, TIDAL e YouTube compaiono nella sezione Ascolta. La frase in fondo a ogni pagina è alla voce `"piede"`.
 
 ### I miei social
 

@@ -577,6 +577,8 @@ function paginaHome(caroselli) {
     : "";
   const canaliMusica = [
     link.spotify && `<li><a href="${esc(link.spotify)}" rel="me noopener">Spotify <small>Ascolta i brani</small></a></li>`,
+    link.apple_music && `<li><a href="${esc(link.apple_music)}" rel="me noopener">Apple Music <small>Ascolta i brani</small></a></li>`,
+    link.tidal && `<li><a href="${esc(link.tidal)}" rel="me noopener">TIDAL <small>Ascolta i brani</small></a></li>`,
     link.youtube && `<li><a href="${esc(link.youtube)}" rel="me noopener">YouTube <small>Guarda i video</small></a></li>`,
   ].filter(Boolean);
   const giocoTesto = gioco.disponibile
