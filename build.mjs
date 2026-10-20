@@ -30,8 +30,11 @@ const esc = (s = "") =>
 // Tiene solo <strong>, <em> e <br> nel testo delle tavole.
 const htmlSicuro = (html = "") =>
   String(html)
-    .replace(/<(?!\/?(strong|em|b|i|br)\b)[^>]*>/gi, "")
+    // link solo verso https, con il solo href: si aprono in un'altra scheda
+    .replace(/<a\s[^>]*?href="(https:\/\/[^"\s<>]+)"[^>]*>/gi, '<a href="$1" target="_blank" rel="noopener">')
+    .replace(/<(?!\/?(strong|em|b|i|br|a)\b)[^>]*>/gi, "")
     .replace(/<(\/?)(strong|em|b|i|br)\b[^>]*>/gi, "<$1$2>")
+    .replace(/<\/a\b[^>]*>/gi, "</a>")
     .replace(/<(\/?)b>/gi, "<$1strong>")
     .replace(/<(\/?)i>/gi, "<$1em>");
 
