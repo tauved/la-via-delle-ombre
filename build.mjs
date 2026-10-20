@@ -1436,7 +1436,7 @@ function paginaTool(x) {
   ${sezione("tool-note", "Da sapere", elencoTool(x.note))}
   <div class="azioni tool-fine">
     ${scarica}
-    ${link.telegram ? `<a class="bottone filo" href="${esc(link.telegram)}" rel="me noopener">Problemi o idee? Scrivimi su Telegram</a>` : ""}
+    ${link.instagram ? `<a class="bottone filo" href="${esc(link.instagram)}" target="_blank" rel="me noopener">Problemi o idee? Scrivimi su Instagram</a>` : ""}
   </div>
 </main>`;
   return documento({

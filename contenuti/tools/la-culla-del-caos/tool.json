@@ -74,7 +74,6 @@
     "I beat scaricati sono per i provini. Prima di pubblicare un pezzo, compra la licenza dal produttore: nel registro c'è il link.",
     "Niente viene caricato su internet: download, conversioni e analisi girano sul tuo PC. Il programma parla solo con YouTube, per scaricare, e con Python, per aggiornarsi.",
     "Avast e AVG a volte mettono in quarantena «Installa requisiti.bat» come <em>IDP.Generic</em>: è un falso positivo, il file lancia solo winget e lo puoi aprire con il Blocco note. Ripristinalo e aggiungi la cartella alle eccezioni, oppure saltalo: installa Python dal Microsoft Store e il resto lo fa il programma.",
-    "YouTube cambia spesso: se un download non va, chiudi e riapri il programma, che aggiorna yt-dlp da solo. I messaggi di errore sono in italiano e spiegano cosa fare.",
-    "Problemi o idee? Scrivimi su Instagram, <a href=\"https://www.instagram.com/tauh616/\" target=\"_blank\" rel=\"noopener\">@tauh616</a>."
+    "YouTube cambia spesso: se un download non va, chiudi e riapri il programma, che aggiorna yt-dlp da solo. I messaggi di errore sono in italiano e spiegano cosa fare."
   ]
 }
