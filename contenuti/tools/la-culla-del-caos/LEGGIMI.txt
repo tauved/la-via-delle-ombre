@@ -1,32 +1,44 @@
-LA CULLA DEL CAOS - INTERFACCIA TAUH
-==============================
+LA CULLA DEL CAOS - TAUH
+========================
 
-La versione con finestra di La Culla del Caos, con logo e palette TAUH. Ha due
-schede:
-- SCARICA DA YOUTUBE: incolli i link, scegli la qualità, premi SCARICA e vedi
-  l'avanzamento brano per brano. A destra c'è il registro dei beat, con BPM,
-  tonalità e i link per comprare la licenza.
-- CONVERTI AUDIO: trasforma in MP3 o WAV qualsiasi file audio, anche le note
-  vocali di WhatsApp, e prende l'audio dai video.
-- BPM E CHIAVE: ti dice tempo e tonalità di un beat, come Tunebat, e riempie
-  BPM e tonalità mancanti nel registro.
+Il programma per i provini: salva in WAV i beat da YouTube e YouTube Music,
+converte qualsiasi audio (anche le note vocali di WhatsApp) in MP3 o WAV e
+trova BPM e tonalità di un beat, come Tunebat. Gratis, gira tutto sul tuo PC.
 
-Non serve installare altro: usa Python e FFmpeg che hai già installato con
-"Installa requisiti.bat", e scarica_wav.py fa i download come prima.
+Nella cartella trovi:
+- "Installa requisiti.bat"            da lanciare una volta sola
+- "Crea collegamento sul desktop.bat" mette l'icona sul desktop
+- "La Culla del Caos.pyw"             il programma con la finestra
+- "Scarica WAV.bat"                   la versione da terminale, solo download
+- scarica_wav.py, trova_bpm_chiave.py, interfaccia\   i file che usa
 
 
 LA PRIMA VOLTA
-1. Copia tutto il contenuto di questa cartella dentro la cartella
-   "La Culla del Caos" che usi già, accanto a scarica_wav.py.
-2. Doppio clic su "Crea collegamento sul desktop.bat": sul desktop compare
-   l'icona "La Culla del Caos" con il logo TAUH. Se Windows avvisa, scegli
+1. Doppio clic su "Installa requisiti.bat": installa Python e FFmpeg con
+   winget. Se Windows avvisa che il file viene da internet, scegli
    "Ulteriori informazioni" e poi "Esegui comunque".
+2. Riavvia il PC, così Windows trova i programmi appena installati.
+3. Doppio clic su "Crea collegamento sul desktop.bat": sul desktop compare
+   l'icona "La Culla del Caos" con il logo TAUH.
+4. Apri La Culla del Caos dall'icona. La prima volta installa da solo le
+   ultime cose che gli servono (yt-dlp e Deno per YouTube, numpy per BPM e
+   chiave): ci vuole un minuto e serve la connessione.
 
 
 SE HAI GIÀ LA VERSIONE PRECEDENTE
-Chiudi la finestra di La Culla del Caos, estrai lo zip nella stessa cartella e
-sostituisci i file. Il collegamento sul desktop e le tue scelte restano.
+Chiudi la finestra, estrai lo zip nella stessa cartella e sostituisci i
+file. Il collegamento sul desktop e le tue scelte restano.
 
+
+LA FINESTRA
+Ha tre schede:
+- SCARICA DA YOUTUBE: incolli i link, scegli la qualità, premi SCARICA e vedi
+  l'avanzamento brano per brano. Sotto c'è il registro dei beat, con BPM,
+  tonalità e i link per comprare la licenza.
+- CONVERTI AUDIO: trasforma in MP3 o WAV qualsiasi file audio, anche le note
+  vocali di WhatsApp, e prende l'audio dai video.
+- BPM E CHIAVE: ti dice tempo e tonalità di un beat e riempie BPM e
+  tonalità mancanti nel registro.
 
 SCARICA DA YOUTUBE
 - Incolla i link, uno per riga, oppure trascina nel riquadro un file .txt.
@@ -75,13 +87,28 @@ BPM E CHIAVE
   produttore.
 
 
+DOVE FINISCONO I WAV
+Nella cartella Musica, sottocartella "Beat per provini", con nome
+"Artista - Titolo.wav". Lì c'è anche registro_beat.csv, che si apre con
+Excel. I link già scaricati vengono saltati. Di una playlist scarica tutto
+solo se incolli il link della playlist.
+
+
+SENZA FINESTRA
+"Scarica WAV.bat" è la versione da terminale: incolla i link, uno per riga,
+e premi Invio su una riga vuota. Trascinando sul .bat un file .txt con un
+link per riga scarica quelli. In cima a scarica_wav.py puoi cambiare
+cartella, frequenza e bit di base.
+
+
 CHIUDERE
 Chiudendo la finestra si chiude anche il programma; se sta scaricando o
-convertendo, prima finisce. "Scarica WAV.bat" continua a funzionare come
-prima.
+convertendo, prima finisce.
 
 
 SE QUALCOSA NON VA
+- YouTube cambia spesso: se un download non va, chiudi e riapri il
+  programma, che controlla se c'è una versione nuova di yt-dlp.
 - "Non trovo scarica_wav.py": i file non sono nella cartella giusta. Spostali,
   oppure premi "Indica la cartella" e scegli la cartella La Culla del Caos.
 - Sotto ogni brano o file con errore c'è la spiegazione. Nella scheda
@@ -98,3 +125,6 @@ Il calcolo sta in trova_bpm_chiave.py, che si usa anche da solo da terminale:
 
 Font: Cinzel e Montserrat (licenza SIL OFL, file nella cartella
 interfaccia\font) e Who asks Satan di Font Monger, gratis per uso personale.
+
+I beat scaricati sono per i provini: prima di pubblicare un pezzo, compra la
+licenza dal produttore (nel registro c'è il link).
