@@ -201,16 +201,16 @@ Tutto quello che sta sotto `/scarica/` (artwork, ebook e tools) il browser lo sc
 
 ### Tools per artisti
 
-I programmi da scaricare stanno in `contenuti/tools/`, una cartella per programma, per esempio `contenuti/tools/scarica-wav/`, con dentro lo zip, le immagini e un file `tool.json`:
+I programmi da scaricare stanno in `contenuti/tools/`, una cartella per programma, per esempio `contenuti/tools/la-culla-del-caos/`, con dentro lo zip, le immagini e un file `tool.json`:
 
 ```json
 {
-  "titolo": "Scarica WAV",
+  "titolo": "La Culla del Caos",
   "sottotitolo": "Una riga che dice cos'è",
   "versione": "3",
   "data": "2026-10-20",
   "sistema": "Windows 10 e 11",
-  "file": "Scarica WAV v3.zip",
+  "file": "La Culla del Caos v3.zip",
   "leggimi": "LEGGIMI.txt",
   "anteprima": "anteprima.webp",
   "descrizione": "Il paragrafo di presentazione.",

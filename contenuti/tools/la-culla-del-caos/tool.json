@@ -1,13 +1,13 @@
 {
-  "titolo": "Scarica WAV",
+  "titolo": "La Culla del Caos",
   "sottotitolo": "Beat in WAV da YouTube, convertitore audio e BPM e chiave di un pezzo, in un programma solo.",
   "versione": "3",
   "data": "2026-10-20",
   "sistema": "Windows 10 e 11",
-  "file": "Scarica WAV v3.zip",
+  "file": "La Culla del Caos v3.zip",
   "leggimi": "LEGGIMI.txt",
   "anteprima": "anteprima.webp",
-  "anteprima_alt": "La finestra di Scarica WAV: a sinistra i link da scaricare e la qualità, a destra il registro dei beat",
+  "anteprima_alt": "La finestra de La Culla del Caos: a sinistra i link da scaricare e la qualità, a destra il registro dei beat",
   "descrizione": "Il programma che uso per i provini: salva in WAV i beat da YouTube, converte qualsiasi audio (anche le note vocali di WhatsApp) in MP3 o WAV e trova BPM e tonalità di un beat, come Tunebat. Gratis, senza registrazione, gira tutto sul tuo PC.",
   "funzioni": [
     { "titolo": "Scarica da YouTube.", "testo": "Incolli i link di YouTube o YouTube Music, uno per riga, e ti salva l'audio in WAV (44,1 o 48 kHz, 16 o 24 bit, come il progetto nella DAW). I link già scaricati vengono saltati." },
@@ -21,11 +21,11 @@
     "Microsoft Edge, che su Windows c'è già: la finestra del programma si apre lì, senza barre."
   ],
   "installazione": [
-    "Scarica lo zip e estrai la cartella «Scarica WAV» dove vuoi, per esempio in Documenti.",
+    "Scarica lo zip e estrai la cartella «La Culla del Caos» dove vuoi, per esempio in Documenti.",
     "Doppio clic su <strong>Installa requisiti.bat</strong>: installa Python e FFmpeg con winget. Se Windows avvisa che il file viene da internet, scegli «Ulteriori informazioni» e poi «Esegui comunque».",
     "Riavvia il PC, così Windows trova i programmi appena installati.",
-    "Doppio clic su <strong>Crea collegamento sul desktop.bat</strong>: sul desktop compare l'icona «Scarica WAV» con il logo TAUH.",
-    "Apri Scarica WAV dall'icona. La prima volta installa da solo le ultime cose che gli servono (yt-dlp per YouTube e numpy per BPM e chiave): ci vuole un minuto."
+    "Doppio clic su <strong>Crea collegamento sul desktop.bat</strong>: sul desktop compare l'icona «La Culla del Caos» con il logo TAUH.",
+    "Apri La Culla del Caos dall'icona. La prima volta installa da solo le ultime cose che gli servono (yt-dlp per YouTube e numpy per BPM e chiave): ci vuole un minuto."
   ],
   "uso": [
     { "titolo": "Scarica:", "testo": "incolla i link, scegli la qualità, premi SCARICA. I WAV finiscono in Musica\\Beat per provini." },

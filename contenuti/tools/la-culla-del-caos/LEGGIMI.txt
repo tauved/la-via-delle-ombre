@@ -1,7 +1,7 @@
-SCARICA WAV - INTERFACCIA TAUH
+LA CULLA DEL CAOS - INTERFACCIA TAUH
 ==============================
 
-La versione con finestra di Scarica WAV, con logo e palette TAUH. Ha due
+La versione con finestra di La Culla del Caos, con logo e palette TAUH. Ha due
 schede:
 - SCARICA DA YOUTUBE: incolli i link, scegli la qualità, premi SCARICA e vedi
   l'avanzamento brano per brano. A destra c'è il registro dei beat, con BPM,
@@ -17,14 +17,14 @@ Non serve installare altro: usa Python e FFmpeg che hai già installato con
 
 LA PRIMA VOLTA
 1. Copia tutto il contenuto di questa cartella dentro la cartella
-   "Scarica WAV" che usi già, accanto a scarica_wav.py.
+   "La Culla del Caos" che usi già, accanto a scarica_wav.py.
 2. Doppio clic su "Crea collegamento sul desktop.bat": sul desktop compare
-   l'icona "Scarica WAV" con il logo TAUH. Se Windows avvisa, scegli
+   l'icona "La Culla del Caos" con il logo TAUH. Se Windows avvisa, scegli
    "Ulteriori informazioni" e poi "Esegui comunque".
 
 
 SE HAI GIÀ LA VERSIONE PRECEDENTE
-Chiudi la finestra di Scarica WAV, estrai lo zip nella stessa cartella e
+Chiudi la finestra di La Culla del Caos, estrai lo zip nella stessa cartella e
 sostituisci i file. Il collegamento sul desktop e le tue scelte restano.
 
 
@@ -83,12 +83,12 @@ prima.
 
 SE QUALCOSA NON VA
 - "Non trovo scarica_wav.py": i file non sono nella cartella giusta. Spostali,
-  oppure premi "Indica la cartella" e scegli la cartella Scarica WAV.
+  oppure premi "Indica la cartella" e scegli la cartella La Culla del Caos.
 - Sotto ogni brano o file con errore c'è la spiegazione. Nella scheda
   Scarica, "Dettagli tecnici" mostra tutto quello che ha scritto
   scarica_wav.py.
 - Se la finestra non si apre, da un terminale nella cartella:
-      py "Scarica WAV TAUH.pyw"
+      py "La Culla del Caos.pyw"
   e guarda il messaggio. I messaggi del programma restano anche in
   %LOCALAPPDATA%\ScaricaWAV\interfaccia.log
 
