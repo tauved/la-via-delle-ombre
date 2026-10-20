@@ -230,15 +230,19 @@ async function caricaMusica() {
   if (!existsSync(file)) return [];
   const dati = await leggiJson(file);
   return (Array.isArray(dati.brani) ? dati.brani : []).map((b, i) => {
-    if (!b.titolo || !b.file) throw new ErroreContenuti(`In contenuti/musica/musica.json il brano ${i + 1} deve avere «titolo» e «file».`);
-    const sorgente = path.join(CONTENUTI, "musica", b.file);
-    if (!existsSync(sorgente)) throw new ErroreContenuti(`Manca il file contenuti/musica/${b.file}.`);
-    if (!/\.mp3$/i.test(b.file)) console.warn(`Il brano «${b.titolo}» non è un MP3: alcuni browser potrebbero non suonarlo.`);
+    if (!b.titolo) throw new ErroreContenuti(`In contenuti/musica/musica.json il brano ${i + 1} deve avere «titolo».`);
     let copertina = "";
     if (b.copertina) {
       if (existsSync(path.join(CONTENUTI, "musica", b.copertina))) copertina = path.join(CONTENUTI, "musica", b.copertina);
       else console.warn(`Manca la copertina contenuti/musica/${b.copertina}: per «${b.titolo}» uso quella di riserva.`);
     }
+    // "in_arrivo": true, senza data: il brano resta chiuso finché non si toglie la riga.
+    // L'MP3 non serve e, anche se c'è, non viene pubblicato: così nessuno può scaricarlo prima.
+    if (b.in_arrivo === true) return { ...b, sorgente: "", sorgenteCopertina: copertina, bloccata: "", colGioco: false, chiusa: true };
+    if (!b.file) throw new ErroreContenuti(`In contenuti/musica/musica.json il brano «${b.titolo}» deve avere «file».`);
+    const sorgente = path.join(CONTENUTI, "musica", b.file);
+    if (!existsSync(sorgente)) throw new ErroreContenuti(`Manca il file contenuti/musica/${b.file}.`);
+    if (!/\.mp3$/i.test(b.file)) console.warn(`Il brano «${b.titolo}» non è un MP3: alcuni browser potrebbero non suonarlo.`);
     // "in_arrivo": fino a quel giorno non si ascolta, poi si sblocca da solo.
     // "bloccata_fino_al": fino a quel giorno si ascolta solo dopo aver finito il primo livello del gioco.
     let bloccata = "";
@@ -605,6 +609,18 @@ function paginaHome(caroselli) {
     nodo += 1;
     return `<div class="via" style="--pos: ${pos}%" aria-hidden="true"></div>`;
   };
+  // Dal giorno dell'uscita il pre-save diventa «Ascolta l'ultima uscita»: se alla build la data è già
+  // arrivata il riquadro nasce così, altrimenti a mezzanotte lo cambia app.js (attributi data-dopo-*).
+  const uscitaDopo = Boolean(uscita?.data && uscita.data <= oggiItalia());
+  const uscitaTesti = uscita
+    ? {
+        stato: [uscita.tipo || "Nuova uscita", uscita.tipo_dopo || "Ultima uscita"],
+        testo: [uscita.testo || "", uscita.testo_dopo || "È fuori su Spotify e su tutte le piattaforme."],
+        bottone: [uscita.bottone || "Pre-salvalo su Spotify", uscita.bottone_dopo || "Ascolta l'ultima uscita"],
+      }
+    : null;
+  // attributo col testo di dopo (solo se c'è una data) e il testo da mostrare adesso
+  const conDopo = ([prima, dopo]) => `${uscita?.data ? ` data-dopo-testo="${esc(dopo)}"` : ""}>${esc(uscitaDopo ? dopo : prima)}`;
   const sezioneUscita = uscita
     ? `<section class="sezione" id="uscita" aria-labelledby="titolo-uscita">
     ${via()}
@@ -614,11 +630,11 @@ function paginaHome(caroselli) {
           ? `<img class="uscita-copertina" src="${indirizzo(media.uscitaCopertina, pagina)}" width="${media.uscitaCopertinaW || 600}" height="${media.uscitaCopertinaH || 600}" alt="La copertina di ${esc(uscita.titolo)}" loading="lazy" decoding="async">`
           : `<div class="uscita-disco" aria-hidden="true"><span class="uscita-etichetta"><img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="" loading="lazy" decoding="async"></span></div>`}
         <div class="uscita-testo">
-          <span class="stato" data-uscita-stato>${esc(uscita.tipo || "Nuova uscita")}</span>
+          <span class="stato" data-uscita-stato${conDopo(uscitaTesti.stato)}</span>
           <h2 id="titolo-uscita">${esc(uscita.titolo)}</h2>
-          ${uscita.data ? `<p class="uscita-data" data-uscita-quando>Esce il ${dataEstesa(uscita.data)}</p>` : ""}
-          ${uscita.testo ? `<p>${esc(uscita.testo)}</p>` : ""}
-          <a class="bottone primario" href="${esc(uscita.link)}" target="_blank" rel="noopener" data-uscita-link data-dopo="${esc(uscita.bottone_dopo || "Ascoltalo su Spotify")}">${icona.gioca}<span>${esc(uscita.bottone || "Pre-salvalo su Spotify")}</span></a>
+          ${uscita.data ? `<p class="uscita-data" data-uscita-quando>${uscitaDopo ? "Uscito" : "Esce"} il ${dataEstesa(uscita.data)}</p>` : ""}
+          ${uscita.data || uscita.testo ? `<p${conDopo(uscitaTesti.testo)}</p>` : ""}
+          <a class="bottone primario" href="${esc(uscitaDopo && uscita.link_dopo ? uscita.link_dopo : uscita.link)}" target="_blank" rel="noopener" data-uscita-link${uscita.data && uscita.link_dopo ? ` data-dopo-link="${esc(uscita.link_dopo)}"` : ""}>${icona.gioca}<span${conDopo(uscitaTesti.bottone)}</span></a>
         </div>
       </div>
     </div>
@@ -729,16 +745,19 @@ function paginaHome(caroselli) {
         <h2 id="titolo-musica">Ascolta</h2>
         <p>${esc(musica.testo || "")}</p>
       </div>
-      ${raccolte.brani.length ? `<div class="musica-brani">
+      ${raccolte.elencoBrani.length ? `<div class="musica-brani">
         <ol class="brani" role="list">
-          ${raccolte.brani
-            .map((b, i) => {
+          ${raccolte.elencoBrani
+            .map((b) => {
               const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
               const interno = (testo, simbolo) => `
             <img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
             <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${esc(testo)}</span>` : ""}</span>
             <span class="brano-icona">${simbolo}</span>`;
-              const bottone = `<button class="brano" type="button" data-brano="${i}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
+              // «in arrivo» senza data: solo il riquadro chiuso, niente bottone (il brano non è nel lettore)
+              if (b.chiusa) return `<li><div class="brano brano-chiuso brano-in-arrivo">${interno("In arrivo", icona.lucchetto)}
+          </div></li>`;
+              const bottone = `<button class="brano" type="button" data-brano="${b.indice}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
           </button>`;
               if (!b.bloccata) return `<li>${bottone}</li>`;
               // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
@@ -1295,7 +1314,9 @@ function pagina404() {
 
 const media = {};
 const risorse = {};
-const raccolte = { brani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
+// brani: quelli che si possono ascoltare (anche se chiusi fino a una data), nell'ordine del lettore;
+// elencoBrani: tutti, nell'ordine di musica.json, compresi quelli «in arrivo» senza data e senza MP3.
+const raccolte = { brani: [], elencoBrani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1455,9 +1476,16 @@ async function principale() {
   // musica, ebook e artwork
   raccolte.slugCaroselli = new Set(caroselli.map((c) => c.slug));
   for (const b of brani) {
+    const copiaCopertina = async () =>
+      b.sorgenteCopertina ? (await copiaConImpronta(b.sorgenteCopertina, "media/musica", b.copertina)).url : media.copertinaBrano;
+    if (b.chiusa) {
+      raccolte.elencoBrani.push({ ...b, urlCopertina: await copiaCopertina() });
+      continue;
+    }
     const { url, dati } = await copiaConImpronta(b.sorgente, "media/musica", b.file);
-    const urlCopertina = b.sorgenteCopertina ? (await copiaConImpronta(b.sorgenteCopertina, "media/musica", b.copertina)).url : media.copertinaBrano;
-    raccolte.brani.push({ ...b, url, urlCopertina, durata: durataMp3(dati) });
+    const voce = { ...b, url, urlCopertina: await copiaCopertina(), durata: durataMp3(dati), indice: raccolte.brani.length };
+    raccolte.brani.push(voce);
+    raccolte.elencoBrani.push(voce);
   }
   for (const x of ebook) {
     for (const f of x.formati) {

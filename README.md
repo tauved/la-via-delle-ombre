@@ -99,12 +99,15 @@ In cima alla home, sotto l'apertura, c'è il riquadro della prossima uscita con 
   "testo": "Pre-salvalo su Spotify: il giorno dell'uscita lo trovi già nella tua libreria.",
   "link": "https://distrokid.com/hyperfollow/tauh/come-dio/",
   "bottone": "Pre-salvalo su Spotify",
-  "bottone_dopo": "Ascoltalo su Spotify",
+  "tipo_dopo": "Ultima uscita",
+  "testo_dopo": "È fuori su Spotify e su tutte le piattaforme.",
+  "bottone_dopo": "Ascolta l'ultima uscita",
+  "link_dopo": "",
   "copertina": ""
 }
 ```
 
-Prima della data il sito mostra quanti giorni mancano; dal giorno dell'uscita scrive «È uscito» e il bottone diventa «Ascoltalo su Spotify» (il link di HyperFollow dopo l'uscita porta al brano). Per mettere la copertina salvala in `contenuti/uscita/` (quadrata, per esempio 1000×1000) e scrivi il nome del file in `"copertina"`; senza copertina compare un disco con il logo, che gira mentre suona la musica del sito. Per togliere il riquadro cancella la voce `"uscita"`.
+Prima della data il sito mostra quanti giorni mancano. Dal giorno dell'uscita (a mezzanotte, senza fare niente) il pre-save diventa «Ascolta l'ultima uscita»: al posto di `"tipo"`, `"testo"` e `"bottone"` compaiono `"tipo_dopo"`, `"testo_dopo"` e `"bottone_dopo"`, e sotto il titolo c'è «Uscito oggi», poi «Uscito il …». Il bottone resta sul link di HyperFollow, che dopo l'uscita porta al brano su Spotify e sulle altre piattaforme; se vuoi mandarlo altrove (per esempio dritto al brano su Spotify) scrivi l'indirizzo in `"link_dopo"`. Il riquadro resta così finché non lo cambi con la prossima uscita. Per mettere la copertina salvala in `contenuti/uscita/` (quadrata, per esempio 1000×1000) e scrivi il nome del file in `"copertina"`; senza copertina compare un disco con il logo, che gira mentre suona la musica del sito. Per togliere il riquadro cancella la voce `"uscita"`.
 
 ### La musica in sottofondo
 
@@ -140,6 +143,8 @@ Per togliere un brano cancella la sua riga e il file.
 Con `"in_arrivo": "AAAA-MM-GG"` il brano compare nell'elenco con il lucchetto e «In arrivo» sotto il titolo, non si può ascoltare e il lettore lo salta. Dal giorno indicato (a mezzanotte) si sblocca da solo per tutti; dopo quella data la riga si può anche togliere. Il gioco non lo sblocca.
 
 Adesso ce l'ha «Edgar Allan Poe», fino al 15 novembre 2026.
+
+Con `"in_arrivo": true`, senza data, il brano resta chiuso finché non togli la riga. In questo caso l'MP3 non serve e, anche se c'è, non viene pubblicato: chi guarda il codice del sito non lo trova. Il repository su GitHub è pubblico, quindi l'MP3 di un brano ancora inedito non va messo in `contenuti/musica/` finché non lo sblocchi: il giorno in cui lo sblocchi aggiungi il file e togli `"in_arrivo"`. Adesso ce l'ha «Brivido e Panico», con la copertina di Incubo.
 
 #### Brani col lucchetto
 

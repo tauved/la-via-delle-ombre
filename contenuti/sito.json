@@ -15,7 +15,9 @@
     "testo": "Pre-salvalo su Spotify: il giorno dell'uscita lo trovi già nella tua libreria.",
     "link": "https://distrokid.com/hyperfollow/tauh/come-dio/",
     "bottone": "Pre-salvalo su Spotify",
-    "bottone_dopo": "Ascoltalo su Spotify",
+    "tipo_dopo": "Ultima uscita",
+    "testo_dopo": "È fuori su Spotify e su tutte le piattaforme.",
+    "bottone_dopo": "Ascolta l'ultima uscita",
     "copertina": "come-dio.webp"
   },
   "caroselli": {

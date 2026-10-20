@@ -795,11 +795,12 @@ function uscita() {
     if (quando) quando.textContent = `${box.dataset.prima} · ${mancano === 1 ? "manca un giorno" : `mancano ${mancano} giorni`}`;
     return;
   }
-  const stato = $("[data-uscita-stato]", box);
+  // dal giorno dell'uscita il pre-save diventa «Ascolta l'ultima uscita»: etichetta, testo e bottone
+  // prendono i testi di dopo che la build ha messo negli attributi data-dopo-testo
+  if (quando) quando.textContent = mancano === 0 ? "Uscito oggi" : box.dataset.dopo;
+  for (const el of $$("[data-dopo-testo]", box)) el.textContent = el.dataset.dopoTesto;
   const bottone = $("[data-uscita-link]", box);
-  if (quando) quando.textContent = mancano === 0 ? "Esce oggi" : box.dataset.dopo;
-  if (stato && mancano < 0) stato.textContent = "È uscito";
-  if (bottone?.dataset.dopo) $("span", bottone).textContent = bottone.dataset.dopo;
+  if (bottone?.dataset.dopoLink) bottone.href = bottone.dataset.dopoLink;
 }
 
 // ---------------------------------------------------------------- elenco dei brani nella home
