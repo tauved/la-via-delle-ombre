@@ -89,10 +89,42 @@ const lettore = (() => {
   const ascoltatori = new Set();
 
   const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco);
-  // il primo brano ascoltabile dopo «da» (o prima, con passo -1); -1 se non ce ne sono
-  const vicino = (da, passo = 1) => {
-    for (let k = 1; k <= brani.length; k++) {
-      const i = (((da + passo * k) % brani.length) + brani.length) % brani.length;
+
+  // Shuffle: i brani suonano in un ordine casuale, nuovo a ogni visita. La scheda lo ricorda
+  // (sessionStorage) mentre si gira per il sito; finito il giro se ne mescola un altro.
+  const n = brani.length;
+  const mescola = (evita = -1) => {
+    const o = brani.map((_, k) => k);
+    for (let k = n - 1; k > 0; k--) {
+      const j = Math.floor(Math.random() * (k + 1));
+      [o[k], o[j]] = [o[j], o[k]];
+    }
+    // tra un giro e l'altro non ripete subito l'ultimo brano
+    if (n > 1 && o[0] === evita) [o[0], o[1]] = [o[1], o[0]];
+    return o;
+  };
+  const ordineValido = (o) =>
+    Array.isArray(o) && o.length === n && new Set(o).size === n && o.every((k) => Number.isInteger(k) && k >= 0 && k < n);
+  let ordine = mescola();
+
+  // il brano ascoltabile che viene dopo «da» nell'ordine casuale; finito il giro rimescola. -1 se sono tutti chiusi
+  const seguente = (da) => {
+    let p = ordine.indexOf(da);
+    for (let k = 0; k < 2 * n; k++) {
+      if (p + 1 >= n) {
+        ordine = mescola(da);
+        p = -1;
+      }
+      p += 1;
+      if (!chiuso(ordine[p])) return ordine[p];
+    }
+    return -1;
+  };
+  // quello che viene prima, nello stesso giro
+  const precedenteIn = (da) => {
+    const p = ordine.indexOf(da);
+    for (let k = 1; k <= n; k++) {
+      const i = ordine[(((p - k) % n) + n) % n];
       if (!chiuso(i)) return i;
     }
     return -1;
@@ -109,7 +141,7 @@ const lettore = (() => {
     if (!subito && ora - ultimoSalvataggio < 2000) return;
     ultimoSalvataggio = ora;
     try {
-      sessionStorage.setItem(CHIAVE, JSON.stringify({ i: indice, t: Math.round(posizione() * 10) / 10, a: attivo }));
+      sessionStorage.setItem(CHIAVE, JSON.stringify({ i: indice, t: Math.round(posizione() * 10) / 10, a: attivo, o: ordine }));
     } catch {
       /* il browser non permette di ricordarlo */
     }
@@ -176,7 +208,7 @@ const lettore = (() => {
 
   function avvia(i = indice) {
     i = ((i % brani.length) + brani.length) % brani.length;
-    if (chiuso(i)) i = vicino(i);
+    if (chiuso(i)) i = seguente(i);
     if (i < 0) return;
     // Safari su iPhone (iOS 17 e dopo): è musica, deve continuare anche a schermo spento
     try {
@@ -204,11 +236,11 @@ const lettore = (() => {
     salva();
   }
   const prossimo = () => {
-    const i = vicino(indice);
+    const i = seguente(indice);
     if (i >= 0) avvia(i);
   };
   const precedente = () => {
-    const i = vicino(indice, -1);
+    const i = precedenteIn(indice);
     if (i >= 0) avvia(i);
   };
 
@@ -332,16 +364,25 @@ const lettore = (() => {
     }
   }
 
+  // All'avvio: se la scheda ha già un ordine e un brano (stessa visita) riparte da lì,
+  // altrimenti il primo brano è il primo ascoltabile del nuovo ordine casuale.
+  let daRiprendere = false;
   try {
     const s = JSON.parse(sessionStorage.getItem(CHIAVE) || "null");
-    if (s?.a && Number.isInteger(s.i) && brani[s.i] && !chiuso(s.i)) {
-      attivo = true;
-      carica(s.i, Math.max(0, Number(s.t) || 0));
+    if (ordineValido(s?.o)) ordine = s.o;
+    if (Number.isInteger(s?.i) && brani[s.i] && !chiuso(s.i)) {
+      daRiprendere = true;
+      if (s.a) {
+        attivo = true;
+        carica(s.i, Math.max(0, Number(s.t) || 0));
+      } else {
+        indice = s.i;
+      }
     }
   } catch {
     /* niente da recuperare */
   }
-  if (chiuso(indice)) indice = Math.max(0, vicino(indice));
+  if (!daRiprendere) indice = ordine.find((i) => !chiuso(i)) ?? 0;
   window.addEventListener("pagehide", () => salva());
   window.addEventListener("pageshow", aggiorna);
   aggiorna();

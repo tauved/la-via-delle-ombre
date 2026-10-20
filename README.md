@@ -115,8 +115,9 @@ In basso a destra c'è il lettore «Ascolta TAUH». La musica parte solo quando 
 
 - **A schermo spento**: in Safari e Chrome la musica continua anche col telefono bloccato o mentre si usa un'altra app. Nel browser interno di Instagram, Facebook e TikTok invece si ferma quando si esce dall'app (lo decide l'app, il sito non può farci niente): lì, sotto l'elenco dei brani, compare un avviso che spiega di aprire il sito nel browser.
 - **Un player alla volta**: se chi visita carica il player di Spotify, il lettore del sito si ferma e si chiude; se poi fa ripartire la musica del sito, il player di Spotify torna al bottone «Carica il player» (così si ferma anche lui).
+- **In ordine casuale (shuffle)**: a ogni visita il lettore mescola i brani, quindi «Ascolta TAUH» parte ogni volta da un pezzo diverso e il tasto avanti segue quell'ordine. Mentre si gira per il sito, o ricaricando la pagina, l'ordine resta lo stesso; finito il giro ne mescola un altro, senza ripetere subito l'ultimo brano. Se chi visita sceglie un brano dall'elenco, si continua da lì. I brani chiusi vengono saltati.
 
-I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in cui suonano (il primo è quello che parte con «Ascolta TAUH»):
+I brani stanno in `contenuti/musica/`, elencati in `musica.json` nell'ordine in cui compaiono nell'elenco della home (il lettore poi li suona in ordine casuale):
 
 ```json
 {
