@@ -14,15 +14,25 @@ Nella cartella trovi:
 
 
 LA PRIMA VOLTA
-1. Doppio clic su "Installa requisiti.bat": installa Python e FFmpeg con
-   winget. Se Windows avvisa che il file viene da internet, scegli
-   "Ulteriori informazioni" e poi "Esegui comunque".
+1. Installa Python, in uno di questi due modi:
+   - dal Microsoft Store: cerca "Python 3.13" (è gratis, di Python Software
+     Foundation) e premi Installa;
+   - oppure doppio clic su "Installa requisiti.bat", che installa Python e
+     FFmpeg con winget. Se Windows avvisa che il file viene da internet,
+     scegli "Ulteriori informazioni" e poi "Esegui comunque".
 2. Riavvia il PC, così Windows trova i programmi appena installati.
 3. Doppio clic su "Crea collegamento sul desktop.bat": sul desktop compare
    l'icona "La Culla del Caos" con il logo TAUH.
-4. Apri La Culla del Caos dall'icona. La prima volta installa da solo le
-   ultime cose che gli servono (yt-dlp e Deno per YouTube, numpy per BPM e
-   chiave): ci vuole un minuto e serve la connessione.
+4. Apri La Culla del Caos dall'icona. La prima volta installa da solo quello
+   che gli manca (FFmpeg per i WAV, yt-dlp e Deno per YouTube, numpy per BPM
+   e chiave): ci vuole qualche minuto e serve la connessione.
+
+ANTIVIRUS
+Avast e AVG a volte mettono in quarantena "Installa requisiti.bat" come
+"IDP.Generic": è un falso positivo (il file lancia solo winget, lo puoi aprire
+con il Blocco note). Puoi ripristinarlo dalla quarantena e aggiungere la
+cartella alle eccezioni, oppure saltarlo: installa Python dal Microsoft Store
+e il resto lo fa il programma.
 
 
 SE HAI GIÀ LA VERSIONE PRECEDENTE
