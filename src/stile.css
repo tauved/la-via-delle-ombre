@@ -2198,6 +2198,26 @@ body:has(.ascolto) {
 
 /* ------------------------------------------------------------ tools per artisti */
 
+/* Da telefono e tablet lo zip non serve: il programma gira su Windows.
+   Il tasto resta solo dove c'è un mouse (pointer: fine). */
+.tool-solo-pc {
+  display: none;
+  align-self: center;
+  color: var(--grigio);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+@media (pointer: coarse) {
+  .tool-scarica {
+    display: none;
+  }
+
+  .tool-solo-pc {
+    display: inline-block;
+  }
+}
+
 .tools {
   display: grid;
   gap: 1.5rem;

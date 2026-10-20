@@ -1363,7 +1363,8 @@ const schedaTool = (x, pagina) => `<li class="tool">
         ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
         <div class="azioni">
           <a class="bottone primario" href="${indirizzo(`/tools/${x.slug}/`, pagina)}">Cosa fa e come si installa</a>
-          <a class="bottone filo" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica (${peso(x.peso)})</a>
+          <a class="bottone filo tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica (${peso(x.peso)})</a>
+          <span class="tool-solo-pc">Si scarica dal PC</span>
         </div>
       </div>
     </li>`;
@@ -1395,7 +1396,8 @@ function paginaTools() {
 
 function paginaTool(x) {
   const pagina = `/tools/${x.slug}/`;
-  const scarica = `<a class="bottone primario" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica ${esc(x.titolo)}${x.versione ? ` v${esc(x.versione)}` : ""}</a>`;
+  const scarica = `<a class="bottone primario tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica ${esc(x.titolo)}${x.versione ? ` v${esc(x.versione)}` : ""}</a>
+      <span class="tool-solo-pc">È un programma per ${esc(x.sistema || "Windows")}: apri questa pagina dal PC per scaricarlo.</span>`;
   const meta = [x.sistema, path.extname(x.file).slice(1).toUpperCase(), peso(x.peso), x.data ? `aggiornato il ${dataEstesa(x.data)}` : ""].filter(Boolean).join(" · ");
   const sezione = (id, titolo, contenuto) =>
     contenuto ? `<section class="tool-sezione" aria-labelledby="${id}">
