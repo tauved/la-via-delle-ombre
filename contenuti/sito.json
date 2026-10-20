@@ -111,6 +111,11 @@
     "tiktok": "https://www.tiktok.com/@tauh616",
     "telegram": "https://t.me/+4ZOcDRnDqZEzYjk0"
   },
+  "tools": {
+    "titolo": "Tools per artisti",
+    "testo": "I programmi che uso per fare musica, gratis per chi cammina sulla via delle ombre. Si scaricano senza registrazione e girano sul tuo PC.",
+    "nota": "Sono fatti per Windows. Ogni pagina spiega cosa fa il programma e come si installa; nello zip c'è anche un LEGGIMI."
+  },
   "biblioteca": {
     "pubblica": true,
     "testo": "I libri e gli scritti che TAUH consiglia a chi cammina sulla via delle ombre: miti antichi, gnosi, magia, coscienza, orrore.",

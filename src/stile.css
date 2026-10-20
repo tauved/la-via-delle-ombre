@@ -2196,6 +2196,171 @@ body:has(.ascolto) {
   color: var(--bianco);
 }
 
+/* ------------------------------------------------------------ tools per artisti */
+
+.tools {
+  display: grid;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0 0 clamp(4rem, 9vw, 6rem);
+  list-style: none;
+}
+
+.tool {
+  display: grid;
+  gap: 1.25rem;
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border-radius: 18px;
+  background: var(--viola-notte);
+  box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.55);
+}
+
+.tool-anteprima {
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  outline: 1px solid rgba(103, 76, 192, 0.5);
+  outline-offset: -1px;
+}
+
+.tool-anteprima img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tool-testo {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+  min-width: 0;
+}
+
+.tool-testo h2 {
+  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+}
+
+.tool-testo h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tool-testo h2 a:hover {
+  color: var(--bianco);
+}
+
+.tool-tipo {
+  font: 700 0.78rem/1.2 var(--corpo);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--grigio);
+}
+
+.tool-testo .sottotitolo,
+.tool-testa .sottotitolo {
+  font: 600 1.05rem/1.35 var(--titoli);
+  color: var(--bianco);
+}
+
+@media (min-width: 720px) {
+  .tool {
+    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    align-items: start;
+  }
+}
+
+.briciole {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+
+.briciole a {
+  color: var(--grigio);
+}
+
+.briciole a::before {
+  content: "← ";
+}
+
+.tool-testa {
+  display: grid;
+  gap: 0.8rem;
+  justify-items: start;
+}
+
+.tool-testa > p {
+  max-width: 44rem;
+}
+
+.tool-meta {
+  color: var(--grigio);
+  font-size: 0.82rem;
+}
+
+.tool-figura {
+  margin: 0 0 clamp(2rem, 5vw, 3rem);
+}
+
+.tool-figura img,
+.tool-schermate img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 0 1px rgba(103, 76, 192, 0.55), 0 20px 50px rgba(0, 0, 0, 0.6);
+}
+
+.tool-sezione {
+  margin: 0 0 clamp(2rem, 5vw, 3rem);
+  max-width: 46rem;
+}
+
+.tool-sezione h2 {
+  margin-bottom: 0.8rem;
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+}
+
+.tool-elenco {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding-left: 1.4rem;
+  line-height: 1.55;
+}
+
+.tool-elenco strong {
+  color: var(--lime);
+  font-weight: 700;
+}
+
+.tool-elenco code {
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  background: rgba(103, 76, 192, 0.25);
+  font-size: 0.92em;
+}
+
+.tool-schermate {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.tool-schermate figure {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.tool-schermate figcaption {
+  color: var(--grigio);
+  font-size: 0.9rem;
+}
+
+.tool-fine {
+  padding-bottom: clamp(4rem, 9vw, 6rem);
+}
+
 /* ------------------------------------------------------------ biblioteca */
 
 .scaffale {

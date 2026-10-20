@@ -324,6 +324,45 @@ async function caricaBiblioteca() {
     .filter((s) => s.voci.length);
 }
 
+// Tools per artisti: una cartella per programma in contenuti/tools/, con tool.json e lo zip.
+async function caricaTools() {
+  const cartella = path.join(CONTENUTI, "tools");
+  if (!existsSync(cartella)) return [];
+  const voci = (await readdir(cartella, { withFileTypes: true })).filter((v) => v.isDirectory());
+  const elenco = [];
+  for (const voce of voci) {
+    const slug = voce.name;
+    const dir = path.join(cartella, slug);
+    if (!/^[a-z0-9-]+$/.test(slug)) {
+      throw new ErroreContenuti(`La cartella tools «${slug}» ha un nome non valido: usa solo lettere minuscole, numeri e trattini.`);
+    }
+    const file = path.join(dir, "tool.json");
+    if (!existsSync(file)) {
+      console.warn(`Salto la cartella tools ${slug}: manca tool.json`);
+      continue;
+    }
+    const x = await leggiJson(file);
+    if (x.pubblica === false) continue;
+    if (!x.titolo) throw new ErroreContenuti(`Nel tool «${slug}» manca il titolo.`);
+    if (!x.file) throw new ErroreContenuti(`Nel tool «${slug}» manca il file da scaricare («file»).`);
+    if (!existsSync(path.join(dir, x.file))) throw new ErroreContenuti(`Nel tool «${slug}» manca il file ${x.file}.`);
+    for (const chiave of ["anteprima", "schermate"]) {
+      const lista = Array.isArray(x[chiave]) ? x[chiave] : x[chiave] ? [x[chiave]] : [];
+      for (const im of lista) {
+        const nome = typeof im === "string" ? im : im.file;
+        if (!existsSync(path.join(dir, nome))) throw new ErroreContenuti(`Nel tool «${slug}» manca l'immagine ${nome}.`);
+      }
+    }
+    const liste = {};
+    for (const chiave of ["funzioni", "requisiti", "installazione", "uso", "note"]) {
+      liste[chiave] = (Array.isArray(x[chiave]) ? x[chiave] : []).filter(Boolean);
+    }
+    elenco.push({ ...x, ...liste, slug, dir, schermate: (Array.isArray(x.schermate) ? x.schermate : []).map((s) => (typeof s === "string" ? { file: s } : s)) });
+  }
+  elenco.sort((a, b) => (b.data || "").localeCompare(a.data || "") || ordinaNaturale(a.titolo, b.titolo));
+  return elenco;
+}
+
 function caricaMerch() {
   const m = sito.merch;
   if (!m || !Array.isArray(m.articoli) || !m.articoli.length) return [];
@@ -409,6 +448,7 @@ function testata(pagina, attiva) {
     raccolte.opere.length ? voce("/artwork/", "Artwork", "artwork") : "",
     ebookAttivi() ? voce("/ebook/", "Ebook", "ebook") : "",
     raccolte.biblioteca.length ? voce("/biblioteca/", "Biblioteca", "biblioteca") : "",
+    raccolte.tools.length ? voce("/tools/", "Tools", "tools") : "",
     raccolte.merch.length ? voce("/#merch", "Merch", "merch") : "",
     puntiManifesto().length ? voce("/#manifesto", "Manifesto", "manifesto") : "",
   ].join("");
@@ -805,6 +845,10 @@ function paginaHome(caroselli) {
         ${raccolte.biblioteca.length ? `<a class="porta" href="${indirizzo("/biblioteca/", pagina)}">
           <img src="${indirizzo(media.gioco600, pagina)}" width="600" height="750" alt="" loading="lazy" decoding="async">
           <span class="porta-testo"><strong>Biblioteca</strong><span>${voceBiblioteca(raccolte.biblioteca)}</span></span>
+        </a>` : ""}
+        ${raccolte.tools.length ? `<a class="porta" href="${indirizzo("/tools/", pagina)}">
+          ${raccolte.tools[0].urlAnteprima ? `<img src="${indirizzo(raccolte.tools[0].urlAnteprima, pagina)}" width="${raccolte.tools[0].anteprimaW || 1200}" height="${raccolte.tools[0].anteprimaH || 750}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
+          <span class="porta-testo"><strong>${esc(sito.tools?.titolo || "Tools per artisti")}</strong><span>${vociTools(raccolte.tools.length)}</span></span>
         </a>` : ""}
       </div>
     </div>
@@ -1292,6 +1336,116 @@ function paginaBiblioteca() {
   });
 }
 
+// ---------------------------------------------------------------- tools per artisti
+
+const vociTools = (n) => (n === 1 ? "1 programma gratuito" : `${n} programmi gratuiti`);
+
+const nomeZip = (x) => `TAUH - ${x.titolo}${x.versione ? ` v${x.versione}` : ""}${path.extname(x.file).toLowerCase()}`;
+
+// Elenco puntato o numerato: ogni voce può essere una stringa o {"titolo", "testo"}.
+const elencoTool = (voci, tag = "ul") =>
+  voci.length
+    ? `<${tag} class="tool-elenco">
+      ${voci
+        .map((v) => (typeof v === "string" ? `<li>${htmlSicuro(v)}</li>` : `<li>${v.titolo ? `<strong>${esc(v.titolo)}</strong> ` : ""}${htmlSicuro(v.testo || "")}</li>`))
+        .join("\n      ")}
+    </${tag}>`
+    : "";
+
+const schedaTool = (x, pagina) => `<li class="tool">
+      <a class="tool-anteprima" href="${indirizzo(`/tools/${x.slug}/`, pagina)}" aria-hidden="true" tabindex="-1">
+        ${x.urlAnteprima ? `<img src="${indirizzo(x.urlAnteprima, pagina)}" width="${x.anteprimaW || 1200}" height="${x.anteprimaH || 750}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
+      </a>
+      <div class="tool-testo">
+        ${x.sistema ? `<span class="tool-tipo">${esc(x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
+        <h2><a href="${indirizzo(`/tools/${x.slug}/`, pagina)}">${esc(x.titolo)}</a></h2>
+        ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
+        ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
+        <div class="azioni">
+          <a class="bottone primario" href="${indirizzo(`/tools/${x.slug}/`, pagina)}">Cosa fa e come si installa</a>
+          <a class="bottone filo" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica (${peso(x.peso)})</a>
+        </div>
+      </div>
+    </li>`;
+
+function paginaTools() {
+  const pagina = "/tools/";
+  const s = sito.tools || {};
+  const corpo = `<main id="contenuto" class="colonna">
+  <header class="archivio-testa">
+    <h1>${esc(s.titolo || "Tools per artisti")}</h1>
+    ${s.testo ? `<p>${esc(s.testo)}</p>` : ""}
+    ${s.nota ? `<p class="licenza">${esc(s.nota)}</p>` : ""}
+  </header>
+  <ul class="tools" role="list">
+    ${raccolte.tools.map((x) => schedaTool(x, pagina)).join("\n    ")}
+  </ul>
+</main>`;
+  return documento({
+    pagina,
+    titolo: s.titolo || "Tools per artisti",
+    descrizione: s.testo || "I programmi gratuiti di TAUH per chi fa musica.",
+    immagine: raccolte.tools[0]?.urlAnteprima || media.ogHome,
+    larghezzaImmagine: raccolte.tools[0]?.urlAnteprima ? raccolte.tools[0].anteprimaW : 1200,
+    altezzaImmagine: raccolte.tools[0]?.urlAnteprima ? raccolte.tools[0].anteprimaH : 630,
+    attiva: "tools",
+    corpo,
+  });
+}
+
+function paginaTool(x) {
+  const pagina = `/tools/${x.slug}/`;
+  const scarica = `<a class="bottone primario" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica ${esc(x.titolo)}${x.versione ? ` v${esc(x.versione)}` : ""}</a>`;
+  const meta = [x.sistema, path.extname(x.file).slice(1).toUpperCase(), peso(x.peso), x.data ? `aggiornato il ${dataEstesa(x.data)}` : ""].filter(Boolean).join(" · ");
+  const sezione = (id, titolo, contenuto) =>
+    contenuto ? `<section class="tool-sezione" aria-labelledby="${id}">
+    <h2 id="${id}">${esc(titolo)}</h2>
+    ${contenuto}
+  </section>` : "";
+  const corpo = `<main id="contenuto" class="colonna tool-pagina">
+  <p class="briciole"><a href="${indirizzo("/tools/", pagina)}">Tools per artisti</a></p>
+  <header class="archivio-testa tool-testa">
+    ${x.sistema ? `<span class="tool-tipo">${esc(x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
+    <h1>${esc(x.titolo)}</h1>
+    ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
+    ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
+    <div class="azioni">
+      ${scarica}
+      ${x.leggimi ? `<a class="bottone filo" href="${indirizzo(x.urlLeggimi, pagina)}" target="_blank" rel="noopener">Leggi il LEGGIMI<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
+    </div>
+    <span class="tool-meta">${esc(meta)}</span>
+  </header>
+  ${x.urlAnteprima ? `<figure class="tool-figura"><img src="${indirizzo(x.urlAnteprima, pagina)}" width="${x.anteprimaW || 1200}" height="${x.anteprimaH || 750}" alt="${esc(x.anteprima_alt || `La finestra di ${x.titolo}`)}" decoding="async"></figure>` : ""}
+  ${sezione("tool-cosa-fa", "Cosa fa", elencoTool(x.funzioni))}
+  ${sezione("tool-requisiti", "Cosa serve", elencoTool(x.requisiti))}
+  ${sezione("tool-installazione", "Come si installa", elencoTool(x.installazione, "ol"))}
+  ${sezione("tool-uso", "Come si usa", elencoTool(x.uso))}
+  ${x.schermate.length
+    ? `<section class="tool-sezione" aria-labelledby="tool-schermate">
+    <h2 id="tool-schermate">Com'è fatto</h2>
+    <div class="tool-schermate">
+      ${x.schermate.map((s) => `<figure><img src="${indirizzo(s.url, pagina)}" width="${s.w || 1200}" height="${s.h || 750}" alt="${esc(s.alt || "")}" loading="lazy" decoding="async">${s.didascalia ? `<figcaption>${esc(s.didascalia)}</figcaption>` : ""}</figure>`).join("\n      ")}
+    </div>
+  </section>`
+    : ""}
+  ${sezione("tool-note", "Da sapere", elencoTool(x.note))}
+  <div class="azioni tool-fine">
+    ${scarica}
+    ${link.telegram ? `<a class="bottone filo" href="${esc(link.telegram)}" rel="me noopener">Problemi o idee? Scrivimi su Telegram</a>` : ""}
+  </div>
+</main>`;
+  return documento({
+    pagina,
+    titolo: x.titolo,
+    descrizione: x.sottotitolo || x.descrizione || `${x.titolo}, un programma gratuito di TAUH.`,
+    immagine: x.urlAnteprima || media.ogHome,
+    larghezzaImmagine: x.urlAnteprima ? x.anteprimaW : 1200,
+    altezzaImmagine: x.urlAnteprima ? x.anteprimaH : 630,
+    attiva: "tools",
+    corpo,
+  });
+}
+
 function pagina404() {
   const pagina = "/404.html";
   const corpo = `<main id="contenuto" class="scena">
@@ -1316,7 +1470,7 @@ const media = {};
 const risorse = {};
 // brani: quelli che si possono ascoltare (anche se chiusi fino a una data), nell'ordine del lettore;
 // elencoBrani: tutti, nell'ordine di musica.json, compresi quelli «in arrivo» senza data e senza MP3.
-const raccolte = { brani: [], elencoBrani: [], ebook: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
+const raccolte = { brani: [], elencoBrani: [], ebook: [], tools: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1410,6 +1564,7 @@ async function principale() {
   const caroselli = await caricaCaroselli();
   const brani = await caricaMusica();
   const ebook = ebookAttivi() ? await caricaEbook() : [];
+  const tools = await caricaTools();
   const merch = caricaMerch();
   const social = caricaSocial();
   const opere = await caricaArtwork();
@@ -1500,6 +1655,26 @@ async function principale() {
     }
     raccolte.ebook.push(x);
   }
+  for (const x of tools) {
+    const zip = await copiaConImpronta(path.join(x.dir, x.file), `scarica/tools/${x.slug}`, x.file);
+    x.url = zip.url;
+    x.peso = zip.dati.length;
+    if (x.leggimi) {
+      if (!existsSync(path.join(x.dir, x.leggimi))) throw new ErroreContenuti(`Nel tool «${x.slug}» manca il file ${x.leggimi}.`);
+      x.urlLeggimi = (await copiaConImpronta(path.join(x.dir, x.leggimi), `media/tools/${x.slug}`, x.leggimi)).url;
+    }
+    if (x.anteprima) {
+      const { url, dati } = await copiaConImpronta(path.join(x.dir, x.anteprima), `media/tools/${x.slug}`, x.anteprima);
+      const dim = dimensioniImmagine(dati);
+      Object.assign(x, { urlAnteprima: url, anteprimaW: dim?.w, anteprimaH: dim?.h });
+    }
+    for (const s of x.schermate) {
+      const { url, dati } = await copiaConImpronta(path.join(x.dir, s.file), `media/tools/${x.slug}`, s.file);
+      const dim = dimensioniImmagine(dati);
+      Object.assign(s, { url, w: dim?.w, h: dim?.h });
+    }
+    raccolte.tools.push(x);
+  }
   for (const o of opere) {
     const originale = await copiaConImpronta(path.join(o.dir, o.file), "scarica/artwork", o.file);
     const dim = dimensioniImmagine(originale.dati);
@@ -1548,6 +1723,7 @@ async function principale() {
     ...(raccolte.opere.length ? [["/artwork/", paginaArtwork()]] : []),
     ...(ebookAttivi() ? [["/ebook/", paginaEbook()]] : []),
     ...(raccolte.biblioteca.length ? [["/biblioteca/", paginaBiblioteca()]] : []),
+    ...(raccolte.tools.length ? [["/tools/", paginaTools()], ...raccolte.tools.map((x) => [`/tools/${x.slug}/`, paginaTool(x)])] : []),
     ["/404.html", pagina404()],
   ];
   for (const [percorso, html] of pagine) await scrivi(percorso, html);
@@ -1569,7 +1745,7 @@ ${indirizzi.map((p) => `  <url><loc>${esc(assoluto(p))}</loc>${date.has(p) ? `<l
   await writeFile(path.join(USCITA, "robots.txt"), `${robots.join("\n")}\n`);
 
   const tavole = caroselli.reduce((s, c) => s + c.tavole.length, 0);
-  console.log(`Sito generato in ${path.relative(RADICE, USCITA)}/: ${pagine.length} pagine, ${caroselli.length} caroselli, ${tavole} tavole, ${raccolte.brani.length} brani, ${raccolte.opere.length} artwork, ${raccolte.ebook.length} ebook.`);
+  console.log(`Sito generato in ${path.relative(RADICE, USCITA)}/: ${pagine.length} pagine, ${caroselli.length} caroselli, ${tavole} tavole, ${raccolte.brani.length} brani, ${raccolte.opere.length} artwork, ${raccolte.ebook.length} ebook, ${raccolte.tools.length} tools.`);
   if (!sito.url) console.log("Nota: in contenuti/sito.json manca «url». Inseriscilo quando il sito è online, per le anteprime dei link.");
 }
 

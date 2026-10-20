@@ -1,0 +1,46 @@
+{
+  "titolo": "Scarica WAV",
+  "sottotitolo": "Beat in WAV da YouTube, convertitore audio e BPM e chiave di un pezzo, in un programma solo.",
+  "versione": "3",
+  "data": "2026-10-20",
+  "sistema": "Windows 10 e 11",
+  "file": "Scarica WAV v3.zip",
+  "leggimi": "LEGGIMI.txt",
+  "anteprima": "anteprima.webp",
+  "anteprima_alt": "La finestra di Scarica WAV: a sinistra i link da scaricare e la qualità, a destra il registro dei beat",
+  "descrizione": "Il programma che uso per i provini: salva in WAV i beat da YouTube, converte qualsiasi audio (anche le note vocali di WhatsApp) in MP3 o WAV e trova BPM e tonalità di un beat, come Tunebat. Gratis, senza registrazione, gira tutto sul tuo PC.",
+  "funzioni": [
+    { "titolo": "Scarica da YouTube.", "testo": "Incolli i link di YouTube o YouTube Music, uno per riga, e ti salva l'audio in WAV (44,1 o 48 kHz, 16 o 24 bit, come il progetto nella DAW). I link già scaricati vengono saltati." },
+    { "titolo": "Registro dei beat.", "testo": "Ogni beat finisce in un registro, che si apre anche con Excel: titolo, canale del produttore, link del video, link per comprare la licenza (BeatStars, Airbit…) e BPM e tonalità, se il produttore li ha scritti." },
+    { "titolo": "Converti audio.", "testo": "Trascini i file, anche una cartella intera, e li trasformi in MP3 o WAV: note vocali e audio di WhatsApp, M4A, OGG, OPUS, FLAC, WMA, AIFF e gli altri. Dai video prende solo l'audio." },
+    { "titolo": "BPM e chiave.", "testo": "Trascini un beat e ti dice il tempo in BPM e la tonalità, con la chiave Camelot per i mix, la relativa e una seconda ipotesi. Nel registro riempie da solo i BPM e le tonalità che mancano." }
+  ],
+  "requisiti": [
+    "Un PC con Windows 10 o 11.",
+    "Python e FFmpeg: se non li hai, li installa il file «Installa requisiti.bat» che trovi nello zip (serve la connessione).",
+    "Microsoft Edge, che su Windows c'è già: la finestra del programma si apre lì, senza barre."
+  ],
+  "installazione": [
+    "Scarica lo zip e estrai la cartella «Scarica WAV» dove vuoi, per esempio in Documenti.",
+    "Doppio clic su <strong>Installa requisiti.bat</strong>: installa Python e FFmpeg con winget. Se Windows avvisa che il file viene da internet, scegli «Ulteriori informazioni» e poi «Esegui comunque».",
+    "Riavvia il PC, così Windows trova i programmi appena installati.",
+    "Doppio clic su <strong>Crea collegamento sul desktop.bat</strong>: sul desktop compare l'icona «Scarica WAV» con il logo TAUH.",
+    "Apri Scarica WAV dall'icona. La prima volta installa da solo le ultime cose che gli servono (yt-dlp per YouTube e numpy per BPM e chiave): ci vuole un minuto."
+  ],
+  "uso": [
+    { "titolo": "Scarica:", "testo": "incolla i link, scegli la qualità, premi SCARICA. I WAV finiscono in Musica\\Beat per provini." },
+    { "titolo": "Converti:", "testo": "trascina i file nella finestra, scegli MP3 o WAV, premi CONVERTI. I file finiscono in Musica\\Convertiti, gli originali restano come sono." },
+    { "titolo": "BPM e chiave:", "testo": "trascina un beat e aspetta qualche secondo. 80 e 160 BPM sono lo stesso beat: il programma mostra entrambi. Per la tonalità controlla anche la relativa: minore e maggiore relativa usano le stesse note." },
+    { "titolo": "Senza finestra:", "testo": "nello zip c'è anche «Scarica WAV.bat», la versione da terminale: incolli i link e premi Invio." }
+  ],
+  "schermate": [
+    { "file": "converti.webp", "alt": "La scheda Converti audio con l'elenco dei file e il formato scelto", "didascalia": "Converti audio: trascini i file, scegli MP3 o WAV e premi Converti." },
+    { "file": "bpm.webp", "alt": "La scheda BPM e chiave con i risultati di due beat", "didascalia": "BPM e chiave: tempo, tonalità, chiave Camelot e seconda ipotesi per ogni beat." }
+  ],
+  "note": [
+    "I beat scaricati sono per i provini. Prima di pubblicare un pezzo, compra la licenza dal produttore: nel registro c'è il link.",
+    "Niente viene caricato su internet: download, conversioni e analisi girano sul tuo PC. Il programma parla solo con YouTube, per scaricare, e con Python, per aggiornarsi.",
+    "YouTube cambia spesso: se un download non va, chiudi e riapri il programma, che aggiorna yt-dlp da solo. I messaggi di errore sono in italiano e spiegano cosa fare.",
+    "Se ti è utile o se trovi un problema, scrivimi sul canale Telegram."
+  ]
+}

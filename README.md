@@ -18,6 +18,7 @@ contenuti/
   merch/                     le foto e i disegni delle magliette
   ebook/<nome>/              un ebook per cartella, con ebook.json (pagina per ora nascosta)
   biblioteca/                i libri consigliati, con i link (biblioteca.json)
+  tools/<nome>/              un programma per cartella, con tool.json, lo zip e le immagini
 src/                         stile.css, app.js, immagini del sito e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
 strumenti/                   script per aggiungere caroselli
@@ -196,7 +197,33 @@ Ogni ebook ha una cartella in `contenuti/ebook/`, per esempio `contenuti/ebook/l
 
 Se c'è un solo formato basta `"file": "nome.pdf"`. Gli ebook si ordinano per data, dal più recente. Finché la cartella è vuota la pagina Ebook mostra «In arrivo».
 
-Tutto quello che sta sotto `/scarica/` (artwork ed ebook) il browser lo scarica invece di aprirlo.
+Tutto quello che sta sotto `/scarica/` (artwork, ebook e tools) il browser lo scarica invece di aprirlo.
+
+### Tools per artisti
+
+I programmi da scaricare stanno in `contenuti/tools/`, una cartella per programma, per esempio `contenuti/tools/scarica-wav/`, con dentro lo zip, le immagini e un file `tool.json`:
+
+```json
+{
+  "titolo": "Scarica WAV",
+  "sottotitolo": "Una riga che dice cos'è",
+  "versione": "3",
+  "data": "2026-10-20",
+  "sistema": "Windows 10 e 11",
+  "file": "Scarica WAV v3.zip",
+  "leggimi": "LEGGIMI.txt",
+  "anteprima": "anteprima.webp",
+  "descrizione": "Il paragrafo di presentazione.",
+  "funzioni": [{ "titolo": "Cosa fa.", "testo": "Spiegazione" }],
+  "requisiti": ["Un PC con Windows 10 o 11."],
+  "installazione": ["Primo passo", "Secondo passo"],
+  "uso": ["Come si usa"],
+  "schermate": [{ "file": "converti.webp", "alt": "...", "didascalia": "..." }],
+  "note": ["Da sapere"]
+}
+```
+
+Ogni programma ha la sua pagina (`/tools/<nome>/`) con le sezioni Cosa fa, Cosa serve, Come si installa, Come si usa, Com'è fatto e Da sapere: le voci possono essere semplici stringhe o `{"titolo", "testo"}`, e nel testo si possono usare `<strong>` ed `<em>`. `leggimi`, `anteprima` e `schermate` sono facoltativi. Lo zip si scarica da `/scarica/tools/<nome>/` con il nome «TAUH - Titolo vN.zip». Per nascondere un programma senza cancellarlo metti `"pubblica": false`. Titolo e testi della pagina che li raccoglie stanno in `contenuti/sito.json`, alla voce `"tools"`; se non ci sono programmi la pagina e la voce del menu spariscono.
 
 Negli ebook vanno solo testi tuoi, o di autori che ti hanno dato il permesso: i libri di altri, anche se in rete girano gratis, vanno nella Biblioteca con un link.
 

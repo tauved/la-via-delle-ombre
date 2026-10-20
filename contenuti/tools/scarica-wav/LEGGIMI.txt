@@ -1,0 +1,100 @@
+SCARICA WAV - INTERFACCIA TAUH
+==============================
+
+La versione con finestra di Scarica WAV, con logo e palette TAUH. Ha due
+schede:
+- SCARICA DA YOUTUBE: incolli i link, scegli la qualità, premi SCARICA e vedi
+  l'avanzamento brano per brano. A destra c'è il registro dei beat, con BPM,
+  tonalità e i link per comprare la licenza.
+- CONVERTI AUDIO: trasforma in MP3 o WAV qualsiasi file audio, anche le note
+  vocali di WhatsApp, e prende l'audio dai video.
+- BPM E CHIAVE: ti dice tempo e tonalità di un beat, come Tunebat, e riempie
+  BPM e tonalità mancanti nel registro.
+
+Non serve installare altro: usa Python e FFmpeg che hai già installato con
+"Installa requisiti.bat", e scarica_wav.py fa i download come prima.
+
+
+LA PRIMA VOLTA
+1. Copia tutto il contenuto di questa cartella dentro la cartella
+   "Scarica WAV" che usi già, accanto a scarica_wav.py.
+2. Doppio clic su "Crea collegamento sul desktop.bat": sul desktop compare
+   l'icona "Scarica WAV" con il logo TAUH. Se Windows avvisa, scegli
+   "Ulteriori informazioni" e poi "Esegui comunque".
+
+
+SE HAI GIÀ LA VERSIONE PRECEDENTE
+Chiudi la finestra di Scarica WAV, estrai lo zip nella stessa cartella e
+sostituisci i file. Il collegamento sul desktop e le tue scelte restano.
+
+
+SCARICA DA YOUTUBE
+- Incolla i link, uno per riga, oppure trascina nel riquadro un file .txt.
+  Ctrl+Invio fa partire il download.
+- Scegli frequenza e bit (come il progetto nella DAW) e, se vuoi, un'altra
+  cartella: le scelte restano salvate per la volta dopo.
+- Premi SCARICA. "Annulla" ferma tutto.
+- Nel registro: "Licenza" apre il negozio del produttore (BeatStars, Airbit,
+  ecc.), "Video" apre YouTube, "Mostra file" apre la cartella sul WAV.
+
+
+CONVERTI AUDIO
+- Trascina i file nella finestra, anche una cartella intera, oppure premi
+  "Scegli file". Vanno bene le note vocali e gli audio di WhatsApp (.opus,
+  .ogg, .waptt, .m4a, .aac), MP3, WAV, M4A, FLAC, WMA, AIFF, AMR e altri; dai
+  video (.mp4, .mov, .mkv...) prende solo l'audio. Puoi anche copiare i file
+  in Esplora risorse e premere Ctrl+V nella finestra.
+- Le note vocali di WhatsApp: salvale prima sul PC (da WhatsApp per Windows
+  o da WhatsApp Web) e poi trascinale qui. Non serve rinominarle.
+- Scegli MP3 (320, 192 o 128 kbps) oppure WAV (44,1 o 48 kHz, 16 o 24 bit).
+  Per lavorarci in FL Studio scegli WAV.
+- Premi CONVERTI. I file finiscono in Musica\Convertiti ("Cambia" per
+  un'altra cartella). Gli originali restano come sono; se un file con lo
+  stesso nome c'è già, il nuovo prende un numero, ad esempio "Nota (2).wav".
+- "Converti di nuovo" rifà i file già convertiti col formato scelto adesso:
+  così puoi avere sia il WAV sia l'MP3.
+- A destra ci sono i file della cartella dei convertiti, i più recenti in
+  alto, con "Mostra file".
+
+Converte tutto sul tuo PC con FFmpeg: niente viene caricato su internet.
+
+
+BPM E CHIAVE
+- Trascina un beat (o più) nella scheda, oppure premi "Scegli file": parte
+  da solo. Per ogni file vedi il tempo in BPM, la tonalità (per esempio
+  "Fa# minore", F#m, Camelot 11A per i mix), la relativa e una seconda
+  ipotesi. "Copia" mette tutto negli appunti.
+- La prima volta installa da solo numpy (serve al calcolo, circa un minuto,
+  ci vuole internet).
+- Nel registro dei beat, i beat senza BPM o tonalità hanno il tasto
+  "Trova BPM e chiave": analizza il WAV e scrive il risultato nel registro.
+  Se ne mancano tanti, il tasto "BPM mancanti" in alto li fa tutti.
+- È una stima: 80 e 160 BPM sono lo stesso beat (il programma mostra
+  entrambi), e una tonalità minore ha le stesse note della sua maggiore
+  relativa. Nei dubbi fidati dell'orecchio, o di quello che scrive il
+  produttore.
+
+
+CHIUDERE
+Chiudendo la finestra si chiude anche il programma; se sta scaricando o
+convertendo, prima finisce. "Scarica WAV.bat" continua a funzionare come
+prima.
+
+
+SE QUALCOSA NON VA
+- "Non trovo scarica_wav.py": i file non sono nella cartella giusta. Spostali,
+  oppure premi "Indica la cartella" e scegli la cartella Scarica WAV.
+- Sotto ogni brano o file con errore c'è la spiegazione. Nella scheda
+  Scarica, "Dettagli tecnici" mostra tutto quello che ha scritto
+  scarica_wav.py.
+- Se la finestra non si apre, da un terminale nella cartella:
+      py "Scarica WAV TAUH.pyw"
+  e guarda il messaggio. I messaggi del programma restano anche in
+  %LOCALAPPDATA%\ScaricaWAV\interfaccia.log
+
+
+Il calcolo sta in trova_bpm_chiave.py, che si usa anche da solo da terminale:
+    py trova_bpm_chiave.py "beat.wav"
+
+Font: Cinzel e Montserrat (licenza SIL OFL, file nella cartella
+interfaccia\font) e Who asks Satan di Font Monger, gratis per uso personale.
