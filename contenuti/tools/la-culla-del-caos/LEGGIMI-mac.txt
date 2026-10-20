@@ -1,0 +1,163 @@
+LA CULLA DEL CAOS - TAUH (versione per Mac)
+===========================================
+
+Il programma per i provini: salva in WAV i beat da YouTube e YouTube Music,
+converte qualsiasi audio (anche le note vocali di WhatsApp) in MP3 o WAV e
+trova BPM e tonalità di un beat, come Tunebat. Gratis, gira tutto sul tuo Mac.
+
+Nella cartella trovi:
+- "Installa requisiti.command"   da lanciare una volta sola
+- "Metti nel Dock.command"       crea l'app con il logo TAUH e la mette nel Dock
+- "La Culla del Caos.command"    apre la finestra del programma
+- "Scarica WAV.command"          la versione da Terminale, solo download
+- La Culla del Caos.py, scarica_wav.py, trova_bpm_chiave.py, interfaccia/
+                                 i file che usa (non spostarli)
+
+
+LA PRIMA VOLTA
+1. Apri "Installa requisiti.command" con tasto destro > Apri (vedi GATEKEEPER
+   qui sotto). Fa tre cose, chiedendo conferma:
+   - installa gli strumenti a riga di comando di Xcode (gratis, di Apple):
+     danno Python 3. Se compare la finestra di macOS premi Installa, aspetta
+     che finisca e rilancia il file;
+   - installa Homebrew (brew.sh) se manca: chiede la password del Mac;
+   - installa FFmpeg con Homebrew.
+   In alternativa: Python da python.org e, nel Terminale, "brew install ffmpeg".
+2. Apri "Metti nel Dock.command" (sempre tasto destro > Apri): in ~/Applications
+   compare l'app "La Culla del Caos" con il logo TAUH e, se dici di sì, va nel
+   Dock. Se poi sposti la cartella del programma, rilancialo.
+3. Apri La Culla del Caos dal Dock (o da "La Culla del Caos.command"). La prima
+   volta installa da solo quello che gli manca (yt-dlp e Deno per YouTube,
+   numpy per BPM e chiave; FFmpeg con Homebrew se non c'è ancora): ci vuole
+   qualche minuto e serve la connessione.
+
+GATEKEEPER (al posto dell'antivirus)
+Su Mac non serve nessun antivirus, ma i file .command arrivano da internet e
+non sono firmati da Apple, quindi al primo doppio clic macOS dice che non può
+aprirli. Si risolve una volta per file:
+- tasto destro (o Ctrl+clic) sul file > Apri > Apri;
+- se il Mac risponde solo "non è possibile verificare", vai in Impostazioni di
+  Sistema > Privacy e sicurezza, scorri in basso e premi "Apri comunque"
+  accanto al nome del file, poi riprova.
+Se invece dice che non hai i permessi per aprirlo, apri il Terminale, scrivi
+    chmod +x
+con uno spazio dopo, trascina nella finestra i quattro file .command e premi
+Invio.
+L'app creata da "Metti nel Dock.command" nasce sul tuo Mac, quindi si apre
+senza avvisi. Gli script Python non hanno bisogno di nulla.
+
+SE HAI GIÀ LA VERSIONE PRECEDENTE
+Chiudi la finestra, estrai lo zip nella stessa cartella e sostituisci i
+file. L'app nel Dock e le tue scelte restano.
+
+
+LA FINESTRA
+Si apre con Chrome, Chromium, Edge o Brave, se ce n'è uno, come finestra
+senza barra degli indirizzi; altrimenti in una scheda di Safari (funziona
+uguale). Ha tre schede:
+- SCARICA DA YOUTUBE: incolli i link, scegli la qualità, premi SCARICA e vedi
+  l'avanzamento brano per brano. Sotto c'è il registro dei beat, con BPM,
+  tonalità e i link per comprare la licenza.
+- CONVERTI AUDIO: trasforma in MP3 o WAV qualsiasi file audio, anche le note
+  vocali di WhatsApp, e prende l'audio dai video.
+- BPM E CHIAVE: ti dice tempo e tonalità di un beat e riempie BPM e
+  tonalità mancanti nel registro.
+
+SCARICA DA YOUTUBE
+- Incolla i link, uno per riga, oppure trascina nel riquadro un file .txt.
+  Cmd+Invio fa partire il download.
+- Scegli frequenza e bit (come il progetto nella DAW) e, se vuoi, un'altra
+  cartella: le scelte restano salvate per la volta dopo.
+- Premi SCARICA. "Annulla" ferma tutto.
+- Nel registro: "Licenza" apre il negozio del produttore (BeatStars, Airbit,
+  ecc.), "Video" apre YouTube, "Mostra file" apre il Finder sul WAV.
+
+
+CONVERTI AUDIO
+- Trascina i file nella finestra, anche una cartella intera, oppure premi
+  "Scegli file". Vanno bene le note vocali e gli audio di WhatsApp (.opus,
+  .ogg, .waptt, .m4a, .aac), MP3, WAV, M4A, FLAC, WMA, AIFF, AMR e altri; dai
+  video (.mp4, .mov, .mkv...) prende solo l'audio. Puoi anche copiare i file
+  nel Finder e premere Cmd+V nella finestra.
+- Le note vocali di WhatsApp: salvale prima sul Mac (da WhatsApp per Mac o da
+  WhatsApp Web) e poi trascinale qui. Non serve rinominarle.
+- Scegli MP3 (320, 192 o 128 kbps) oppure WAV (44,1 o 48 kHz, 16 o 24 bit).
+  Per lavorarci in FL Studio o Logic scegli WAV.
+- Premi CONVERTI. I file finiscono in Musica/Convertiti ("Cambia" per
+  un'altra cartella). Gli originali restano come sono; se un file con lo
+  stesso nome c'è già, il nuovo prende un numero, ad esempio "Nota (2).wav".
+- "Converti di nuovo" rifà i file già convertiti col formato scelto adesso:
+  così puoi avere sia il WAV sia l'MP3.
+- A destra ci sono i file della cartella dei convertiti, i più recenti in
+  alto, con "Mostra file".
+
+Converte tutto sul tuo Mac con FFmpeg: niente viene caricato su internet.
+
+
+BPM E CHIAVE
+- Trascina un beat (o più) nella scheda, oppure premi "Scegli file": parte
+  da solo. Per ogni file vedi il tempo in BPM, la tonalità (per esempio
+  "Fa# minore", F#m, Camelot 11A per i mix), la relativa e una seconda
+  ipotesi. "Copia" mette tutto negli appunti.
+- La prima volta installa da solo numpy (serve al calcolo, circa un minuto,
+  ci vuole internet).
+- Nel registro dei beat, i beat senza BPM o tonalità hanno il tasto
+  "Trova BPM e chiave": analizza il WAV e scrive il risultato nel registro.
+  Se ne mancano tanti, il tasto "BPM mancanti" in alto li fa tutti.
+- È una stima: 80 e 160 BPM sono lo stesso beat (il programma mostra
+  entrambi), e una tonalità minore ha le stesse note della sua maggiore
+  relativa. Nei dubbi fidati dell'orecchio, o di quello che scrive il
+  produttore.
+
+
+DOVE FINISCONO I WAV
+Nella cartella Musica, sottocartella "Beat per provini", con nome
+"Artista - Titolo.wav". Lì c'è anche registro_beat.csv, che si apre con
+Numbers o Excel. I link già scaricati vengono saltati. Di una playlist
+scarica tutto solo se incolli il link della playlist.
+
+
+SENZA FINESTRA
+"Scarica WAV.command" è la versione da Terminale: incolla i link, uno per
+riga, e premi Invio su una riga vuota. Dal Terminale puoi passargli i link o
+un file .txt con un link per riga. In cima a scarica_wav.py puoi cambiare
+cartella, frequenza e bit di base.
+
+
+CHIUDERE
+Chiudendo la finestra si chiude anche il programma; se sta scaricando o
+convertendo, prima finisce. Quando lo apri dal Dock l'icona rimbalza un
+attimo e sparisce: è normale, il programma vive nella finestra.
+
+
+SE QUALCOSA NON VA
+- YouTube cambia spesso: se un download non va, chiudi e riapri il
+  programma, che controlla se c'è una versione nuova di yt-dlp.
+- "FFmpeg non trovato": lancia "Installa requisiti.command", oppure nel
+  Terminale scrivi  brew install ffmpeg  (Homebrew da brew.sh). Il programma
+  lo cerca nel PATH, in /opt/homebrew/bin e in /usr/local/bin.
+- "Non trovo scarica_wav.py": i file non sono nella cartella giusta. Spostali,
+  oppure premi "Indica la cartella" e scegli la cartella del programma.
+- La finestra per scegliere una cartella è quella di macOS: se non compare
+  davanti, guarda dietro le altre finestre.
+- Sotto ogni brano o file con errore c'è la spiegazione. Nella scheda
+  Scarica, "Dettagli tecnici" mostra tutto quello che ha scritto
+  scarica_wav.py.
+- Se la finestra non si apre, dal Terminale, nella cartella del programma:
+      python3 "La Culla del Caos.py"
+  e guarda il messaggio. I messaggi del programma restano anche in
+  ~/Library/Application Support/ScaricaWAV/interfaccia.log
+- Se il Python degli strumenti Xcode è troppo vecchio per yt-dlp, installa
+  Python da python.org: i file .command lo trovano da soli.
+
+
+Il calcolo sta in trova_bpm_chiave.py, che si usa anche da solo dal Terminale:
+    python3 trova_bpm_chiave.py "beat.wav"
+
+Font: Cinzel e Montserrat (licenza SIL OFL, file nella cartella
+interfaccia/font) e Who asks Satan di Font Monger, gratis per uso personale.
+
+I beat scaricati sono per i provini: prima di pubblicare un pezzo, compra la
+licenza dal produttore (nel registro c'è il link).
+
+Problemi o idee? Scrivimi su Instagram: @tauh616

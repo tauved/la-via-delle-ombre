@@ -1343,7 +1343,7 @@ function paginaBiblioteca() {
 
 const vociTools = (n) => (n === 1 ? "1 programma gratuito" : `${n} programmi gratuiti`);
 
-const nomeZip = (x) => `TAUH - ${x.titolo}${x.versione ? ` v${x.versione}` : ""}${path.extname(x.file).toLowerCase()}`;
+const nomeZip = (x, v) => `TAUH - ${x.titolo}${x.versione ? ` v${x.versione}` : ""}${(v || x).etichetta && x.versioni.length ? ` (${(v || x).etichetta})` : ""}${path.extname((v || x).file).toLowerCase()}`;
 
 // Elenco puntato o numerato: ogni voce può essere una stringa o {"titolo", "testo"}.
 const elencoTool = (voci, tag = "ul") =>
@@ -1360,13 +1360,14 @@ const schedaTool = (x, pagina) => `<li class="tool">
         ${x.urlAnteprima ? `<img src="${indirizzo(x.urlAnteprima, pagina)}" width="${x.anteprimaW || 1200}" height="${x.anteprimaH || 750}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
       </a>
       <div class="tool-testo">
-        ${x.sistema ? `<span class="tool-tipo">${esc(x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
+        ${x.sistema ? `<span class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
         <h2><a href="${indirizzo(`/tools/${x.slug}/`, pagina)}">${esc(x.titolo)}</a></h2>
         ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
         ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
         <div class="azioni">
           <a class="bottone primario" href="${indirizzo(`/tools/${x.slug}/`, pagina)}">Cosa fa e come si installa</a>
-          <a class="bottone filo tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica (${peso(x.peso)})</a>
+          <a class="bottone filo tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}${x.versioni.length ? esc(x.etichetta || x.sistema) : "Scarica"} (${peso(x.peso)})</a>
+          ${x.versioni.map((v) => `<a class="bottone filo tool-scarica" href="${indirizzo(v.url, pagina)}" download="${esc(nomeZip(x, v))}">${icona.scarica}${esc(v.etichetta || v.sistema)} (${peso(v.peso)})</a>`).join("\n          ")}
           <span class="tool-solo-pc">Si scarica dal PC</span>
         </div>
       </div>
@@ -1399,8 +1400,10 @@ function paginaTools() {
 
 function paginaTool(x) {
   const pagina = `/tools/${x.slug}/`;
-  const scarica = `<a class="bottone primario tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica ${esc(x.titolo)}${x.versione ? ` v${esc(x.versione)}` : ""}</a>
-      <span class="tool-solo-pc">È un programma per ${esc(x.sistema || "Windows")}: apri questa pagina dal PC per scaricarlo.</span>`;
+  const perChi = [x.sistema, ...x.versioni.map((v) => v.sistema)].filter(Boolean).join(" e ");
+  const scarica = `<a class="bottone primario tool-scarica" href="${indirizzo(x.url, pagina)}" download="${esc(nomeZip(x))}">${icona.scarica}Scarica per ${esc(x.etichetta || x.sistema || "Windows")}</a>
+      ${x.versioni.map((v) => `<a class="bottone primario tool-scarica" href="${indirizzo(v.url, pagina)}" download="${esc(nomeZip(x, v))}">${icona.scarica}Scarica per ${esc(v.etichetta || v.sistema)}</a>`).join("\n      ")}
+      <span class="tool-solo-pc">È un programma per ${esc(perChi || "Windows")}: apri questa pagina dal computer per scaricarlo.</span>`;
   const meta = [x.sistema, path.extname(x.file).slice(1).toUpperCase(), peso(x.peso), x.data ? `aggiornato il ${dataEstesa(x.data)}` : ""].filter(Boolean).join(" · ");
   const sezione = (id, titolo, contenuto) =>
     contenuto ? `<section class="tool-sezione" aria-labelledby="${id}">
@@ -1410,15 +1413,17 @@ function paginaTool(x) {
   const corpo = `<main id="contenuto" class="colonna tool-pagina">
   <p class="briciole"><a href="${indirizzo("/tools/", pagina)}">Tools per artisti</a></p>
   <header class="archivio-testa tool-testa">
-    ${x.sistema ? `<span class="tool-tipo">${esc(x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
+    ${x.sistema ? `<span class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
     <h1>${esc(x.titolo)}</h1>
     ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
     ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
     <div class="azioni">
       ${scarica}
-      ${x.leggimi ? `<a class="bottone filo" href="${indirizzo(x.urlLeggimi, pagina)}" target="_blank" rel="noopener">Leggi il LEGGIMI<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
+      ${x.leggimi ? `<a class="bottone filo" href="${indirizzo(x.urlLeggimi, pagina)}" target="_blank" rel="noopener">LEGGIMI${x.versioni.length ? ` ${esc(x.etichetta || x.sistema)}` : ""}<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
+      ${x.versioni.filter((v) => v.urlLeggimi).map((v) => `<a class="bottone filo" href="${indirizzo(v.urlLeggimi, pagina)}" target="_blank" rel="noopener">LEGGIMI ${esc(v.etichetta || v.sistema)}<span class="nascosto"> (si apre in un'altra scheda)</span></a>`).join("\n      ")}
     </div>
     <span class="tool-meta">${esc(meta)}</span>
+    ${x.versioni.map((v) => `<span class="tool-meta">${esc([v.sistema, path.extname(v.file).slice(1).toUpperCase(), peso(v.peso), v.nota].filter(Boolean).join(" · "))}</span>`).join("\n    ")}
   </header>
   ${x.urlAnteprima ? `<figure class="tool-figura"><img src="${indirizzo(x.urlAnteprima, pagina)}" width="${x.anteprimaW || 1200}" height="${x.anteprimaH || 750}" alt="${esc(x.anteprima_alt || `La finestra di ${x.titolo}`)}" decoding="async"></figure>` : ""}
   ${sezione("tool-cosa-fa", "Cosa fa", elencoTool(x.funzioni))}
@@ -1668,6 +1673,20 @@ async function principale() {
       if (!existsSync(path.join(x.dir, x.leggimi))) throw new ErroreContenuti(`Nel tool «${x.slug}» manca il file ${x.leggimi}.`);
       x.urlLeggimi = (await copiaConImpronta(path.join(x.dir, x.leggimi), `media/tools/${x.slug}`, x.leggimi)).url;
     }
+    // altre versioni dello stesso programma (per esempio quella per Mac)
+    x.versioni = [];
+    for (const v of Array.isArray(x.altre_versioni) ? x.altre_versioni : []) {
+      if (!v.file || !v.sistema) throw new ErroreContenuti(`Nel tool «${x.slug}» ogni voce di «altre_versioni» deve avere «sistema» e «file».`);
+      if (!existsSync(path.join(x.dir, v.file))) throw new ErroreContenuti(`Nel tool «${x.slug}» manca il file ${v.file}.`);
+      const z = await copiaConImpronta(path.join(x.dir, v.file), `scarica/tools/${x.slug}`, v.file);
+      const voce = { ...v, url: z.url, peso: z.dati.length };
+      if (v.leggimi) {
+        if (!existsSync(path.join(x.dir, v.leggimi))) throw new ErroreContenuti(`Nel tool «${x.slug}» manca il file ${v.leggimi}.`);
+        voce.urlLeggimi = (await copiaConImpronta(path.join(x.dir, v.leggimi), `media/tools/${x.slug}`, v.leggimi)).url;
+      }
+      x.versioni.push(voce);
+    }
+    x.sistemi = [x.sistema, ...x.versioni.map((v) => v.sistema)].filter(Boolean).join(" · ");
     if (x.anteprima) {
       const { url, dati } = await copiaConImpronta(path.join(x.dir, x.anteprima), `media/tools/${x.slug}`, x.anteprima);
       const dim = dimensioniImmagine(dati);
