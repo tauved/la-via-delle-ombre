@@ -420,7 +420,15 @@ function caricaSostieni() {
     throw new ErroreContenuti(`Manca il sigillo contenuti/social/${s.sigillo} per «${s.titolo || "Sostienimi"}».`);
   }
   if (s.qr && !existsSync(path.join(CONTENUTI, "sostieni", s.qr))) throw new ErroreContenuti(`Manca il codice QR contenuti/sostieni/${s.qr}.`);
-  return s;
+  // Codici per sbloccare con una donazione i brani col lucchetto del gioco: qui solo le impronte
+  // (strumenti/codice-sblocco.mjs), il codice vero lo conosce solo TAUH.
+  const codici = Array.isArray(s.codici_sblocco) ? s.codici_sblocco : [];
+  for (const c of codici) {
+    if (!/^[0-9a-f]{64}$/.test(c)) {
+      throw new ErroreContenuti(`In sito.json, alla voce "sostieni", "codici_sblocco" vuole le impronte fatte con strumenti/codice-sblocco.mjs, non i codici.`);
+    }
+  }
+  return { ...s, codici_sblocco: codici };
 }
 
 // I ringraziamenti (sito.json, voce "ringraziamenti"): le persone da ringraziare e chi ha donato.
@@ -633,6 +641,9 @@ function paginaHome(caroselli) {
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
   const sostieni = raccolte.sostieni;
+  // i brani col lucchetto del gioco si sbloccano anche con il codice che TAUH manda a chi dona
+  const conDonazione = Boolean(sostieni?.codici_sblocco?.length);
+  const braniGioco = raccolte.brani.filter((b) => b.bloccata && b.colGioco);
   const grazie = raccolte.grazie;
   const manifesto = puntiManifesto();
   const prossime = (Array.isArray(sito.sezioni_in_arrivo?.voci) ? sito.sezioni_in_arrivo.voci : []).filter((v) => v?.titolo);
@@ -793,9 +804,10 @@ function paginaHome(caroselli) {
           ${raccolte.elencoBrani
             .map((b) => {
               const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
-              const interno = (testo, simbolo) => `
+              // la nota sotto il titolo: testo semplice, oppure già HTML (con i link) se notaHtml è vero
+              const interno = (testo, simbolo, notaHtml = false) => `
             <img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
-            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${esc(testo)}</span>` : ""}</span>
+            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${notaHtml ? testo : esc(testo)}</span>` : ""}</span>
             <span class="brano-icona">${simbolo}</span>`;
               // «in arrivo» senza data: solo il riquadro chiuso, niente bottone (il brano non è nel lettore)
               if (b.chiusa) return `<li><div class="brano brano-chiuso brano-in-arrivo">${interno("In arrivo", icona.lucchetto)}
@@ -804,8 +816,13 @@ function paginaHome(caroselli) {
           </button>`;
               if (!b.bloccata) return `<li>${bottone}</li>`;
               // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
+              // col gioco e i codici delle donazioni: due strade, il gioco o il riquadro Sostienimi
+              const dueStrade = `Per ascoltarla finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a> o <a href="#sostieni">sostienimi con una donazione</a>`;
               const chiuso = b.colGioco
-                ? `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
+                ? conDonazione
+                  ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(dueStrade, icona.lucchetto, true)}
+          </div>`
+                  : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
           </a>`
                 : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
           </div>`;
@@ -914,6 +931,16 @@ function paginaHome(caroselli) {
               <figcaption>${esc(sostieni.qr_testo || "Inquadra il codice col telefono per donare.")}</figcaption>
             </figure>` : ""}
           </div>
+          ${conDonazione && braniGioco.length ? `<form class="sblocco" data-sblocco data-codici="${sostieni.codici_sblocco.join(",")}" data-date="${braniGioco.map((b) => b.bloccata).join(",")}" hidden>
+            <p class="sblocco-titolo">${esc(sostieni.sblocco_titolo || "Hai già donato?")}</p>
+            <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi i pezzi del gioco:")} ${braniGioco.map((b) => `«${esc(b.titolo)}»`).join(", ")}.</p>
+            <div class="sblocco-riga">
+              <label class="nascosto" for="codice-sblocco">Codice di sblocco</label>
+              <input id="codice-sblocco" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" required>
+              <button class="bottone filo" type="submit">Sblocca</button>
+            </div>
+            <p class="sblocco-esito" data-sblocco-esito role="status" aria-live="polite"></p>
+          </form>` : ""}
         </div>
       </div>
     </div>

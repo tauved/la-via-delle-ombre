@@ -48,7 +48,20 @@ const giocoFinito = () => {
   }
 };
 
-const libero = (bloccata, colGioco = false) => !bloccata || giornoArrivato(bloccata) || (colGioco && giocoFinito());
+// I brani col lucchetto del gioco si sbloccano anche con il codice che TAUH manda a chi dona
+// (riquadro Sostienimi): il browser lo ricorda con questa chiave. Quelli «in arrivo» no.
+const CHIAVE_DONAZIONE = "tauh-sblocco-donazione";
+
+const donazioneFatta = () => {
+  try {
+    return Boolean(localStorage.getItem(CHIAVE_DONAZIONE));
+  } catch {
+    return false;
+  }
+};
+
+const libero = (bloccata, colGioco = false) =>
+  !bloccata || giornoArrivato(bloccata) || (colGioco && (giocoFinito() || donazioneFatta()));
 
 // ================================================================ lettore della musica
 
@@ -844,6 +857,59 @@ function uscita() {
   if (bottone?.dataset.dopoLink) bottone.href = bottone.dataset.dopoLink;
 }
 
+// ---------------------------------------------------------------- codice della donazione
+// Nel riquadro Sostienimi chi ha donato scrive il codice che gli ha mandato TAUH. Il sito ne
+// conosce solo l'impronta (SHA-256, come strumenti/codice-sblocco.mjs): se combacia, il browser
+// ricorda lo sblocco e i brani col lucchetto del gioco si aprono, nell'elenco e nel lettore.
+
+function sblocco(signal) {
+  const form = $("[data-sblocco]");
+  if (!form) return;
+  const date = (form.dataset.date || "").split(",").filter(Boolean);
+  const codici = new Set((form.dataset.codici || "").split(",").filter(Boolean));
+  const campo = $("input", form);
+  const riga = $(".sblocco-riga", form);
+  const esito = $("[data-sblocco-esito]", form);
+  // si vede solo se in questo browser c'è ancora un brano del gioco da sbloccare
+  form.hidden = !date.some((d) => !libero(d, true));
+  const di = (testo, classe = "") => {
+    esito.textContent = testo;
+    form.classList.toggle("sbagliato", classe === "sbagliato");
+    form.classList.toggle("fatto", classe === "fatto");
+  };
+  form.addEventListener(
+    "submit",
+    async (e) => {
+      e.preventDefault();
+      const pulito = campo.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+      if (!pulito) return;
+      let impronta = "";
+      try {
+        const hash = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`la-via-delle-ombre:${pulito}`));
+        impronta = [...new Uint8Array(hash)].map((x) => x.toString(16).padStart(2, "0")).join("");
+      } catch {
+        di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
+        return;
+      }
+      if (!codici.has(impronta)) {
+        di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
+        campo.select();
+        return;
+      }
+      try {
+        localStorage.setItem(CHIAVE_DONAZIONE, "1");
+      } catch {
+        di("Il browser non permette di ricordare lo sblocco: se sei in navigazione privata, riprova in una finestra normale.", "sbagliato");
+        return;
+      }
+      riga.hidden = true;
+      di("Fatto, grazie del sostegno! Ora i pezzi del gioco li trovi aperti nell'elenco dei brani.", "fatto");
+      window.dispatchEvent(new Event("tauh-sbloccati"));
+    },
+    { signal },
+  );
+}
+
 // ---------------------------------------------------------------- elenco dei brani nella home
 
 function elencoBrani(signal) {
@@ -862,9 +928,11 @@ function elencoBrani(signal) {
   };
   if (chiusi.length) {
     controlla();
-    // il gioco finito in un'altra scheda, o tornando indietro dal gioco
-    window.addEventListener("storage", (e) => (e.key === CHIAVE_GIOCO || e.key === null) && controlla(), { signal });
+    // il gioco finito o il codice scritto in un'altra scheda, o tornando indietro dal gioco
+    window.addEventListener("storage", (e) => [CHIAVE_GIOCO, CHIAVE_DONAZIONE, null].includes(e.key) && controlla(), { signal });
     window.addEventListener("pageshow", controlla, { signal });
+    // il codice della donazione appena scritto in questa pagina
+    window.addEventListener("tauh-sbloccati", controlla, { signal });
   }
   for (const b of bottoni) {
     b.addEventListener(
@@ -936,7 +1004,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

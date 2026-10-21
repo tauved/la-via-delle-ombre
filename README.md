@@ -270,6 +270,18 @@ Dopo il Merch c'è il riquadro «Sostienimi», con il sigillo della pietra filos
 
 Il sigillo si prende da `contenuti/social/`. Il bottone apre la pagina PayPal.me di TAUH in un'altra scheda. Su computer, accanto al bottone, c'è anche il codice QR (`contenuti/sostieni/paypal-qr.svg`, nei colori del sito) per donare dal telefono; sul telefono il codice non compare. Se il link cambia, il codice QR va rifatto con il link nuovo (lo fa Claude), oppure si toglie la riga `"qr"`. Per togliere il riquadro cancella la voce `"sostieni"`.
 
+#### Sbloccare con una donazione i pezzi del gioco
+
+I brani col lucchetto del gioco (`"bloccata_fino_al"`) si sbloccano anche con un codice, che TAUH manda in DM a chi ha donato (chi dona lascia il suo profilo nella causale). Quelli `"in_arrivo"` invece no. Finché c'è almeno un brano del gioco ancora chiuso, sotto il bottone di PayPal compare «Hai già donato?» con il campo per il codice; il brano chiuso, nell'elenco, dice «Per ascoltarla finisci il primo livello del gioco o sostienimi con una donazione», con i due link. Chi scrive il codice giusto sblocca i brani del gioco in quel browser, come chi finisce il livello.
+
+```json
+"sblocco_titolo": "Hai già donato?",
+"sblocco_testo": "Scrivi il codice che ti ho mandato e sblocchi i pezzi del gioco:",
+"codici_sblocco": ["2b5cfe1c…"]
+```
+
+In `"codici_sblocco"` non c'è il codice ma la sua impronta, perché il repository su GitHub è pubblico: dall'impronta non si risale al codice. Per cambiare codice (o aggiungerne un altro) scrivi `node strumenti/codice-sblocco.mjs IL-NUOVO-CODICE`, copia la riga che stampa dentro `"codici_sblocco"` e togli quella vecchia, oppure chiedi a Claude. Maiuscole, spazi e trattini non contano; servono almeno 8 tra lettere e cifre. Il codice vero non va mai scritto nei file del sito. Come per il gioco, lo sblocco vive solo nel browser: chi sa smanettare può aggirarlo, a tutti gli altri serve il codice.
+
 ### Ringraziamenti
 
 Dopo «Sostienimi» c'è la sezione Ringraziamenti, alla voce `"ringraziamenti"` di `contenuti/sito.json`. Ogni voce ha `"chi"` (in verde) e `"per"` (sotto):

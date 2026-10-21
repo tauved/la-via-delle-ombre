@@ -168,7 +168,10 @@
     "bottone": "Dona con PayPal",
     "sigillo": "pietra-filosofale.webp",
     "qr": "paypal-qr.svg",
-    "qr_testo": "Oppure inquadra il codice col telefono."
+    "qr_testo": "Oppure inquadra il codice col telefono.",
+    "sblocco_titolo": "Hai già donato?",
+    "sblocco_testo": "Scrivi il codice che ti ho mandato e sblocchi i pezzi del gioco:",
+    "codici_sblocco": ["2b5cfe1c4a036cd9fe721bea50e4d6774e888bfa979a813d4cb1e9ed14c843bf"]
   },
   "ringraziamenti": {
     "titolo": "Ringraziamenti",
