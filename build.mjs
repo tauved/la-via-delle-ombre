@@ -1119,7 +1119,10 @@ function paginaCarosello(c, indice, caroselli) {
       <span><small>${etichetta}</small><strong>${esc(altro.titolo)}</strong></span>
     </a>`
       : "";
+  // .carosello-corpo racchiude tutto tranne «Altre pillole»: su computer il visore fisso (sticky)
+  // si ferma alla fine di questo blocco e non copre più i riquadri delle pillole vicine.
   const corpo = `<main id="contenuto" class="colonna carosello">
+  <div class="carosello-corpo">
   <a class="indietro" href="${indirizzo("/caroselli/", pagina)}">${icona.sinistra}Tutte le pillole</a>
   <header class="carosello-testa">
     <h1>${esc(c.titolo)}</h1>
@@ -1161,6 +1164,7 @@ function paginaCarosello(c, indice, caroselli) {
       )
       .join("\n    ")}
   </section>` : ""}
+  </div>
 
   ${precedente || successivo ? `<nav class="vicini" aria-label="Altre pillole">
     ${vicino(precedente, "Pillola precedente")}

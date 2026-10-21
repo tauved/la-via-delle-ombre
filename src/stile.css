@@ -898,6 +898,12 @@ body::before {
   padding-block: clamp(1.25rem, 4vw, 2.5rem) clamp(3.5rem, 8vw, 5rem);
 }
 
+/* tutto tranne «Altre pillole» (.vicini): su computer è la griglia col visore fisso */
+.carosello-corpo {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+}
+
 .indietro {
   display: inline-flex;
   align-items: center;
@@ -1116,42 +1122,42 @@ body::before {
 
 @media (min-width: 1000px) {
   .carosello {
+    row-gap: 1.25rem;
+  }
+
+  /* Il visore sticky resta dentro .carosello-corpo: le pillole vicine stanno fuori, così non le copre. */
+  .carosello-corpo {
     --larg-visore: min(36rem, 50vw, calc((100svh - var(--alt-testata) - 9.75rem) * 0.8));
     grid-template-columns: var(--larg-visore) minmax(19rem, 1fr);
     grid-template-areas:
       "visore indietro"
       "visore testa"
-      "visore testo"
-      "vicini vicini";
-    grid-template-rows: auto auto 1fr auto;
+      "visore testo";
+    grid-template-rows: auto auto 1fr;
     column-gap: clamp(2.5rem, 5vw, 5rem);
     row-gap: 1.25rem;
     align-items: start;
   }
 
-  .carosello > .indietro {
+  .carosello-corpo > .indietro {
     grid-area: indietro;
     justify-self: start;
   }
 
-  .carosello > .carosello-testa {
+  .carosello-corpo > .carosello-testa {
     grid-area: testa;
   }
 
-  .carosello > .visore {
+  .carosello-corpo > .visore {
     grid-area: visore;
     width: 100%;
     position: sticky;
     top: calc(var(--alt-testata) + 1.5rem);
   }
 
-  .carosello > .testo-tavole {
+  .carosello-corpo > .testo-tavole {
     grid-area: testo;
     margin-top: 0.75rem;
-  }
-
-  .carosello > .vicini {
-    grid-area: vicini;
   }
 }
 
