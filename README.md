@@ -280,7 +280,7 @@ I brani col lucchetto del gioco (`"bloccata_fino_al"`) si sbloccano anche con un
 "codici_sblocco": ["2b5cfe1c…"]
 ```
 
-In `"codici_sblocco"` non c'è il codice ma la sua impronta, perché il repository su GitHub è pubblico: dall'impronta non si risale al codice. Per cambiare codice (o aggiungerne un altro) scrivi `node strumenti/codice-sblocco.mjs IL-NUOVO-CODICE`, copia la riga che stampa dentro `"codici_sblocco"` e togli quella vecchia, oppure chiedi a Claude. Maiuscole, spazi e trattini non contano; servono almeno 8 tra lettere e cifre. Il codice vero non va mai scritto nei file del sito. Come per il gioco, lo sblocco vive solo nel browser: chi sa smanettare può aggirarlo, a tutti gli altri serve il codice.
+In `"codici_sblocco"` non ci sono i codici ma le loro impronte, perché il repository su GitHub è pubblico: dall'impronta non si risale al codice. Adesso ci sono le impronte di 30 codici diversi: TAUH ne dà uno a ogni persona che dona e si segna a chi l'ha dato. Per farne altri scrivi `node strumenti/codice-sblocco.mjs --genera 30`: stampa i codici nuovi, ognuno con la sua impronta; i codici li tieni tu, le impronte vanno aggiunte in `"codici_sblocco"`. Per bloccare un codice che gira, togli la sua impronta (`node strumenti/codice-sblocco.mjs IL-CODICE` la ricalcola); chi l'aveva già usato resta sbloccato. Oppure chiedi a Claude. Maiuscole, spazi e trattini non contano; servono almeno 8 tra lettere e cifre. I codici veri non vanno mai scritti nei file del sito. Come per il gioco, lo sblocco vive solo nel browser: chi sa smanettare può aggirarlo, a tutti gli altri serve il codice.
 
 ### Ringraziamenti
 
