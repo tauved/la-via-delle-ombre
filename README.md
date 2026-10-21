@@ -357,7 +357,7 @@ La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli:
 
 ### Il gioco
 
-Il gioco è Incubo e sta in `static/gioco/play/`: `index.html` è la versione in un unico file (quella per itch.io, con dentro il codice e la copertina di caricamento) e la cartella `assets` ha la musica e la copertina della canzone. Dal 21 ottobre 2026 è la versione con la grafica nuova e il Livello 2 «Oltre il Velo» con il lucchetto fino al 25 novembre.
+Il gioco è Incubo e sta in `static/gioco/play/`: `index.html` è la versione in un unico file (quella per itch.io, con dentro il codice e la copertina di caricamento) e la cartella `assets` ha la musica e la copertina della canzone. Dal 21 ottobre 2026 è la versione con la grafica nuova, il Livello 2 «Oltre il Velo» con il lucchetto fino al 25 novembre e il Livello 3 «Chi è come Dio» con il lucchetto fino al 13 gennaio 2027 (le loro canzoni arrivano quei giorni).
 Su computer si apre dentro la pagina /gioco/, con il bottone per lo schermo intero; su telefono e tablet si apre a tutta pagina con i comandi touch.
 Quando si preme «Entra nella breccia» su Android il gioco passa a schermo intero e si gira in orizzontale; dove non si può (iPhone, browser dentro le app) si gira da solo e il telefono si tiene di lato. Il pulsante SCHERMO sceglie anche il verticale, e in pausa GRAFICA abbassa gli effetti sui telefoni più lenti.
 
