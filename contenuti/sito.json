@@ -52,7 +52,7 @@
     "percorso": "/gioco/play/",
     "proporzioni": "16 / 9",
     "immagine": "incubo",
-    "descrizione_immagine": "Una scena di Incubo: un corridoio del Cielo del Parassita, con le porte segnate dall'occhio e la mano del demone in primo piano.",
+    "descrizione_immagine": "Una scena di Incubo: nel Chiostro delle Anime un Serafino apre le ali piene d'occhi sotto l'Occhio del Parassita, e in primo piano ci sono gli artigli del demone.",
     "comandi": [
       [
         "WASD o frecce",
@@ -67,7 +67,7 @@
         "attaccare"
       ],
       [
-        "1–4 o rotella",
+        "1–5 o rotella",
         "cambiare arma"
       ],
       [
@@ -80,14 +80,15 @@
       ],
       [
         "Esc o P",
-        "pausa"
+        "pausa (lì c'è anche GRAFICA: alta, media o bassa)"
       ]
     ],
     "comandi_touch": [
       "A sinistra trascina per muoverti.",
       "A destra trascina per girarti: i gesti veloci girano di più.",
       "Tieni premuto ATTACCA per sparare e trascinalo per mirare.",
-      "Si gioca anche in verticale; in orizzontale vedi di più."
+      "Il gioco si mette in orizzontale: se il telefono resta in verticale si gira da solo e lo tieni di lato. Il pulsante SCHERMO sceglie anche il verticale.",
+      "Se il telefono rallenta, in pausa metti GRAFICA su media o bassa."
     ]
   },
   "scarica": {

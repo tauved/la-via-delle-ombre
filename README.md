@@ -357,18 +357,18 @@ La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli:
 
 ### Il gioco
 
-Il gioco è Incubo e sta in `static/gioco/play/`: `index.html`, la cartella `src` con il codice e la cartella `assets` con la musica (va bene anche la versione in un unico file per itch.io).
+Il gioco è Incubo e sta in `static/gioco/play/`: `index.html` è la versione in un unico file (quella per itch.io, con dentro il codice e la copertina di caricamento) e la cartella `assets` ha la musica e la copertina della canzone. Dal 21 ottobre 2026 è la versione con la grafica nuova e il Livello 2 «Oltre il Velo» con il lucchetto fino al 25 novembre.
 Su computer si apre dentro la pagina /gioco/, con il bottone per lo schermo intero; su telefono e tablet si apre a tutta pagina con i comandi touch.
-Quando si preme «Entra nella breccia» su Android il gioco passa a schermo intero e si gira in orizzontale; dove non si può (iPhone, browser dentro le app) resta in verticale con l'inquadratura allargata.
+Quando si preme «Entra nella breccia» su Android il gioco passa a schermo intero e si gira in orizzontale; dove non si può (iPhone, browser dentro le app) si gira da solo e il telefono si tiene di lato. Il pulsante SCHERMO sceglie anche il verticale, e in pausa GRAFICA abbassa gli effetti sui telefoni più lenti.
 
 Per aggiornarlo:
 
-1. Metti al posto del contenuto di `static/gioco/play/` quello della nuova versione del gioco.
+1. Metti al posto del contenuto di `static/gioco/play/` quello della nuova versione del gioco: `index.html` e `assets/` di `dist/itch/` (si crea con `python3 build.py` nel progetto del gioco). Il file musicale di un livello non ancora uscito non va messo: il repository è pubblico.
 2. Controlla che nei testi del gioco non ci siano riferimenti all'EP.
 3. Commit e push.
 
 I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli del sito durante la generazione. Sempre durante la generazione si aggiunge lo script che, a fine livello, sblocca i brani col lucchetto (vedi «Brani col lucchetto»).
-I testi della pagina (storia, comandi, immagine di copertina in `src/img/incubo-1280.webp`) sono in `contenuti/sito.json`, alla voce `"gioco"`.
+I testi della pagina (storia, comandi, descrizione dell'immagine) sono in `contenuti/sito.json`, alla voce `"gioco"`. La copertina della pagina è `src/img/incubo-1280.webp` (con `incubo-640.webp` per i telefoni) e l'anteprima per i link è `src/img/og-gioco.jpg` (1200×630): sono schermate vere del gioco, da rifare quando cambia la grafica.
 Con `"disponibile": false` la pagina torna a mostrare «In arrivo».
 
 ## Provarlo sul computer
