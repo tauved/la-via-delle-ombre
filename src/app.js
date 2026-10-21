@@ -33,6 +33,7 @@ const sostituisciIndirizzo = (url) => {
 const CHIAVE_GIOCO = "tauh-incubo-livello-1";
 
 const giornoArrivato = (iso) => {
+  if (iso === "sempre") return false; // lucchetto senza scadenza
   const [anno, mese, giorno] = String(iso || "").split("-").map(Number);
   if (!anno || !mese || !giorno) return true;
   const oggi = new Date();
@@ -49,19 +50,31 @@ const giocoFinito = () => {
 };
 
 // I brani col lucchetto del gioco si sbloccano anche con il codice che TAUH manda a chi dona
-// (riquadro Sostienimi): il browser lo ricorda con questa chiave. Quelli «in arrivo» no.
-const CHIAVE_DONAZIONE = "tauh-sblocco-donazione";
+// (riquadro Sostienimi). Ogni brano ha i suoi codici e il browser ricorda lo sblocco brano per
+// brano, con «tauh-sblocco:<nome del file>». Quelli «in arrivo» no.
+const chiaveDonazione = (codice) => `tauh-sblocco:${codice}`;
 
-const donazioneFatta = () => {
+// Il primo giorno la chiave era una sola, e i codici valevano solo per «Incubo».
+try {
+  if (localStorage.getItem("tauh-sblocco-donazione")) {
+    localStorage.setItem(chiaveDonazione("incubo"), "1");
+    localStorage.removeItem("tauh-sblocco-donazione");
+  }
+} catch {
+  /* il browser non permette di ricordarlo */
+}
+
+const donazioneFatta = (codice) => {
+  if (!codice) return false;
   try {
-    return Boolean(localStorage.getItem(CHIAVE_DONAZIONE));
+    return Boolean(localStorage.getItem(chiaveDonazione(codice)));
   } catch {
     return false;
   }
 };
 
-const libero = (bloccata, colGioco = false) =>
-  !bloccata || giornoArrivato(bloccata) || (colGioco && (giocoFinito() || donazioneFatta()));
+const libero = (bloccata, colGioco = false, codice = "") =>
+  !bloccata || giornoArrivato(bloccata) || (colGioco && giocoFinito()) || donazioneFatta(codice);
 
 // ================================================================ lettore della musica
 
@@ -101,7 +114,7 @@ const lettore = (() => {
   const ripieghi = new Map();
   const ascoltatori = new Set();
 
-  const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco);
+  const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco, brani[i]?.codice);
 
   // Shuffle: i brani suonano in un ordine casuale, nuovo a ogni visita. La scheda lo ricorda
   // (sessionStorage) mentre si gira per il sito; finito il giro se ne mescola un altro.
@@ -865,13 +878,19 @@ function uscita() {
 function sblocco(signal) {
   const form = $("[data-sblocco]");
   if (!form) return;
-  const date = (form.dataset.date || "").split(",").filter(Boolean);
-  const codici = new Set((form.dataset.codici || "").split(",").filter(Boolean));
+  // per ogni brano coi codici: { titolo, codici: [impronte], fino, gioco }, sotto il nome della sua chiave
+  let voci = [];
+  try {
+    voci = Object.entries(JSON.parse(form.dataset.brani || "{}"));
+  } catch {
+    return;
+  }
   const campo = $("input", form);
   const riga = $(".sblocco-riga", form);
   const esito = $("[data-sblocco-esito]", form);
-  // si vede solo se in questo browser c'è ancora un brano del gioco da sbloccare
-  form.hidden = !date.some((d) => !libero(d, true));
+  const ancoraChiusi = () => voci.filter(([codice, b]) => !libero(b.fino, b.gioco, codice));
+  // si vede solo se in questo browser c'è ancora un brano da sbloccare col codice
+  form.hidden = !ancoraChiusi().length;
   const di = (testo, classe = "") => {
     esito.textContent = testo;
     form.classList.toggle("sbagliato", classe === "sbagliato");
@@ -891,19 +910,24 @@ function sblocco(signal) {
         di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
         return;
       }
-      if (!codici.has(impronta)) {
+      // ogni codice vale solo per il suo brano
+      const trovato = voci.find(([, b]) => b.codici.includes(impronta));
+      if (!trovato) {
         di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
         campo.select();
         return;
       }
+      const [codice, b] = trovato;
       try {
-        localStorage.setItem(CHIAVE_DONAZIONE, "1");
+        localStorage.setItem(chiaveDonazione(codice), "1");
       } catch {
         di("Il browser non permette di ricordare lo sblocco: se sei in navigazione privata, riprova in una finestra normale.", "sbagliato");
         return;
       }
-      riga.hidden = true;
-      di("Fatto, grazie del sostegno! Ora i pezzi del gioco li trovi aperti nell'elenco dei brani.", "fatto");
+      campo.value = "";
+      // se ci sono altri brani da sbloccare il campo resta, per un altro codice
+      riga.hidden = !ancoraChiusi().length;
+      di(`Fatto, grazie del sostegno! «${b.titolo}» ora la ascolti anche qui, nell'elenco dei brani.`, "fatto");
       window.dispatchEvent(new Event("tauh-sbloccati"));
     },
     { signal },
@@ -919,17 +943,20 @@ function elencoBrani(signal) {
   const chiusi = $$("[data-bloccata]");
   const controlla = () => {
     for (const voce of chiusi) {
-      const aperto = libero(voce.dataset.bloccata, "colGioco" in voce.dataset);
+      const aperto = libero(voce.dataset.bloccata, "colGioco" in voce.dataset, voce.dataset.codice);
       const bottone = $("[data-brano]", voce);
       const verso = $("[data-sblocca]", voce);
       if (bottone) bottone.hidden = !aperto;
       if (verso) verso.hidden = aperto;
     }
+    // «oppure ascoltala su Spotify»: compare dal giorno in cui il pezzo esce
+    for (const el of $$("[data-dal]")) el.hidden = !giornoArrivato(el.dataset.dal);
   };
   if (chiusi.length) {
     controlla();
     // il gioco finito o il codice scritto in un'altra scheda, o tornando indietro dal gioco
-    window.addEventListener("storage", (e) => [CHIAVE_GIOCO, CHIAVE_DONAZIONE, null].includes(e.key) && controlla(), { signal });
+    const chiave = (k) => k === null || k === CHIAVE_GIOCO || k.startsWith("tauh-sblocco:");
+    window.addEventListener("storage", (e) => chiave(e.key) && controlla(), { signal });
     window.addEventListener("pageshow", controlla, { signal });
     // il codice della donazione appena scritto in questa pagina
     window.addEventListener("tauh-sbloccati", controlla, { signal });

@@ -152,7 +152,9 @@ Con `"in_arrivo": true`, senza data, il brano resta chiuso finché non togli la 
 
 Con `"bloccata_fino_al": "AAAA-MM-GG"` il brano ha il lucchetto: nell'elenco compare con «Finisci il primo livello del gioco per ascoltarla» e porta alla pagina del gioco, e il lettore lo salta. Chi finisce il primo livello lo sblocca: il browser se lo ricorda e il brano si ascolta come gli altri. Dal giorno indicato (a mezzanotte) il brano è libero per tutti, senza fare niente; dopo quella data la riga si può anche togliere.
 
-Adesso ce l'ha «Incubo», la traccia del gioco, fino al 28 ottobre 2026, il giorno in cui finisce il conto alla rovescia del pre-save.
+Con `"bloccata_fino_al": true`, senza data, il lucchetto non scade mai: nel lettore del sito il brano si ascolta solo finendo il livello o con il codice di una donazione (vedi sotto). Adesso ce l'ha «Incubo», la traccia del gioco, anche dopo l'uscita.
+
+A chi non lo sblocca si può offrire il brano su Spotify: con `"spotify": "https://open.spotify.com/…"` nel brano chiuso compare anche «oppure ascoltala su Spotify», e con `"su_spotify_dal": "AAAA-MM-GG"` compare solo da quel giorno (per esempio il giorno dell'uscita).
 
 Lo sblocco funziona perché, durante la generazione, alla pagina del gioco si aggiunge un piccolo script: quando compare la schermata di vittoria («Le anime sono libere») segna il livello finito e mostra «Hai sbloccato…» con il link alla musica del sito. Il codice del gioco non cambia, quindi resta così anche quando si aggiorna il gioco, purché la schermata di vittoria si chiami ancora `won`.
 
@@ -272,15 +274,17 @@ Il sigillo si prende da `contenuti/social/`. Il bottone apre la pagina PayPal.me
 
 #### Sbloccare con una donazione i pezzi del gioco
 
-I brani col lucchetto del gioco (`"bloccata_fino_al"`) si sbloccano anche con un codice, che TAUH manda in DM a chi ha donato (chi dona lascia il suo profilo nella causale). Quelli `"in_arrivo"` invece no. Finché c'è almeno un brano del gioco ancora chiuso, sotto il bottone di PayPal compare «Hai già donato?» con il campo per il codice; il brano chiuso, nell'elenco, dice «Per ascoltarla finisci il primo livello del gioco o sostienimi con una donazione», con i due link. Chi scrive il codice giusto sblocca i brani del gioco in quel browser, come chi finisce il livello.
+I brani col lucchetto del gioco (`"bloccata_fino_al"`) si sbloccano anche con un codice, che TAUH manda in DM a chi ha donato (chi dona lascia il suo profilo nella causale). Quelli `"in_arrivo"` invece no. Ogni brano ha la sua lista di codici, e un codice apre solo il suo brano. Finché c'è almeno un brano coi codici ancora chiuso, sotto il bottone di PayPal compare «Hai già donato?» con il campo per il codice; il brano chiuso, nell'elenco, dice «Per ascoltarla finisci il primo livello del gioco o sostienimi con una donazione», con i due link. Chi scrive il codice giusto sblocca quel brano in quel browser, come chi finisce il livello.
 
 ```json
 "sblocco_titolo": "Hai già donato?",
-"sblocco_testo": "Scrivi il codice che ti ho mandato e sblocchi i pezzi del gioco:",
-"codici_sblocco": ["2b5cfe1c…"]
+"sblocco_testo": "Scrivi il codice che ti ho mandato e sblocchi",
+"codici_sblocco": {
+  "Incubo": ["2b5cfe1c…", "8e77580b…"]
+}
 ```
 
-In `"codici_sblocco"` non ci sono i codici ma le loro impronte, perché il repository su GitHub è pubblico: dall'impronta non si risale al codice. Adesso ci sono le impronte di 30 codici diversi: TAUH ne dà uno a ogni persona che dona e si segna a chi l'ha dato. Per farne altri scrivi `node strumenti/codice-sblocco.mjs --genera 30`: stampa i codici nuovi, ognuno con la sua impronta; i codici li tieni tu, le impronte vanno aggiunte in `"codici_sblocco"`. Per bloccare un codice che gira, togli la sua impronta (`node strumenti/codice-sblocco.mjs IL-CODICE` la ricalcola); chi l'aveva già usato resta sbloccato. Oppure chiedi a Claude. Maiuscole, spazi e trattini non contano; servono almeno 8 tra lettere e cifre. I codici veri non vanno mai scritti nei file del sito. Come per il gioco, lo sblocco vive solo nel browser: chi sa smanettare può aggirarlo, a tutti gli altri serve il codice.
+In `"codici_sblocco"`, sotto il titolo esatto del brano, non ci sono i codici ma le loro impronte, perché il repository su GitHub è pubblico: dall'impronta non si risale al codice. Adesso ci sono le impronte di 30 codici, validi solo per «Incubo»: TAUH ne dà uno a ogni persona che dona e si segna a chi l'ha dato. Per un altro brano (per esempio il prossimo singolo) si fa una lista nuova sotto il suo titolo. Per fare i codici scrivi `node strumenti/codice-sblocco.mjs --genera 30`: stampa i codici nuovi, ognuno con la sua impronta; i codici li tieni tu, le impronte vanno nella lista del brano. Per bloccare un codice che gira, togli la sua impronta (`node strumenti/codice-sblocco.mjs IL-CODICE` la ricalcola); chi l'aveva già usato resta sbloccato. Oppure chiedi a Claude. Maiuscole, spazi e trattini non contano; servono almeno 8 tra lettere e cifre. I codici veri non vanno mai scritti nei file del sito. Come per il gioco, lo sblocco vive solo nel browser: chi sa smanettare può aggirarlo, a tutti gli altri serve il codice.
 
 ### Ringraziamenti
 

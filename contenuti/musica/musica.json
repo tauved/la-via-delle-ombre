@@ -16,7 +16,7 @@
     {"titolo": "Colpirli tutti per non rieducare più nessuno", "file": "colpirli-tutti.mp3", "copertina": "colpirli-tutti.webp", "nota": "feat. Perry Watt"},
     {"titolo": "Netflix", "file": "netflix.mp3"},
     {"titolo": "Corpi", "file": "corpi.mp3"},
-    {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco", "bloccata_fino_al": "2026-10-28"},
+    {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco", "bloccata_fino_al": true},
     {"titolo": "Brivido e Panico", "file": "brivido-e-panico.mp3", "copertina": "incubo.webp", "in_arrivo": true}
   ]
 }

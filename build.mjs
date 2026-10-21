@@ -253,6 +253,14 @@ async function caricaMusica() {
     for (const [campo, gioco] of [["in_arrivo", false], ["bloccata_fino_al", true]]) {
       const data = b[campo];
       if (!data) continue;
+      // "bloccata_fino_al": true, senza data: non si apre mai da sola, solo col gioco o col codice di una donazione
+      if (data === true && campo === "bloccata_fino_al") {
+        if (!bloccata) {
+          bloccata = "sempre";
+          colGioco = true;
+        }
+        continue;
+      }
       if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) {
         throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «${campo}» deve essere nel formato AAAA-MM-GG.`);
       }
@@ -261,8 +269,27 @@ async function caricaMusica() {
         colGioco = gioco;
       }
     }
+    // "spotify": il link del brano su Spotify, offerto a chi non lo sblocca; "su_spotify_dal": da quel giorno
+    if (b.spotify && !/^https:\/\//.test(b.spotify)) throw new ErroreContenuti(`Nel brano «${b.titolo}» il link "spotify" deve iniziare con https://`);
+    if (b.su_spotify_dal && !/^\d{4}-\d{2}-\d{2}$/.test(b.su_spotify_dal)) {
+      throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «su_spotify_dal» deve essere nel formato AAAA-MM-GG.`);
+    }
     return { ...b, sorgente, sorgenteCopertina: copertina, bloccata, colGioco };
   });
+}
+
+// Collega ai brani i codici delle donazioni (sito.json, "sostieni" → "codici_sblocco"): ogni brano
+// ha la sua lista, col titolo come chiave. Il browser ricorda lo sblocco con «tauh-sblocco:<file>».
+function collegaCodici() {
+  const liste = raccolte.sostieni?.codici_sblocco || {};
+  for (const titolo of Object.keys(liste)) {
+    const b = raccolte.elencoBrani.find((x) => x.titolo === titolo);
+    if (!b) throw new ErroreContenuti(`In sito.json, "codici_sblocco" ha i codici di «${titolo}», ma in musica.json non c'è un brano con questo titolo.`);
+    if (b.chiusa) throw new ErroreContenuti(`«${titolo}» è «in arrivo» senza data: i codici delle donazioni valgono solo per i brani col lucchetto del gioco.`);
+    if (!liste[titolo].length) continue;
+    b.codici = liste[titolo];
+    b.chiaveCodici = path.basename(b.file, path.extname(b.file)).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  }
 }
 
 async function caricaEbook() {
@@ -420,15 +447,18 @@ function caricaSostieni() {
     throw new ErroreContenuti(`Manca il sigillo contenuti/social/${s.sigillo} per «${s.titolo || "Sostienimi"}».`);
   }
   if (s.qr && !existsSync(path.join(CONTENUTI, "sostieni", s.qr))) throw new ErroreContenuti(`Manca il codice QR contenuti/sostieni/${s.qr}.`);
-  // Codici per sbloccare con una donazione i brani col lucchetto del gioco: qui solo le impronte
-  // (strumenti/codice-sblocco.mjs), il codice vero lo conosce solo TAUH.
-  const codici = Array.isArray(s.codici_sblocco) ? s.codici_sblocco : [];
-  for (const c of codici) {
-    if (!/^[0-9a-f]{64}$/.test(c)) {
-      throw new ErroreContenuti(`In sito.json, alla voce "sostieni", "codici_sblocco" vuole le impronte fatte con strumenti/codice-sblocco.mjs, non i codici.`);
+  // Codici per sbloccare con una donazione i brani col lucchetto del gioco, una lista per brano
+  // ({"Titolo": [impronte]}): qui solo le impronte (strumenti/codice-sblocco.mjs), i codici veri li ha TAUH.
+  const liste = s.codici_sblocco && typeof s.codici_sblocco === "object" && !Array.isArray(s.codici_sblocco) ? s.codici_sblocco : {};
+  if (Array.isArray(s.codici_sblocco)) {
+    throw new ErroreContenuti(`In sito.json, "codici_sblocco" vuole una lista per brano: {"Titolo del brano": ["impronta", …]}.`);
+  }
+  for (const [titolo, codici] of Object.entries(liste)) {
+    if (!Array.isArray(codici) || codici.some((c) => !/^[0-9a-f]{64}$/.test(c))) {
+      throw new ErroreContenuti(`In sito.json, i codici di «${titolo}» in "codici_sblocco" devono essere impronte fatte con strumenti/codice-sblocco.mjs, non i codici.`);
     }
   }
-  return { ...s, codici_sblocco: codici };
+  return { ...s, codici_sblocco: liste };
 }
 
 // I ringraziamenti (sito.json, voce "ringraziamenti"): le persone da ringraziare e chi ha donato.
@@ -489,7 +519,7 @@ function barraAscolto(pagina) {
     file: indirizzo(b.url, pagina),
     copertina: indirizzo(b.urlCopertina, pagina),
     durata: Math.round(b.durata * 10) / 10,
-    ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true } : {}) } : {}),
+    ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true } : {}), ...(b.chiaveCodici ? { codice: b.chiaveCodici } : {}) } : {}),
   }));
   const primo = raccolte.brani.find((b) => !b.bloccata) || raccolte.brani[0];
   return `<div class="ascolto" data-lettore>
@@ -641,9 +671,12 @@ function paginaHome(caroselli) {
     : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
   const sostieni = raccolte.sostieni;
-  // i brani col lucchetto del gioco si sbloccano anche con il codice che TAUH manda a chi dona
-  const conDonazione = Boolean(sostieni?.codici_sblocco?.length);
-  const braniGioco = raccolte.brani.filter((b) => b.bloccata && b.colGioco);
+  // i brani col lucchetto del gioco che hanno anche i codici delle donazioni (ognuno la sua lista)
+  const braniConCodice = raccolte.brani.filter((b) => b.bloccata && b.chiaveCodici);
+  const elencoTitoli = (lista) => {
+    const t = lista.map((b) => `«${b.titolo}»`);
+    return t.length > 1 ? `${t.slice(0, -1).join(", ")} e ${t[t.length - 1]}` : t.join("");
+  };
   const grazie = raccolte.grazie;
   const manifesto = puntiManifesto();
   const prossime = (Array.isArray(sito.sezioni_in_arrivo?.voci) ? sito.sezioni_in_arrivo.voci : []).filter((v) => v?.titolo);
@@ -816,17 +849,22 @@ function paginaHome(caroselli) {
           </button>`;
               if (!b.bloccata) return `<li>${bottone}</li>`;
               // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
-              // col gioco e i codici delle donazioni: due strade, il gioco o il riquadro Sostienimi
-              const dueStrade = `Per ascoltarla finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a> o <a href="#sostieni">sostienimi con una donazione</a>`;
+              // il brano del gioco: il link al gioco e, se ci sono, i codici delle donazioni e Spotify
+              // (con "su_spotify_dal" il pezzo su Spotify compare da quel giorno: lo mostra app.js)
+              const spotifyOra = Boolean(b.spotify) && (!b.su_spotify_dal || b.su_spotify_dal <= oggiItalia());
+              const suSpotify = b.spotify
+                ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a></span>`
+                : "";
+              const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a>${b.chiaveCodici ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
               const chiuso = b.colGioco
-                ? conDonazione
-                  ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(dueStrade, icona.lucchetto, true)}
+                ? b.chiaveCodici || b.spotify
+                  ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(strade, icona.lucchetto, true)}
           </div>`
                   : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
           </a>`
                 : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
           </div>`;
-              return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}>${bottone}
+              return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}${b.chiaveCodici ? ` data-codice="${b.chiaveCodici}"` : ""}>${bottone}
           ${chiuso}</li>`;
             })
             .join("\n          ")}
@@ -931,9 +969,9 @@ function paginaHome(caroselli) {
               <figcaption>${esc(sostieni.qr_testo || "Inquadra il codice col telefono per donare.")}</figcaption>
             </figure>` : ""}
           </div>
-          ${conDonazione && braniGioco.length ? `<form class="sblocco" data-sblocco data-codici="${sostieni.codici_sblocco.join(",")}" data-date="${braniGioco.map((b) => b.bloccata).join(",")}" hidden>
+          ${braniConCodice.length ? `<form class="sblocco" data-sblocco data-brani="${esc(JSON.stringify(Object.fromEntries(braniConCodice.map((b) => [b.chiaveCodici, { titolo: b.titolo, codici: b.codici, fino: b.bloccata, gioco: b.colGioco }]))))}" hidden>
             <p class="sblocco-titolo">${esc(sostieni.sblocco_titolo || "Hai già donato?")}</p>
-            <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi i pezzi del gioco:")} ${braniGioco.map((b) => `«${esc(b.titolo)}»`).join(", ")}.</p>
+            <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi")} ${esc(elencoTitoli(braniConCodice))}.</p>
             <div class="sblocco-riga">
               <label class="nascosto" for="codice-sblocco">Codice di sblocco</label>
               <input id="codice-sblocco" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" required>
@@ -1542,6 +1580,7 @@ function scriptSblocco(bloccati, pagina) {
   const oggi = new Date();
   oggi.setHours(0, 0, 0, 0);
   const ancoraChiusi = d.brani.filter((b) => {
+    if (b.fino === "sempre") return true;
     const [a, m, g] = b.fino.split("-").map(Number);
     return new Date(a, m - 1, g) > oggi;
   });
@@ -1758,6 +1797,7 @@ async function principale() {
     raccolte.social.push(v);
   }
   raccolte.sostieni = caricaSostieni();
+  collegaCodici();
   raccolte.grazie = caricaRingraziamenti();
   if (raccolte.sostieni?.sigillo) {
     media.sostieniSigillo = (await copiaConImpronta(path.join(CONTENUTI, "social", raccolte.sostieni.sigillo), "media/sostieni", raccolte.sostieni.sigillo)).url;
