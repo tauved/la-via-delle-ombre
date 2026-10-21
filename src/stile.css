@@ -2500,8 +2500,21 @@ body:has(.ascolto) {
   font-size: 0.95rem;
 }
 
-.libro .bottone {
+.libro-azioni {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-top: 0.65rem;
+}
+
+.libro-approfondimenti {
+  margin-top: 0.35rem;
+  color: var(--grigio);
+  font-size: 0.9rem;
+}
+
+.libro-approfondimenti a {
+  font-weight: 600;
 }
 
 /* ------------------------------------------------------------ nuova uscita (pre-save) */

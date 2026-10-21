@@ -345,8 +345,17 @@ async function caricaBiblioteca() {
     .map((s, i) => {
       if (!s.titolo) throw new ErroreContenuti(`In contenuti/biblioteca/biblioteca.json la sezione ${i + 1} deve avere «titolo».`);
       const voci = (Array.isArray(s.voci) ? s.voci : []).map((v, k) => {
-        if (!v.titolo || !v.link) throw new ErroreContenuti(`Nella biblioteca la voce ${k + 1} di «${s.titolo}» deve avere «titolo» e «link».`);
-        if (!/^https?:\/\//.test(v.link)) throw new ErroreContenuti(`Nella biblioteca il link di «${v.titolo}» deve iniziare con https://`);
+        if (!v.titolo || !(v.link || v.file)) throw new ErroreContenuti(`Nella biblioteca la voce ${k + 1} di «${s.titolo}» deve avere «titolo» e «link» (o «file», per un testo tuo da scaricare).`);
+        if (v.link && !/^https?:\/\//.test(v.link)) throw new ErroreContenuti(`Nella biblioteca il link di «${v.titolo}» deve iniziare con https://`);
+        // «file»: un testo di TAUH (per esempio una guida alla lettura) messo in contenuti/biblioteca/ e scaricabile dal sito.
+        if (v.file) {
+          if (path.basename(v.file) !== v.file) throw new ErroreContenuti(`Nella biblioteca il file di «${v.titolo}» va messo direttamente in contenuti/biblioteca/: scrivi solo il nome.`);
+          if (!existsSync(path.join(path.dirname(file), v.file))) throw new ErroreContenuti(`Manca il file contenuti/biblioteca/${v.file} di «${v.titolo}».`);
+        }
+        // «approfondimenti»: "telegram" aggiunge sotto i bottoni «Per approfondimenti c'è il canale Telegram».
+        if (v.approfondimenti && (v.approfondimenti !== "telegram" || !link.telegram)) {
+          throw new ErroreContenuti(`Nella biblioteca «approfondimenti» di «${v.titolo}» può essere solo "telegram", con il link del canale in sito.json.`);
+        }
         return v;
       });
       return { ...s, voci };
@@ -1358,8 +1367,21 @@ function paginaBiblioteca() {
   const pagina = "/biblioteca/";
   const b = sito.biblioteca || {};
   const etichette = { gratis: "Leggilo gratis", editore: "Dall'editore", libreria: "In libreria", biblioteca: "In biblioteca" };
+  const fuori = `<span class="nascosto"> (si apre in un'altra scheda)</span>`;
   const schedaLibro = (v) => {
-    const edizione = [v.editore, v.anno].filter(Boolean).join(", ");
+    const estensione = v.file ? path.extname(v.file).toLowerCase() : "";
+    // per un file da scaricare, formato e peso vanno nella riga sotto l'autore: «2026 · PDF, 178 KB»
+    const edizione = [[v.editore, v.anno].filter(Boolean).join(", "), v.file ? `${estensione.slice(1).toUpperCase()}, ${peso(v.peso)}` : ""]
+      .filter(Boolean)
+      .join(" · ");
+    const bottoni = [
+      v.file
+        ? `<a class="bottone primario stretto" href="${indirizzo(v.url, pagina)}" download="${esc(`TAUH - ${v.titolo}${estensione}`)}">${icona.scarica}${esc(v.etichetta || "Scarica gratis")}</a>`
+        : "",
+      v.link
+        ? `<a class="bottone filo stretto" href="${esc(v.link)}" target="_blank" rel="noopener">${icona.esterno}${esc((!v.file && v.etichetta) || etichette[v.dove] || "Dove trovarlo")}${fuori}</a>`
+        : "",
+    ].filter(Boolean);
     return `<li class="libro">
         <span class="libro-segno" aria-hidden="true">${esc(iniziale(v.titolo))}</span>
         <div class="libro-testo">
@@ -1368,7 +1390,10 @@ function paginaBiblioteca() {
           ${v.autore ? `<p class="libro-autore">${esc(v.autore)}</p>` : ""}
           ${edizione ? `<p class="libro-edizione">${esc(edizione)}</p>` : ""}
           ${v.descrizione ? `<p class="libro-descrizione">${esc(v.descrizione)}</p>` : ""}
-          <a class="bottone filo stretto" href="${esc(v.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(v.etichetta || etichette[v.dove] || "Dove trovarlo")}<span class="nascosto"> (si apre in un'altra scheda)</span></a>
+          <div class="libro-azioni">
+            ${bottoni.join("\n            ")}
+          </div>
+          ${v.approfondimenti === "telegram" ? `<p class="libro-approfondimenti">Per approfondimenti c'è il <a href="${esc(link.telegram)}" target="_blank" rel="me noopener">canale Telegram${fuori}</a>.</p>` : ""}
         </div>
       </li>`;
   };
@@ -1730,6 +1755,11 @@ async function principale() {
       Object.assign(x, { urlCopertina: url, copertinaW: dim?.w, copertinaH: dim?.h });
     }
     raccolte.ebook.push(x);
+  }
+  // i testi di TAUH da scaricare dalla biblioteca
+  for (const v of raccolte.biblioteca.flatMap((s) => s.voci).filter((x) => x.file)) {
+    const { url, dati: contenuto } = await copiaConImpronta(path.join(CONTENUTI, "biblioteca", v.file), "scarica/biblioteca", v.file);
+    Object.assign(v, { url, peso: contenuto.length });
   }
   for (const x of tools) {
     const zip = await copiaConImpronta(path.join(x.dir, x.file), `scarica/tools/${x.slug}`, x.file);

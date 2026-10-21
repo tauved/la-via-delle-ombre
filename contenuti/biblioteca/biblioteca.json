@@ -120,6 +120,16 @@
           "dove": "editore"
         },
         {
+          "titolo": "Liber Falxifer I e II. Guida alla lettura",
+          "autore": "TAUH",
+          "tipo": "Guida",
+          "anno": "2026",
+          "descrizione": "La mia guida per orientarsi nei due Liber Falxifer: glossario di nomi, entità e simboli, vocabolario spagnolo–italiano e riassunti capitolo per capitolo. Non è una traduzione: racconta idee, figure e scopo dei riti senza riportare preghiere, formule o procedure, e segnala le piante velenose.",
+          "file": "liber-falxifer-guida.pdf",
+          "etichetta": "Scarica la guida",
+          "approfondimenti": "telegram"
+        },
+        {
           "titolo": "Liber Null & Psiconauta. La pratica della magia del caos",
           "autore": "Peter J. Carroll",
           "tipo": "Libro",

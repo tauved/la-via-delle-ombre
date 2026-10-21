@@ -17,7 +17,7 @@ contenuti/
   artwork/                   le immagini da scaricare e artwork.json
   merch/                     le foto e i disegni delle magliette
   ebook/<nome>/              un ebook per cartella, con ebook.json (pagina per ora nascosta)
-  biblioteca/                i libri consigliati, con i link (biblioteca.json)
+  biblioteca/                i libri consigliati, con i link (biblioteca.json), e le tue guide da scaricare
   tools/<nome>/              un programma per cartella, con tool.json, lo zip e le immagini
 src/                         stile.css, app.js, immagini del sito e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
@@ -369,7 +369,9 @@ La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli:
 }
 ```
 
-`dove` decide la scritta del bottone: `gratis` («Leggilo gratis»), `editore` («Dall'editore»), `libreria` («In libreria») o `biblioteca` («In biblioteca»). Per una scritta diversa usa `"etichetta"`. I link si aprono in un'altra scheda. L'intro della pagina è in `contenuti/sito.json`, alla voce `"biblioteca"`; lì `"pubblica": false` nasconde la pagina e la voce del menu.
+`dove` decide la scritta del bottone: `gratis` («Leggilo gratis»), `editore` («Dall'editore»), `libreria` («In libreria») o `biblioteca` («In biblioteca»). Per una scritta diversa usa `"etichetta"`. I link si aprono in un'altra scheda.
+
+Un testo tuo, per esempio una guida alla lettura, si può invece scaricare dalla Biblioteca: metti il file in `contenuti/biblioteca/` e al posto di `"link"` scrivi `"file": "nome.pdf"`. Il bottone diventa «Scarica gratis» (o la tua `"etichetta"`), formato e peso compaiono accanto all'anno, e il file si scarica da `/scarica/biblioteca/` con il nome «TAUH - Titolo.pdf». Con `"approfondimenti": "telegram"` sotto il bottone compare «Per approfondimenti c'è il canale Telegram», con il link al canale. I libri degli altri restano solo con il link, anche se in rete girano gratis. L'intro della pagina è in `contenuti/sito.json`, alla voce `"biblioteca"`; lì `"pubblica": false` nasconde la pagina e la voce del menu.
 
 ### Il gioco
 
