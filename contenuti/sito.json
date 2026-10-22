@@ -18,7 +18,8 @@
     "tipo_dopo": "Ultima uscita",
     "testo_dopo": "È fuori su Spotify e su tutte le piattaforme.",
     "bottone_dopo": "Ascolta l'ultima uscita",
-    "copertina": "come-dio.webp"
+    "copertina": "come-dio.webp",
+    "striscia_instagram": { "giorni_dopo": 7 }
   },
   "caroselli": {
     "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",

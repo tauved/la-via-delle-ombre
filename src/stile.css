@@ -890,6 +890,87 @@ body::before {
   color: var(--testo);
 }
 
+/* ------------------------------------------------------------ striscia della nuova uscita (solo da Instagram) */
+
+.striscia {
+  display: none;
+  background:
+    linear-gradient(90deg, rgba(103, 76, 192, 0.35), rgba(103, 76, 192, 0) 70%),
+    var(--viola-notte);
+  border-bottom: 1px solid var(--filo);
+}
+
+.ig-prima .striscia,
+.ig-dopo .striscia {
+  display: block;
+}
+
+.ig-prima .striscia .solo-dopo,
+.ig-dopo .striscia .solo-prima {
+  display: none;
+}
+
+.striscia-dentro {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-block: 0.55rem;
+}
+
+.striscia-copertina {
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(207, 254, 126, 0.25);
+}
+
+.striscia-testo {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  line-height: 1.25;
+}
+
+.striscia-testo strong {
+  color: var(--lime);
+  font: 600 1.05rem/1.2 var(--titoli);
+}
+
+.striscia-testo span {
+  color: var(--grigio);
+  font-size: 0.82rem;
+}
+
+.striscia .bottone {
+  flex-shrink: 0;
+}
+
+.striscia-chiudi {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  margin-right: -0.6rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--grigio);
+  cursor: pointer;
+}
+
+.striscia-chiudi:hover {
+  color: var(--bianco);
+}
+
+.striscia-chiudi svg {
+  width: 18px;
+  height: 18px;
+}
+
 /* ------------------------------------------------------------ pagina di un carosello */
 
 .carosello {

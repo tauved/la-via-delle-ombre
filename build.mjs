@@ -72,6 +72,12 @@ const dataEstesa = (iso) => {
   return `${Number(m[3])} ${MESI[Number(m[2]) - 1]} ${m[1]}`;
 };
 
+// Una data AAAA-MM-GG più n giorni, sempre come AAAA-MM-GG.
+const piuGiorni = (iso, n) => {
+  const [a, m, g] = iso.split("-").map(Number);
+  return new Date(Date.UTC(a, m - 1, g + n)).toISOString().slice(0, 10);
+};
+
 const peso = (byte) => {
   if (byte < 1024 * 1024) return `${Math.max(1, Math.round(byte / 1024))} KB`;
   return `${(byte / (1024 * 1024)).toFixed(1).replace(".", ",")} MB`;
@@ -582,16 +588,82 @@ ${sito.url && !ANTEPRIMA ? `<meta property="og:url" content="${esc(assoluto(pagi
 <link rel="preload" href="${indirizzo("/assets/font/montserrat-var.woff", pagina)}" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="${indirizzo(risorse.css, pagina)}">
 <script>document.documentElement.classList.add("js")</script>
-<script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
+${scriptStriscia()}<script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
 ${extraTesta}</head>
 <body>
 ${testata(pagina, attiva)}
+${strisciaUscita(pagina)}
 ${corpo}
 ${piede(pagina)}
 ${barraAscolto(pagina)}
 </body>
 </html>
 `;
+}
+
+// ---------------------------------------------------------------- striscia della nuova uscita
+// Solo per chi arriva da Instagram (link della bio con utm_source=ig, o browser interno di
+// Instagram): sotto il menu una striscia con la copertina e «Pre-salva» fino al giorno
+// dell'uscita, poi «Ascolta» per giorni_dopo giorni (sito.json, uscita.striscia_instagram).
+// Decide uno script nella <head>, prima che la pagina compaia, mettendo su <html> la classe
+// ig-prima o ig-dopo; app.js (funzione striscia) la chiude e ricorda la scelta.
+
+let strisciaCalcolata;
+function datiStriscia() {
+  if (strisciaCalcolata !== undefined) return strisciaCalcolata;
+  strisciaCalcolata = null;
+  const u = sito.uscita;
+  const s = u?.striscia_instagram;
+  if (!s) return null;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(u.data || "")) {
+    throw new ErroreContenuti('Per «striscia_instagram» serve la data dell\'uscita in sito.json («data»: "AAAA-MM-GG").');
+  }
+  const giorni = s === true ? 7 : Number(s.giorni_dopo ?? 7);
+  if (!Number.isInteger(giorni) || giorni < 0) {
+    throw new ErroreContenuti("In «striscia_instagram» «giorni_dopo» deve essere un numero intero (0 per toglierla il giorno dell'uscita).");
+  }
+  const fine = piuGiorni(u.data, giorni);
+  // alla build l'ultimo giorno è già passato: niente striscia né script
+  if (oggiItalia() >= fine) return null;
+  const nome = String(u.titolo || "uscita")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  strisciaCalcolata = {
+    data: u.data,
+    fine,
+    chiave: `${nome}-${u.data}`,
+    bottone: (s === true ? "" : s.bottone) || "Pre-salva",
+    bottoneDopo: (s === true ? "" : s.bottone_dopo) || "Ascolta",
+  };
+  return strisciaCalcolata;
+}
+
+const scriptStriscia = () => {
+  const d = datiStriscia();
+  if (!d) return "";
+  const j = JSON.stringify;
+  return `<script>(function(){var r=document.documentElement,k="tauh-da-instagram",ig=/[?&]utm_source=ig(&|$)/.test(location.search)||/Instagram/i.test(navigator.userAgent);try{if(ig)sessionStorage.setItem(k,"1");else ig=sessionStorage.getItem(k)==="1"}catch(e){}if(!ig)return;var t=new Date(),o=t.getFullYear()+"-"+("0"+(t.getMonth()+1)).slice(-2)+"-"+("0"+t.getDate()).slice(-2),s=o<${j(d.data)}?"prima":o<${j(d.fine)}?"dopo":"";if(!s)return;try{if(localStorage.getItem(${j(`tauh-striscia:${d.chiave}:`)}+s))return}catch(e){}r.classList.add("ig-"+s)})()</script>\n`;
+};
+
+function strisciaUscita(pagina) {
+  const d = datiStriscia();
+  if (!d) return "";
+  const u = sito.uscita;
+  const m = /^\d{4}-(\d{2})-(\d{2})$/.exec(u.data);
+  const giorno = `${Number(m[2])} ${MESI[Number(m[1]) - 1]}`;
+  const tipo = u.tipo ? `${esc(u.tipo)} · ` : "";
+  return `<aside class="striscia" data-striscia="${esc(d.chiave)}" aria-label="Nuova uscita">
+  <div class="colonna striscia-dentro">
+    ${media.uscitaCopertina ? `<img class="striscia-copertina" src="${indirizzo(media.uscitaCopertina, pagina)}" width="44" height="44" alt="" loading="lazy" decoding="async">` : ""}
+    <p class="striscia-testo"><strong>${esc(u.titolo)}</strong><span class="solo-prima">${tipo}esce il ${giorno}</span><span class="solo-dopo">${tipo}è fuori</span></p>
+    <a class="bottone primario stretto solo-prima" href="${esc(u.link)}" target="_blank" rel="noopener" data-striscia-azione>${esc(d.bottone)}</a>
+    <a class="bottone primario stretto solo-dopo" href="${esc(u.link_dopo || u.link)}" target="_blank" rel="noopener" data-striscia-azione>${esc(d.bottoneDopo)}</a>
+    <button class="striscia-chiudi" type="button" aria-label="Chiudi l'avviso" data-striscia-chiudi>${icona.chiudi}</button>
+  </div>
+</aside>`;
 }
 
 // ---------------------------------------------------------------- pezzi riutilizzabili
@@ -1674,6 +1746,7 @@ async function principale() {
   const social = caricaSocial();
   const opere = await caricaArtwork();
   raccolte.biblioteca = sito.biblioteca?.pubblica === false ? [] : await caricaBiblioteca();
+  datiStriscia(); // controlla «striscia_instagram» prima di cancellare dist/
 
   await rm(USCITA, { recursive: true, force: true });
   await mkdir(path.join(USCITA, "assets"), { recursive: true });

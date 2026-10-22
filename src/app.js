@@ -1024,6 +1024,31 @@ function avvisoApp() {
   avviso.hidden = false;
 }
 
+// ---------------------------------------------------------------- striscia della nuova uscita
+// Compare solo a chi arriva da Instagram: lo script nella <head> (build.mjs, scriptStriscia)
+// mette su <html> la classe ig-prima (prima dell'uscita) o ig-dopo (nei giorni dopo).
+// Chiudendola, o toccando il bottone, non torna più per quella fase dell'uscita.
+
+function striscia(segnale) {
+  const s = $("[data-striscia]");
+  if (!s) return;
+  s.addEventListener(
+    "click",
+    (e) => {
+      if (!e.target.closest("[data-striscia-chiudi], [data-striscia-azione]")) return;
+      const radice = document.documentElement;
+      const fase = radice.classList.contains("ig-dopo") ? "dopo" : "prima";
+      try {
+        localStorage.setItem(`tauh-striscia:${s.dataset.striscia}:${fase}`, "1");
+      } catch {
+        /* senza memoria del browser si chiude solo per questa pagina */
+      }
+      radice.classList.remove("ig-prima", "ig-dopo");
+    },
+    { signal: segnale },
+  );
+}
+
 // ---------------------------------------------------------------- avvio delle parti
 
 let spegniPagina = null;
@@ -1031,7 +1056,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {
