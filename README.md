@@ -75,7 +75,7 @@ Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezio
 
 ### I miei social
 
-Verso il fondo della home, dopo i Ringraziamenti, c'è la sezione «I miei social»: al posto dei loghi dei social ci sono i sigilli, e toccando il sigillo o il nome si apre il social. Si cambia in `contenuti/sito.json`, alla voce `"social"`:
+Verso il fondo della home, dopo Sostienimi e i Ringraziamenti, c'è la sezione «I miei social»: al posto dei loghi dei social ci sono i sigilli, e toccando il sigillo o il nome si apre il social. Si cambia in `contenuti/sito.json`, alla voce `"social"`:
 
 ```json
 "social": {
@@ -127,7 +127,7 @@ Con `"striscia_instagram": { "giorni_dopo": 7 }` chi arriva da Instagram (link d
 
 ### La musica in sottofondo
 
-In basso a destra c'è il lettore «Ascolta TAUH» (sul telefono, finché non suona, è solo il tondo col ▶, per non coprire i bottoni della pagina). La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra; la × sulla barra la ferma e richiude il lettore. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, nella sezione Musica, c'è l'elenco dei brani: se ne vedono 6, gli altri con «Tutti i brani». Nell'apertura il bottone «Ascolta» fa partire la musica.
+In basso a destra c'è il lettore «Ascolta TAUH» (sul telefono, finché non suona, è solo il tondo col ▶, per non coprire i bottoni della pagina). La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra; la × sulla barra la ferma e richiude il lettore. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, nella sezione Musica, c'è l'elenco dei brani: se ne vedono 6, gli altri con «Tutti i brani». Sul computer, nell'apertura, il bottone «Ascolta» fa partire la musica.
 
 Le copertine dei brani si vedono piccole: per l'elenco e il lettore il sito usa la versione da 160 px (`<nome>-160.webp`, accanto alla copertina in `contenuti/musica/`), che si prepara con `python3 strumenti/miniature.py`. Lo stesso comando prepara anche le tavole delle pillole da 810 px (`01-810.webp`, …), che i telefoni meno densi e i computer scaricano al posto di quelle grandi. Va lanciato quando aggiungi una copertina o un carosello; se non lo fai il sito funziona lo stesso, con le immagini grandi.
 
@@ -242,7 +242,7 @@ I programmi da scaricare stanno in `contenuti/tools/`, una cartella per programm
 }
 ```
 
-Ogni programma ha la sua pagina (`/tools/<nome>/`) con le sezioni Cosa fa, Cosa serve, Come si installa, Come si usa, Com'è fatto e Da sapere: le voci possono essere semplici stringhe o `{"titolo", "testo"}`, e nel testo si possono usare `<strong>` ed `<em>`. `leggimi`, `anteprima` e `schermate` sono facoltativi. Lo zip si scarica da `/scarica/tools/<nome>/` con il nome «TAUH - Titolo vN.zip». Per una seconda versione dello stesso programma (per esempio quella per Mac) aggiungi `"altre_versioni": [{"sistema": "macOS", "etichetta": "Mac", "file": "….zip", "leggimi": "LEGGIMI-mac.txt", "nota": "…"}]` e, per distinguerle, `"etichetta": "Windows"` nella principale: nella pagina compaiono un tasto e un LEGGIMI per versione, e gli zip si chiamano «TAUH - Titolo vN (Etichetta).zip». Per nascondere un programma senza cancellarlo metti `"pubblica": false`. Titolo e testi della pagina che li raccoglie stanno in `contenuti/sito.json`, alla voce `"tools"`; se non ci sono programmi la pagina e la voce del menu spariscono.
+Ogni programma ha la sua pagina (`/tools/<nome>/`) con le sezioni Cosa fa, Cosa serve, Come si installa, Come si usa, Com'è fatto e Da sapere: le voci possono essere semplici stringhe o `{"titolo", "testo"}`, e nel testo si possono usare `<strong>` ed `<em>`. `leggimi`, `anteprima` e `schermate` sono facoltativi. Lo zip si scarica da `/scarica/tools/<nome>/` con il nome «TAUH - Titolo vN.zip». Per una seconda versione dello stesso programma (per esempio quella per Mac) aggiungi `"altre_versioni": [{"sistema": "macOS", "etichetta": "Mac", "file": "….zip", "leggimi": "LEGGIMI-mac.txt", "nota": "…"}]` e, per distinguerle, `"etichetta": "Windows"` nella principale: nella pagina compaiono, per ogni versione, un tasto per scaricarla e uno con le istruzioni («Istruzioni per Mac»), e gli zip si chiamano «TAUH - Titolo vN (Etichetta).zip». Per nascondere un programma senza cancellarlo metti `"pubblica": false`. Titolo e testi della pagina che li raccoglie stanno in `contenuti/sito.json`, alla voce `"tools"`; se non ci sono programmi la pagina e la voce del menu spariscono.
 
 Negli ebook vanno solo testi tuoi, o di autori che ti hanno dato il permesso: i libri di altri, anche se in rete girano gratis, vanno nella Biblioteca con un link.
 

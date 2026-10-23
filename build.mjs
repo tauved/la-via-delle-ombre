@@ -1726,7 +1726,8 @@ async function principale() {
   // file statici, immagini del sito e caratteri
   await cp(path.join(RADICE, "static"), USCITA, { recursive: true });
   await adattaGioco(brani);
-  await cp(path.join(RADICE, "src", "img"), path.join(USCITA, "img"), { recursive: true });
+  // le immagini del sito, senza i file .json accanto (la loro provenienza, per chi lavora sul repository)
+  await cp(path.join(RADICE, "src", "img"), path.join(USCITA, "img"), { recursive: true, filter: (f) => !f.endsWith(".json") });
   await cp(path.join(RADICE, "src", "font"), path.join(USCITA, "assets", "font"), { recursive: true });
 
   // foglio di stile e script con l'impronta nel nome, così la cache si aggiorna da sola
@@ -1741,8 +1742,6 @@ async function principale() {
   Object.assign(media, {
     logoPiccolo: await versioneImg("logo-tauh-160.webp"),
     logoGrande: await versioneImg("logo-tauh-612.webp"),
-    apertura900: await versioneImg("apertura-900.webp"),
-    apertura1620: await versioneImg("apertura-1620.webp"),
     gioco600: await versioneImg("gioco-600.webp"),
     gioco1080: await versioneImg("gioco-1080.webp"),
     soglia: await versioneImg("soglia-900.webp"),
