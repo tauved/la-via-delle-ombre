@@ -1922,6 +1922,16 @@ body:has(.ascolto) {
   color: var(--lime);
 }
 
+/* mentre la nuova uscita è sullo schermo il lettore fermo si fa da parte (app.js, lettoreDaParte) */
+.ascolto {
+  transition: opacity 0.25s ease, visibility 0.25s;
+}
+
+.uscita-in-vista .ascolto:not(.attivo) {
+  opacity: 0;
+  visibility: hidden;
+}
+
 .ascolto:not(.attivo) .ascolto-suona:hover {
   background: var(--viola-acceso);
 }

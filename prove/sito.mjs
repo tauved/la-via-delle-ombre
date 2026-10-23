@@ -113,8 +113,12 @@ for (const [larghezza, altezza, telefono] of [
     const totale = await pg.evaluate(() => document.querySelectorAll("#elenco-brani > li").length);
     if (prima !== 6 || dopo !== totale) errore("home", `brani visibili ${prima} e poi ${dopo} (attesi 6 e ${totale})`);
   }
-  // il lettore: play apre la barra e suona
+  // il lettore: si fa da parte mentre la nuova uscita è sullo schermo, poi play apre la barra e suona
   await pg.evaluate(() => window.scrollTo(0, 0));
+  await pg.waitForTimeout(800);
+  if (await pg.$(".uscita") && (await pg.isVisible("[data-lettore-suona]"))) errore("home", "il lettore fermo si vede accanto alla nuova uscita");
+  await pg.evaluate(() => document.querySelector("#musica").scrollIntoView());
+  await pg.waitForTimeout(400);
   await pg.click("[data-lettore-suona]");
   await pg.waitForTimeout(1500);
   const lettore = await pg.getAttribute("[data-lettore]", "class");

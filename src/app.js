@@ -1167,8 +1167,8 @@ function via(signal) {
       // il cerchio della tappa sta a 0,62em dall'alto del titolo
       const centro = box.top + parseFloat(getComputedStyle(t).fontSize) * 0.62;
       t.classList.toggle("accesa", box.top < meta);
-      // quando il nodo ci passa sopra, il cerchio della tappa si spegne: niente due nodi uno sull'altro
-      t.classList.toggle("sotto-il-nodo", Math.abs(centro - meta) < 16);
+      // quando il nodo (24 px) tocca il cerchio della tappa (16 px), il cerchio si spegne: niente due nodi uno sull'altro
+      t.classList.toggle("sotto-il-nodo", Math.abs(centro - meta) < 30);
     }
   };
   const chiedi = () => {
@@ -1179,6 +1179,26 @@ function via(signal) {
   signal.addEventListener("abort", () => cancelAnimationFrame(attesa), { once: true });
   percorso.classList.add("in-cammino");
   aggiorna();
+}
+
+// ---------------------------------------------------------------- lettore e nuova uscita
+// Finché la nuova uscita è sullo schermo, il tondo del lettore (da fermo) si fa da parte: nella prima
+// schermata l'unico bottone pieno è il pre-save. Se la musica suona, la barra resta.
+
+function lettoreDaParte(signal) {
+  const box = $("[data-uscita]");
+  if (!box || !("IntersectionObserver" in window)) return;
+  const radice = document.documentElement;
+  const guarda = new IntersectionObserver(([voce]) => radice.classList.toggle("uscita-in-vista", voce.isIntersecting), { threshold: 0.1 });
+  guarda.observe(box);
+  signal.addEventListener(
+    "abort",
+    () => {
+      guarda.disconnect();
+      radice.classList.remove("uscita-in-vista");
+    },
+    { once: true },
+  );
 }
 
 // ---------------------------------------------------------------- «Ascolta» nell'apertura
@@ -1280,7 +1300,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {
