@@ -1,0 +1,157 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-23T12:00:00Z",
+  "title": "Design System: La via delle ombre",
+  "extensions": {
+    "colorMeta": {
+      "lime": { "role": "primary", "displayName": "Lime dei caroselli", "canonical": "oklch(93.8% 0.164 126.1)", "tonalRamp": ["#031000", "#132c00", "#2a4c00", "#466c00", "#658d00", "#87ae3a", "#b3d185", "#e7f5d4"] },
+      "lime-chiaro": { "role": "primary", "displayName": "Lime chiaro", "canonical": "oklch(95.8% 0.112 124.9)", "tonalRamp": ["#041000", "#182b00", "#324900", "#4f6811", "#6e8938", "#8fab5a", "#b4d083", "#e7f4d4"] },
+      "viola": { "role": "secondary", "displayName": "Viola del nodo", "canonical": "oklch(50.8% 0.174 289.5)", "tonalRamp": ["#0e002e", "#28075f", "#43228f", "#5f43b7", "#7e65dc", "#9d8cf4", "#c2b9ff", "#edeaff"] },
+      "viola-acceso": { "role": "secondary", "displayName": "Viola acceso", "canonical": "oklch(58.0% 0.167 290.9)", "tonalRamp": ["#0f002e", "#29065f", "#45218f", "#6144b2", "#8066d7", "#a08cf3", "#c4b8ff", "#eeeaff"] },
+      "viola-notte": { "role": "secondary", "displayName": "Viola notte", "canonical": "oklch(17.1% 0.043 294.6)", "tonalRamp": ["#0d071b", "#252037", "#413b54", "#5f5974", "#7e7995", "#a09ab7", "#c5bfde", "#f0eaff"] },
+      "nero": { "role": "neutral", "displayName": "Nero pieno", "canonical": "oklch(0% 0 0)", "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c4c4c4", "#eeeeee"] },
+      "grigio": { "role": "neutral", "displayName": "Grigio cenere", "canonical": "oklch(76.7% 0 0)", "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c4c4c4", "#eeeeee"] },
+      "bianco": { "role": "neutral", "displayName": "Bianco", "canonical": "oklch(100% 0 0)", "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c4c4c4", "#eeeeee"] },
+      "testo": { "role": "neutral", "displayName": "Testo (bianco all'88%)", "canonical": "rgba(255, 255, 255, 0.88)" },
+      "filo": { "role": "neutral", "displayName": "Filo (lime al 16%)", "canonical": "rgba(207, 254, 126, 0.16)" }
+    },
+    "typographyMeta": {
+      "grande": { "displayName": "Grande (--t-grande)", "purpose": "Titolo della home, h1 delle pagine archivio, scena del gioco e della soglia, titolo del Manifesto. Alone lime solo nell'apertura." },
+      "titolo": { "displayName": "Titolo (--t-titolo)", "purpose": "Titoli delle tappe della home, titolo dell'uscita, titolo del riquadro Telegram, h1 di una pillola." },
+      "sotto": { "displayName": "Sotto (--t-sotto)", "purpose": "Motto, sottotitoli, h3, nomi delle porte e dei social, titoli di libri e artwork; in corsivo 500 il testo del riquadro Telegram." },
+      "corpo": { "displayName": "Corpo (--t-corpo)", "purpose": "Lettura (62ch); in 600 il testo dei bottoni; in Cinzel 600 i nomi di schede, brani e ringraziati." },
+      "piccolo": { "displayName": "Piccolo (--t-piccolo)", "purpose": "Voci della testata, bottoni stretti, indice, contatore, autore, testi di servizio grigi." },
+      "meta": { "displayName": "Meta (--t-meta)", "purpose": "Durate, tempo del lettore, numeri delle tavole, edizioni, formato e peso dei file." }
+    },
+    "shadows": [
+      { "name": "contorno-filo", "value": "inset 0 0 0 1.5px rgba(207, 254, 126, 0.55)", "purpose": "Bottone a filo, frecce, tondi di comando; al passaggio inset 0 0 0 1.5px var(--lime)." },
+      { "name": "contorno-viola", "value": "inset 0 0 0 1px rgba(103, 76, 192, 0.5)", "purpose": "Schede su viola notte: pillole vicine, ebook, tools." },
+      { "name": "galleggiante", "value": "inset 0 0 0 1px rgba(103, 76, 192, 0.75), 0 12px 32px rgba(0, 0, 0, 0.65)", "purpose": "Solo il lettore fisso in basso." },
+      { "name": "alone-titolo", "value": "text-shadow: 0 0 28px rgba(207, 254, 126, 0.28), 0 2px 14px rgba(0, 0, 0, 0.9)", "purpose": "Solo il titolo grande dell'apertura; l'unico alone del sito." },
+      { "name": "focus", "value": "outline: 3px solid var(--lime); outline-offset: 3px", "purpose": "Focus da tastiera, uguale in tutto il sito." }
+    ],
+    "motion": [
+      { "name": "via-scorrimento", "value": "position: sticky; top: 50dvh + --via-fatto aggiornato a ogni fotogramma di scorrimento", "purpose": "Il nodo della home scende con lo scorrimento e accende le tappe; non è un'animazione a tempo." },
+      { "name": "tappa", "value": "background-color 0.35s ease, scale 0.35s ease", "purpose": "Il cerchio della tappa si accende quando il nodo lo raggiunge." },
+      { "name": "anello-sigillo", "value": "animation: ruota linear both; animation-timeline: scroll(root block)", "purpose": "L'anello del sigillo ruota solo mentre si scorre; disattivato con riduci movimento." },
+      { "name": "clip-gioco", "value": "video muted loop playsinline, play solo con IntersectionObserver (soglia 0.25)", "purpose": "La partita vera gira solo quando è sullo schermo; con riduci movimento resta sul primo fotogramma; tondo per fermarla." },
+      { "name": "apribile", "value": "si-apre 0.4s ease (opacity 0, translateY(-6px))", "purpose": "Apertura di Ringraziamenti e Manifesto; disattivata con riduci movimento." },
+      { "name": "cambio-pagina", "value": "@view-transition navigation: auto; 0.2s; linea lime 2px che corre in cima (viaggio 0.9s)", "purpose": "Navigazione morbida con la musica che continua; con riduci movimento la linea è ferma e piena." }
+    ],
+    "breakpoints": [
+      { "name": "lettore-compatto", "value": "max-width: 640px" },
+      { "name": "frecce-binario", "value": "(hover: hover) and (min-width: 700px)" },
+      { "name": "porte-merch", "value": "min-width: 48em" },
+      { "name": "apertura-computer", "value": "min-width: 56.25em" },
+      { "name": "biblioteca-due-colonne", "value": "min-width: 900px" },
+      { "name": "pillola-due-colonne", "value": "min-width: 1000px" },
+      { "name": "musica-due-colonne", "value": "min-width: 62.5em" },
+      { "name": "menu-a-tendina", "value": "max-width: 69.9375em" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bottone primario",
+      "kind": "button",
+      "refersTo": "bottone-primario",
+      "description": "Il bottone lime pieno: uno solo per sezione, l'azione della tappa.",
+      "html": "<a class=\"ds-bottone ds-primario\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 2.5v11l9-5.5z\" fill=\"currentColor\"/></svg>Pre-salvalo su Spotify</a>",
+      "css": ".ds-bottone { display: inline-flex; align-items: center; justify-content: center; gap: 0.55em; min-height: 48px; padding: 0.7em 1.35em; border: 0; border-radius: 999px; background: var(--viola, #674cc0); color: var(--bianco, #fff); font: 600 var(--t-corpo, 1.0625rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; cursor: pointer; } .ds-bottone.ds-primario { background: var(--lime, #cffe7e); color: var(--nero, #000); } .ds-bottone.ds-primario:hover { background: var(--lime-chiaro, #e0ffab); } .ds-bottone:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Bottone a filo",
+      "kind": "button",
+      "refersTo": "bottone-filo",
+      "description": "Le azioni secondarie: trasparente, testo lime, contorno interno.",
+      "html": "<a class=\"ds-bottone-filo\" href=\"#\">Sfoglia le pillole</a>",
+      "css": ".ds-bottone-filo { display: inline-flex; align-items: center; gap: 0.55em; min-height: 48px; padding: 0.7em 1.35em; border-radius: 999px; background: transparent; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55); font: 600 var(--t-corpo, 1.0625rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-filo:hover { box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); color: var(--lime-chiaro, #e0ffab); } .ds-bottone-filo:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Bottone stretto",
+      "kind": "button",
+      "refersTo": "bottone-stretto",
+      "description": "Variante da 44px per righe e barre (Biblioteca, artwork, visore).",
+      "html": "<a class=\"ds-bottone-stretto\" href=\"#\">Dove trovarlo</a>",
+      "css": ".ds-bottone-stretto { display: inline-flex; align-items: center; gap: 0.55em; min-height: 44px; padding: 0.5em 1.05em; border-radius: 999px; background: transparent; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55); font: 600 var(--t-piccolo, 0.9375rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-stretto:hover { box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); } .ds-bottone-stretto:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+    },
+    {
+      "name": "La via con il nodo",
+      "kind": "custom",
+      "refersTo": "via",
+      "description": "Linea lime da 2px con il nodo viola e lime dei caroselli; segna dove si è.",
+      "html": "<div class=\"ds-via\" style=\"--pos: 40%\" aria-hidden=\"true\"></div>",
+      "css": ".ds-via { --pos: 50%; position: relative; height: 2px; margin: 24px 12px; background: var(--lime, #cffe7e); } .ds-via::after { content: \"\"; position: absolute; top: 50%; left: var(--pos); width: 24px; height: 24px; translate: -50% -50%; border-radius: 50%; border: 3px solid var(--viola, #674cc0); background: radial-gradient(circle, var(--lime, #cffe7e) 0 5px, var(--nero, #000) 6px); transition: left 0.35s ease; }"
+    },
+    {
+      "name": "Riquadro Telegram",
+      "kind": "card",
+      "refersTo": "riquadro-telegram",
+      "description": "Il box viola in corsivo dei caroselli, riservato al canale Telegram.",
+      "html": "<div class=\"ds-riquadro\"><h3>Il canale Telegram</h3><p>Il testo del canale, in corsivo.</p><a class=\"ds-riquadro-bottone\" href=\"#\">Entra nel canale</a></div>",
+      "css": ".ds-riquadro { display: grid; gap: 1rem; justify-items: start; padding: clamp(1.5rem, 5vw, 3rem); border-radius: 20px; background: var(--viola, #674cc0); color: var(--bianco, #fff); } .ds-riquadro h3 { margin: 0; font: 600 var(--t-titolo, 2rem)/1.1 var(--titoli, Cinzel, serif); color: var(--bianco, #fff); } .ds-riquadro p { margin: 0; font: italic 500 var(--t-sotto, 1.25rem)/1.5 var(--corpo, Montserrat, sans-serif); } .ds-riquadro-bottone { display: inline-flex; min-height: 48px; align-items: center; padding: 0.7em 1.35em; border-radius: 999px; background: var(--lime, #cffe7e); color: var(--nero, #000); font: 600 var(--t-corpo, 1.0625rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-riquadro-bottone:hover { background: var(--lime-chiaro, #e0ffab); } .ds-riquadro-bottone:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Riga di brano",
+      "kind": "custom",
+      "refersTo": "brano",
+      "description": "Una riga della scaletta: miniatura, titolo Cinzel lime, nota grigia, tondo di ascolto.",
+      "html": "<button class=\"ds-brano\" type=\"button\"><span class=\"ds-brano-copertina\"></span><span class=\"ds-brano-testo\"><span class=\"ds-brano-titolo\">Titolo del brano</span><span class=\"ds-brano-nota\">3:12</span></span><span class=\"ds-brano-icona\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 2.5v11l9-5.5z\" fill=\"currentColor\"/></svg></span></button>",
+      "css": ".ds-brano { display: flex; align-items: center; gap: 0.9rem; width: 100%; min-height: 4.25rem; padding: 0.5rem 0.4rem 0.5rem 0.25rem; border: 0; border-block: 1px solid var(--filo, rgba(207,254,126,0.16)); background: transparent; color: var(--bianco, #fff); text-align: left; cursor: pointer; } .ds-brano:hover { background: rgba(103, 76, 192, 0.16); } .ds-brano-copertina { flex-shrink: 0; width: 52px; height: 52px; border-radius: 6px; background: var(--viola-notte, #110b20); } .ds-brano-testo { display: grid; flex: 1; } .ds-brano-titolo { font: 600 var(--t-corpo, 1.0625rem)/1.25 var(--titoli, Cinzel, serif); color: var(--lime, #cffe7e); } .ds-brano-nota { color: var(--grigio, #b3b3b3); font-size: var(--t-meta, 0.8125rem); font-variant-numeric: tabular-nums; } .ds-brano-icona { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45); } .ds-brano:hover .ds-brano-icona { background: var(--lime, #cffe7e); color: var(--nero, #000); box-shadow: none; } .ds-brano:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+    },
+    {
+      "name": "Voce dell'indice",
+      "kind": "chip",
+      "refersTo": "indice-voce",
+      "description": "Pillola a filo dell'indice della Biblioteca, con il numero delle letture in grigio.",
+      "html": "<a class=\"ds-indice\" href=\"#\">Filosofia<span class=\"ds-indice-n\">7</span></a>",
+      "css": ".ds-indice { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.4rem 0.95rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.4); color: var(--bianco, #fff); font: 600 var(--t-piccolo, 0.9375rem) var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-indice:hover { color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); } .ds-indice:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; } .ds-indice-n { color: var(--grigio, #b3b3b3); font-weight: 500; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Lettore fisso",
+      "kind": "custom",
+      "refersTo": "lettore-fisso",
+      "description": "Il lettore in basso a destra, da fermo: pillola viola notte con il tondo viola e l'invito.",
+      "html": "<div class=\"ds-ascolto\"><button class=\"ds-ascolto-suona\" type=\"button\" aria-label=\"Ascolta TAUH\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 2.5v11l9-5.5z\" fill=\"currentColor\"/></svg></button><span class=\"ds-ascolto-invito\">Ascolta TAUH</span></div>",
+      "css": ".ds-ascolto { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.45rem 1.1rem 0.45rem 0.45rem; border-radius: 999px; background: rgba(17, 11, 32, 0.94); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.75), 0 12px 32px rgba(0, 0, 0, 0.65); } .ds-ascolto-suona { display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; background: var(--viola, #674cc0); color: var(--lime, #cffe7e); cursor: pointer; } .ds-ascolto-suona:hover { background: var(--viola-acceso, #7d63d4); } .ds-ascolto-suona:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; } .ds-ascolto-invito { color: var(--bianco, #fff); font: 600 var(--t-piccolo, 0.9375rem) var(--corpo, Montserrat, sans-serif); white-space: nowrap; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "La via da percorrere",
+    "overview": "Il sito è il prolungamento dei caroselli di TAUH: fondo nero pieno, una linea lime che si percorre, un nodo viola che dice dove sei. Tutto il resto (titoli Cinzel in lime, testi Montserrat, il riquadro viola in corsivo, il sigillo con l'anello) viene da quei caroselli e non da un'estetica nuova. La pagina non è una pila di riquadri uguali ma un cammino a tappe: nella home una sola linea scende lungo tutte le sezioni e il nodo, fermo a metà schermo, accende il cerchio di ogni titolo quando ci passa.\n\nLa densità è bassa e verticale: una colonna di 76rem, molto nero tra una tappa e l'altra, separazioni fatte con fili sottili (lime al 16%) invece che con contenitori. La materia visiva è solo quella vera di TAUH: il ritratto con la maschera, le tavole delle pillole, le copertine, le magliette, i sigilli, la partita vera del gioco. La luce è rara e si guadagna: l'unico alone del sito è quello lime del titolo grande dell'apertura.\n\nIl carattere è oscuro ma chiaro, come la voce di TAUH: contrasto alto, un solo colore che chiama l'azione per tappa, niente ornamento che non sia già un segno di TAUH.",
+    "keyCharacteristics": [
+      "Fondo nero pieno (#000) su ogni pagina; il colore entra come linea, testo o bottone, mai come atmosfera.",
+      "La via: linea lime da 2px con il nodo viola (anello viola 3px, punto lime al centro), nella home verticale, nelle pillole orizzontale come avanzamento.",
+      "Cinzel per titoli e nomi (lime), Montserrat per il testo; sei grandezze in tutto.",
+      "Bottoni a pillola; un solo bottone lime pieno per sezione, gli altri a filo.",
+      "Profondità quasi assente: fili, contorni interni e veli scuri sulle foto, non ombre."
+    ],
+    "rules": [
+      { "name": "La Regola del Fondo Pieno", "body": "Il fondo è nero #000 ovunque. Niente sfumature radiali come atmosfera, niente fondali colorati: le uniche sfumature sono lineari e servono a far leggere il testo sopra una foto (il buio che sale sul ritratto, sulla scena del gioco e della soglia). Il disegno del nodo (punto lime a bordo netto dentro l'anello viola) usa un radial-gradient a stop netti: è il segno dei caroselli, non un'atmosfera, e resta.", "section": "colors" },
+      { "name": "La Regola del Lime che Chiama", "body": "In ogni sezione c'è un solo bottone lime pieno: l'azione della tappa. Le altre azioni sono a filo (contorno lime) o viola.", "section": "colors" },
+      { "name": "La Regola delle Sei Grandezze", "body": "Il testo usa solo --t-meta, --t-piccolo, --t-corpo, --t-sotto, --t-titolo, --t-grande. Una misura nuova non si inventa: si sceglie il ruolo.", "section": "typography" },
+      { "name": "La Regola delle Etichette Piane", "body": "Le etichette dell'interfaccia (menu, bottoni, stati, metadati) sono in Montserrat con lettere a spaziatura normale e in maiuscolo/minuscolo. Il maiuscoletto di Cinzel è il carattere stesso dei titoli e l'anello del sigillo è un segno di TAUH: nessuno dei due è un'etichetta.", "section": "typography" },
+      { "name": "La Regola dell'Unico Alone", "body": "Nessun alone su riquadri, bottoni o immagini. L'alone lime esiste una volta sola: sul titolo grande dell'apertura.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do tieni il fondo nero #000 e usa solo i colori del frontmatter; lime per ciò che chiama, viola per ciò che segna, grigio per ciò che accompagna.",
+      "Do metti un solo bottone lime pieno per sezione; le altre azioni a filo o viola.",
+      "Do scegli la grandezza del testo tra le sei variabili (--t-meta … --t-grande) in base al ruolo.",
+      "Do usa la via (linea lime 2px, nodo viola e lime) per dire dove si è: tappe, tavole, avanzamento del brano.",
+      "Do separa le righe con il filo (lime al 16%) invece di chiuderle in riquadri.",
+      "Do usa solo materiale vero di TAUH: ritratto, tavole, copertine, magliette, sigilli, partita del gioco.",
+      "Do lascia i testi di TAUH come li ha scritti: si correggono solo refusi e punteggiatura.",
+      "Do lega il movimento allo scorrimento o a un gesto, e fermalo con «riduci movimento»."
+    ],
+    "donts": [
+      "Don't usare sfumature radiali come fondo o atmosfera (il punto a bordo netto del nodo è il disegno del nodo, non un'atmosfera).",
+      "Don't mettere aloni su riquadri, bottoni o immagini: l'unico alone è quello lime del titolo grande dell'apertura.",
+      "Don't usare il maiuscoletto spaziato (maiuscole con letter-spacing) nelle etichette dell'interfaccia.",
+      "Don't mettere occhielli o etichette sopra i titoli: la tappa si apre con il titolo.",
+      "Don't usare bordi colorati a sinistra come accento di un blocco.",
+      "Don't usare immagini generate, foto di repertorio o loghi dei social: al loro posto i sigilli di TAUH.",
+      "Don't riformulare i testi di TAUH.",
+      "Don't usare il riquadro viola in corsivo per altro che il Telegram (e, in piccolo, per il box delle tavole).",
+      "Don't tornare alla pila di riquadri arrotondati tutti uguali (titolo lime, paragrafo grigio, bottone lime)."
+    ]
+  }
+}
