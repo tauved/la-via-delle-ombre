@@ -1160,7 +1160,16 @@ function via(signal) {
     const r = percorso.getBoundingClientRect();
     const meta = window.innerHeight * 0.5;
     percorso.style.setProperty("--via-fatto", `${Math.round(Math.max(0, Math.min(r.height, meta - r.top)))}px`);
-    for (const t of tappe) t.classList.toggle("accesa", t.getBoundingClientRect().top < meta);
+    // il nodo compare solo quando la via è cominciata (prima sarebbe un mezzo cerchio sotto l'apertura)
+    percorso.classList.toggle("partita", r.top < meta);
+    for (const t of tappe) {
+      const box = t.getBoundingClientRect();
+      // il cerchio della tappa sta a 0,62em dall'alto del titolo
+      const centro = box.top + parseFloat(getComputedStyle(t).fontSize) * 0.62;
+      t.classList.toggle("accesa", box.top < meta);
+      // quando il nodo ci passa sopra, il cerchio della tappa si spegne: niente due nodi uno sull'altro
+      t.classList.toggle("sotto-il-nodo", Math.abs(centro - meta) < 16);
+    }
   };
   const chiedi = () => {
     if (!attesa) attesa = requestAnimationFrame(aggiorna);

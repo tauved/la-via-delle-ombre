@@ -376,6 +376,12 @@ body::before {
   padding-left: var(--rientro);
 }
 
+/* il sigillo nell'apertura c'è solo sul computer: sul telefono coprirebbe la maschera,
+   e la via finisce comunque al sigillo del piede */
+.apertura-sigillo {
+  display: none;
+}
+
 .apertura h1 {
   font-size: var(--t-grande);
   line-height: 0.98;
@@ -514,6 +520,12 @@ body::before {
     max-width: 36rem;
   }
 
+  .apertura-dentro > .apertura-sigillo {
+    display: block;
+    width: clamp(6rem, 14vh, 8.5rem);
+    margin-bottom: clamp(0.75rem, 2.5vh, 1.5rem);
+  }
+
   /* l'uscita non entra nel ritratto: si ferma prima di metà schermo (conta a 1024px) */
   .apertura-dentro > .uscita {
     width: min(100%, 34rem, 50vw - 5.5rem);
@@ -594,7 +606,16 @@ body::before {
   pointer-events: none;
 }
 
+.via-percorso.in-cammino:not(.partita) .via-nodo {
+  opacity: 0;
+}
+
+.via-percorso [data-tappa].sotto-il-nodo::before {
+  opacity: 0;
+}
+
 .via-nodo {
+  transition: opacity 0.3s ease;
   position: sticky;
   top: 50vh;
   top: 50dvh;
@@ -765,6 +786,11 @@ body::before {
   .musica {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
     gap: 3.5rem;
+  }
+
+  .musica-fuori {
+    position: sticky;
+    top: calc(var(--alt-testata) + 2rem);
   }
 }
 
@@ -946,7 +972,6 @@ body::before {
   width: 100%;
   height: 100%;
   overflow: visible;
-  filter: drop-shadow(0 0 12px rgba(207, 254, 126, 0.35));
 }
 
 .sigillo-anello text {
@@ -1890,6 +1915,15 @@ body:has(.ascolto) {
 
 .ascolto-suona:hover {
   background: var(--lime-chiaro);
+}
+
+.ascolto:not(.attivo) .ascolto-suona {
+  background: var(--viola);
+  color: var(--lime);
+}
+
+.ascolto:not(.attivo) .ascolto-suona:hover {
+  background: var(--viola-acceso);
 }
 
 .ascolto-copertina,
@@ -2929,7 +2963,7 @@ body:has(.ascolto) {
   aspect-ratio: 4 / 5;
   object-fit: contain;
   border-radius: 10px;
-  background: var(--viola-notte);
+  background: var(--nero);
 }
 
 .maglia h3 {

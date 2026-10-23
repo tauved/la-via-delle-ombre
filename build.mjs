@@ -685,12 +685,13 @@ const scheda = (c, pagina, { lazy = true } = {}) => `<a class="scheda" href="${i
   <span class="scheda-meta">${c.tavole.length} tavole${c.data ? `, ${dataEstesa(c.data)}` : ""}</span>
 </a>`;
 
-const sigillo = (pagina) => `<div class="sigillo">
+// il sigillo con l'anello: nella pagina può comparire due volte (apertura e piede), quindi l'id del cerchio cambia
+const sigillo = (pagina, dove = "piede", classe = "") => `<div class="sigillo${classe ? ` ${classe}` : ""}">
   <svg class="sigillo-anello" viewBox="0 0 400 400" aria-hidden="true">
-    <defs><path id="giro-sigillo" d="M 200 200 m -161 0 a 161 161 0 1 1 322 0 a 161 161 0 1 1 -322 0"/></defs>
+    <defs><path id="giro-sigillo-${dove}" d="M 200 200 m -161 0 a 161 161 0 1 1 322 0 a 161 161 0 1 1 -322 0"/></defs>
     <circle cx="200" cy="200" r="196" fill="rgba(0,0,0,0.38)" stroke="#CFFE7E" stroke-width="2.6"/>
     <circle cx="200" cy="200" r="144" fill="none" stroke="#CFFE7E" stroke-width="2.6"/>
-    <text font-size="25" fill="#CFFE7E"><textPath href="#giro-sigillo" textLength="1006" lengthAdjust="spacing">NON SERVIAM · LUX IN TENEBRIS · LUCIFER ·</textPath></text>
+    <text font-size="25" fill="#CFFE7E"><textPath href="#giro-sigillo-${dove}" textLength="1006" lengthAdjust="spacing">NON SERVIAM · LUX IN TENEBRIS · LUCIFER ·</textPath></text>
   </svg>
   <img class="sigillo-logo" src="${indirizzo(media.logoGrande, pagina)}" width="612" height="420" alt="TAUH" loading="lazy" decoding="async">
 </div>`;
@@ -890,6 +891,7 @@ function paginaHome(caroselli) {
   <section class="apertura" aria-labelledby="titolo-apertura">
     <img class="apertura-ritratto" src="${indirizzo(media.ritratto900, pagina)}" srcset="${indirizzo(media.ritratto600, pagina)} 600w, ${indirizzo(media.ritratto900, pagina)} 900w, ${indirizzo(media.ritratto1122, pagina)} 1122w" sizes="(min-width: 56.25em) 52vw, 100vw" width="1122" height="1402" alt="TAUH con la maschera e un teschio in mano, nel bosco" fetchpriority="high" decoding="async">
     <div class="colonna apertura-dentro">
+      ${sigillo(pagina, "apertura", "apertura-sigillo")}
       <h1 id="titolo-apertura">${esc(sito.apertura?.titolo || sito.nome)}</h1>
       ${sito.apertura?.motto ? `<p class="motto">${esc(sito.apertura.motto)}</p>` : ""}
       ${sito.apertura?.testo ? `<p class="apertura-testo">${esc(sito.apertura.testo)}</p>` : ""}

@@ -21,8 +21,8 @@ OWN-WORLD: fondo nero pieno; lime #CFFE7E per la linea, i titoli Cinzel e un sol
 
 STORY: chi arriva vede TAUH (ritratto e sigillo) e la nuova uscita con «Pre-salva», poi scende la via: gioca, sfoglia le pillole, ascolta, legge e scarica, entra nel Telegram, guarda il merch, sostiene, segue i social, apre il Manifesto.
 
-FIRST VIEWPORT: telefono 390×844: sotto la testata il ritratto a tutta larghezza (maschera in alto), il sigillo che fa da ponte sul bordo basso del ritratto, «La via delle ombre» in Cinzel lime, il motto, e la riga dell'uscita (copertina, «Come Dio», data e giorni che mancano, bottone lime «Pre-salvalo su Spotify») tutta dentro la prima schermata. Computer: ritratto alto a destra fino al bordo, a sinistra sigillo, titolo, motto, riga dell'uscita e due azioni secondarie (Ascolta, Sfoglia le pillole).
+FIRST VIEWPORT: telefono 390×844 (e 390×700 nel browser di Instagram): sotto la testata il ritratto a tutta altezza (maschera in alto, libera), sopra la sua parte bassa «La via delle ombre» in Cinzel lime, il motto e la riga dell'uscita (copertina, «Come Dio», «Nuovo singolo», data e giorni che mancano, bottone lime «Pre-salvalo su Spotify»), tutta dentro la prima schermata; sul telefono il sigillo non sta nella prima schermata (coprirebbe la maschera) e chiude la via nel piede. Computer: ritratto alto a destra fino al bordo, a sinistra il sigillo (l'anello gira scorrendo), titolo, motto, riga dell'uscita e due azioni secondarie (Ascolta, Sfoglia le pillole); il sigillo torna nel piede dove la via finisce.
 
-FORM: «via» verticale con nodo che scende (idea dell'analisi taste-skill, posizione 1 di 1: direzione fissata da TAUH, nessun tiro). seed: none (unavailable)
+FORM: «via» verticale con nodo che scende (idea dell'analisi taste-skill, posizione 1 di 1: direzione fissata da TAUH; il tiro è stato fatto solo per registrare il riferimento, la direzione fissata vince). seed:64579d86e42816ba
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
