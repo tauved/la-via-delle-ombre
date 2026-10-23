@@ -72,6 +72,12 @@ const dataEstesa = (iso) => {
   return `${Number(m[3])} ${MESI[Number(m[2]) - 1]} ${m[1]}`;
 };
 
+// Giorno e mese senza l'anno: «28 ottobre».
+const giornoMese = (iso) => {
+  const [, m, g] = iso.split("-").map(Number);
+  return `${g} ${MESI[m - 1]}`;
+};
+
 // Una data AAAA-MM-GG più n giorni, sempre come AAAA-MM-GG.
 const piuGiorni = (iso, n) => {
   const [a, m, g] = iso.split("-").map(Number);
@@ -506,6 +512,8 @@ function testata(pagina, attiva) {
     raccolte.biblioteca.length ? voce("/biblioteca/", "Biblioteca", "biblioteca") : "",
     raccolte.tools.length ? voce("/tools/", "Tools", "tools") : "",
     raccolte.merch.length ? voce("/#merch", "Merch", "merch") : "",
+    link.telegram ? `<a href="${esc(link.telegram)}" rel="me noopener">Telegram</a>` : "",
+    raccolte.sostieni ? voce("/#sostieni", "Sostienimi", "sostieni") : "",
     puntiManifesto().length ? voce("/#manifesto", "Manifesto", "manifesto") : "",
   ].join("");
   return `<a class="salta" href="#contenuto">Vai al contenuto</a>
@@ -520,7 +528,7 @@ function piede(pagina) {
   return `<footer class="piede">
   <div class="via via-fine" style="--pos: 90%" aria-hidden="true"></div>
   <div class="colonna piede-corpo">
-    <img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="TAUH" loading="lazy">
+    ${sigillo(pagina)}
     ${sito.piede?.motto ? `<p class="piede-motto">${esc(sito.piede.motto)}</p>` : ""}
     <p class="firma">TAUH · la via delle ombre</p>
   </div>
@@ -533,13 +541,14 @@ function barraAscolto(pagina) {
     titolo: b.titolo,
     file: indirizzo(b.url, pagina),
     copertina: indirizzo(b.urlCopertina, pagina),
+    ...(b.urlMini ? { mini: indirizzo(b.urlMini, pagina) } : {}),
     durata: Math.round(b.durata * 10) / 10,
     ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true } : {}), ...(b.chiaveCodici ? { codice: b.chiaveCodici } : {}) } : {}),
   }));
   const primo = raccolte.brani.find((b) => !b.bloccata) || raccolte.brani[0];
   return `<div class="ascolto" data-lettore>
   <button class="ascolto-suona" type="button" data-lettore-suona aria-label="Ascolta ${esc(primo.titolo)} di TAUH"><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span></button>
-  <img class="ascolto-copertina" data-lettore-copertina src="${indirizzo(primo.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
+  <img class="ascolto-copertina" data-lettore-copertina src="${indirizzo(primo.urlMini || primo.urlCopertina, pagina)}" width="160" height="160" alt="" loading="lazy" decoding="async">
   <div class="ascolto-info">
     <span class="ascolto-invito">Ascolta TAUH</span>
     <span class="ascolto-riga"><span class="ascolto-titolo" data-lettore-titolo>${esc(primo.titolo)}</span><span class="ascolto-tempo" data-lettore-tempo>0:00</span></span>
@@ -585,8 +594,8 @@ ${sito.url && !ANTEPRIMA ? `<meta property="og:url" content="${esc(assoluto(pagi
 <link rel="icon" href="${indirizzo("/favicon.ico", pagina)}" sizes="48x48">
 <link rel="icon" type="image/png" sizes="32x32" href="${indirizzo("/img/favicon-32.png", pagina)}">
 <link rel="apple-touch-icon" href="${indirizzo("/img/apple-touch-icon.png", pagina)}">
-<link rel="preload" href="${indirizzo("/assets/font/cinzel-var.woff", pagina)}" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="${indirizzo("/assets/font/montserrat-var.woff", pagina)}" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="${indirizzo("/assets/font/cinzel-var.woff2", pagina)}" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${indirizzo("/assets/font/montserrat-var.woff2", pagina)}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${indirizzo(risorse.css, pagina)}">
 <script>document.documentElement.classList.add("js")</script>
 ${scriptStriscia()}<script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
@@ -651,7 +660,8 @@ const scriptStriscia = () => {
 
 function strisciaUscita(pagina) {
   const d = datiStriscia();
-  if (!d) return "";
+  // nella home l'uscita è già nella prima schermata, per tutti
+  if (!d || pagina === "/") return "";
   const u = sito.uscita;
   const m = /^\d{4}-(\d{2})-(\d{2})$/.exec(u.data);
   const giorno = `${Number(m[2])} ${MESI[Number(m[1]) - 1]}`;
@@ -682,7 +692,7 @@ const sigillo = (pagina) => `<div class="sigillo">
     <circle cx="200" cy="200" r="144" fill="none" stroke="#CFFE7E" stroke-width="2.6"/>
     <text font-size="25" fill="#CFFE7E"><textPath href="#giro-sigillo" textLength="1006" lengthAdjust="spacing">NON SERVIAM · LUX IN TENEBRIS · LUCIFER ·</textPath></text>
   </svg>
-  <img class="sigillo-logo" src="${indirizzo(media.logoGrande, pagina)}" width="612" height="420" alt="TAUH">
+  <img class="sigillo-logo" src="${indirizzo(media.logoGrande, pagina)}" width="612" height="420" alt="TAUH" loading="lazy" decoding="async">
 </div>`;
 
 function immagineGioco(pagina, dimensioni, lazy, alt = "") {
@@ -722,35 +732,38 @@ function paginaHome(caroselli) {
   const musica = sito.musica || {};
   const gioco = sito.gioco || {};
   const tg = sito.telegram || {};
+  // nell'elenco dei brani se ne vedono questi; gli altri con «Tutti i brani» (app.js, elencoBrani)
+  const BRANI_IN_VISTA = 6;
   const lettoreSpotify = ANTEPRIMA && musica.spotify_artista && link.spotify
     ? `<div class="lettore">
         <h3>TAUH su Spotify</h3>
         <p>In questa anteprima il player di Spotify non si può caricare. Sul sito online compare qui, dopo aver premuto il bottone.</p>
-        <a class="bottone primario" href="${esc(link.spotify)}">Apri Spotify</a>
+        <a class="bottone filo" href="${esc(link.spotify)}">Apri Spotify</a>
       </div>`
     : musica.spotify_artista
     ? `<div class="lettore" data-incorpora="https://open.spotify.com/embed/artist/${esc(musica.spotify_artista)}?utm_source=generator&amp;theme=0" data-altezza="352" data-titolo="TAUH su Spotify">
         <h3>TAUH su Spotify</h3>
-        <p>Il player arriva dai server di Spotify e si carica solo quando lo attivi: da quel momento Spotify può usare i suoi cookie.</p>
-        <button type="button" class="bottone primario">Carica il player</button>
+        <p>Il player arriva dai server di Spotify e si carica solo quando lo apri: da quel momento Spotify può usare i suoi cookie.</p>
+        <button type="button" class="bottone filo">${icona.gioca}Apri il player di Spotify</button>
       </div>`
     : "";
   const lettoreYoutube = musica.youtube_video
     ? `<div class="lettore" data-incorpora="https://www.youtube-nocookie.com/embed/${esc(musica.youtube_video)}" data-altezza="360" data-titolo="Video di TAUH su YouTube">
         <h3>Il video</h3>
-        <p>Il video arriva da YouTube e si carica solo quando lo attivi.</p>
-        <button type="button" class="bottone primario">Carica il video</button>
+        <p>Il video arriva da YouTube e si carica solo quando lo apri.</p>
+        <button type="button" class="bottone filo">${icona.gioca}Apri il video di YouTube</button>
       </div>`
     : "";
-  const canaliMusica = [
-    link.spotify && `<li><a href="${esc(link.spotify)}" rel="me noopener">Spotify <small>Ascolta i brani</small></a></li>`,
-    link.apple_music && `<li><a href="${esc(link.apple_music)}" rel="me noopener">Apple Music <small>Ascolta i brani</small></a></li>`,
-    link.tidal && `<li><a href="${esc(link.tidal)}" rel="me noopener">TIDAL <small>Ascolta i brani</small></a></li>`,
-    link.youtube && `<li><a href="${esc(link.youtube)}" rel="me noopener">YouTube <small>Guarda i video</small></a></li>`,
-  ].filter(Boolean);
-  const giocoTesto = gioco.disponibile
-    ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
-    : `<a class="bottone" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`;
+  // le altre piattaforme, in una riga: «Anche su Spotify, Apple Music, TIDAL e YouTube.»
+  const piattaforme = [
+    link.spotify && ["Spotify", link.spotify],
+    link.apple_music && ["Apple Music", link.apple_music],
+    link.tidal && ["TIDAL", link.tidal],
+    link.youtube && ["YouTube", link.youtube],
+  ]
+    .filter(Boolean)
+    .map(([nome, url]) => `<a href="${esc(url)}" rel="me noopener">${nome}</a>`);
+  const elencoPiattaforme = piattaforme.length > 1 ? `${piattaforme.slice(0, -1).join(", ")} e ${piattaforme[piattaforme.length - 1]}` : piattaforme.join("");
   const uscita = sito.uscita?.titolo && sito.uscita?.link ? sito.uscita : null;
   const sostieni = raccolte.sostieni;
   // i brani col lucchetto del gioco che hanno anche i codici delle donazioni (ognuno la sua lista)
@@ -762,22 +775,8 @@ function paginaHome(caroselli) {
   const grazie = raccolte.grazie;
   const manifesto = puntiManifesto();
   const prossime = (Array.isArray(sito.sezioni_in_arrivo?.voci) ? sito.sezioni_in_arrivo.voci : []).filter((v) => v?.titolo);
-  const quanteSezioni =
-    4 +
-    (prossime.length ? 1 : 0) +
-    (uscita ? 1 : 0) +
-    (link.telegram ? 1 : 0) +
-    (raccolte.merch.length ? 1 : 0) +
-    (sostieni ? 1 : 0) +
-    (grazie ? 1 : 0) +
-    (raccolte.social.length ? 1 : 0) +
-    (manifesto.length ? 1 : 0);
-  let nodo = 0;
-  const via = () => {
-    const pos = Math.round(10 + (nodo * 80) / Math.max(1, quanteSezioni - 1));
-    nodo += 1;
-    return `<div class="via" style="--pos: ${pos}%" aria-hidden="true"></div>`;
-  };
+
+  // ------------------------------------------------ l'uscita, nella prima schermata
   // Dal giorno dell'uscita il pre-save diventa «Ascolta l'ultima uscita»: se alla build la data è già
   // arrivata il riquadro nasce così, altrimenti a mezzanotte lo cambia app.js (attributi data-dopo-*).
   const uscitaDopo = Boolean(uscita?.data && uscita.data <= oggiItalia());
@@ -790,25 +789,79 @@ function paginaHome(caroselli) {
     : null;
   // attributo col testo di dopo (solo se c'è una data) e il testo da mostrare adesso
   const conDopo = ([prima, dopo]) => `${uscita?.data ? ` data-dopo-testo="${esc(dopo)}"` : ""}>${esc(uscitaDopo ? dopo : prima)}`;
-  const sezioneUscita = uscita
-    ? `<section class="sezione" id="uscita" aria-labelledby="titolo-uscita">
-    ${via()}
-    <div class="colonna">
-      <div class="uscita" data-uscita="${esc(uscita.data || "")}"${uscita.data ? ` data-prima="Esce il ${dataEstesa(uscita.data)}" data-dopo="Uscito il ${dataEstesa(uscita.data)}"` : ""}>
+  const bloccoUscita = uscita
+    ? `<div class="uscita" role="group" aria-labelledby="titolo-uscita" data-uscita="${esc(uscita.data || "")}"${uscita.data ? ` data-prima="Esce il ${giornoMese(uscita.data)}" data-dopo="Uscito il ${dataEstesa(uscita.data)}"` : ""}>
         ${media.uscitaCopertina
-          ? `<img class="uscita-copertina" src="${indirizzo(media.uscitaCopertina, pagina)}" width="${media.uscitaCopertinaW || 600}" height="${media.uscitaCopertinaH || 600}" alt="La copertina di ${esc(uscita.titolo)}" loading="lazy" decoding="async">`
-          : `<div class="uscita-disco" aria-hidden="true"><span class="uscita-etichetta"><img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="" loading="lazy" decoding="async"></span></div>`}
+          ? `<img class="uscita-copertina" src="${indirizzo(media.uscitaCopertina, pagina)}" width="${media.uscitaCopertinaW || 600}" height="${media.uscitaCopertinaH || 600}" alt="La copertina di ${esc(uscita.titolo)}" decoding="async">`
+          : `<div class="uscita-disco" aria-hidden="true"><span class="uscita-etichetta"><img src="${indirizzo(media.logoPiccolo, pagina)}" width="160" height="110" alt="" decoding="async"></span></div>`}
         <div class="uscita-testo">
-          <span class="stato" data-uscita-stato${conDopo(uscitaTesti.stato)}</span>
           <h2 id="titolo-uscita">${esc(uscita.titolo)}</h2>
-          ${uscita.data ? `<p class="uscita-data" data-uscita-quando>${uscitaDopo ? "Uscito" : "Esce"} il ${dataEstesa(uscita.data)}</p>` : ""}
-          ${uscita.data || uscita.testo ? `<p${conDopo(uscitaTesti.testo)}</p>` : ""}
-          <a class="bottone primario" href="${esc(uscitaDopo && uscita.link_dopo ? uscita.link_dopo : uscita.link)}" target="_blank" rel="noopener" data-uscita-link${uscita.data && uscita.link_dopo ? ` data-dopo-link="${esc(uscita.link_dopo)}"` : ""}>${icona.gioca}<span${conDopo(uscitaTesti.bottone)}</span></a>
+          <p class="uscita-data"><span class="uscita-stato" data-uscita-stato${conDopo(uscitaTesti.stato)}</span>${uscita.data ? `<span class="uscita-quando" data-uscita-quando>${uscitaDopo ? `Uscito il ${dataEstesa(uscita.data)}` : `Esce il ${giornoMese(uscita.data)}`}</span>` : ""}</p>
+          ${uscita.data || uscita.testo ? `<p class="uscita-spiega"${conDopo(uscitaTesti.testo)}</p>` : ""}
         </div>
-      </div>
-    </div>
-  </section>`
+        <a class="bottone primario uscita-bottone" href="${esc(uscitaDopo && uscita.link_dopo ? uscita.link_dopo : uscita.link)}" target="_blank" rel="noopener" data-uscita-link${uscita.data && uscita.link_dopo ? ` data-dopo-link="${esc(uscita.link_dopo)}"` : ""}>${icona.gioca}<span${conDopo(uscitaTesti.bottone)}</span></a>
+        <p class="uscita-app" data-avviso-app hidden>Dentro <span data-nome-app>questa app</span> Spotify può chiederti di accedere e non aprire la tua libreria: se succede, apri il sito nel browser dal menu ⋯ in alto.</p>
+      </div>`
     : "";
+
+  // ------------------------------------------------ il gioco: qualche secondo di partita vera, muta
+  const clip = media.giocoClip;
+  const schermoGioco = clip
+    ? `<div class="gioco-schermo">
+      <video class="gioco-clip" data-clip muted loop playsinline preload="none" poster="${indirizzo(clip.poster, pagina)}"${clip.posterGrande ? ` data-poster-grande="${indirizzo(clip.posterGrande, pagina)}"` : ""} width="${clip.w}" height="${clip.h}" aria-hidden="true">
+        ${clip.fonti.map((f) => `<source${f.media ? ` media="${f.media}"` : ""} src="${indirizzo(f.url, pagina)}" type="${f.tipo}">`).join("\n        ")}
+      </video>
+      <button class="clip-pausa" type="button" data-clip-pausa aria-pressed="false" hidden><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span><span class="nascosto" data-clip-etichetta>Ferma l'anteprima del gioco</span></button>
+    </div>`
+    : `<div class="gioco-schermo">${immagineGioco(pagina, "100vw", true)}</div>`;
+
+  // ------------------------------------------------ elenco dei brani
+  const voceBrano = (b) => {
+    const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
+    const copertina = b.urlMini
+      ? `<img class="brano-copertina" src="${indirizzo(b.urlMini, pagina)}" srcset="${indirizzo(b.urlMini, pagina)} 160w, ${indirizzo(b.urlCopertina, pagina)} 512w" sizes="52px" width="160" height="160" alt="" loading="lazy" decoding="async">`
+      : `<img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">`;
+    // la nota sotto il titolo: testo semplice, oppure già HTML (con i link) se notaHtml è vero
+    const interno = (testo, simbolo, notaHtml = false) => `
+            ${copertina}
+            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${notaHtml ? testo : esc(testo)}</span>` : ""}</span>
+            <span class="brano-icona">${simbolo}</span>`;
+    // «in arrivo» senza data: solo il riquadro chiuso, niente bottone (il brano non è nel lettore)
+    if (b.chiusa) return `<li><div class="brano brano-chiuso brano-in-arrivo">${interno("In arrivo", icona.lucchetto)}
+          </div></li>`;
+    const bottone = `<button class="brano" type="button" data-brano="${b.indice}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
+          </button>`;
+    if (!b.bloccata) return `<li>${bottone}</li>`;
+    // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
+    // il brano del gioco: il link al gioco e, se ci sono, i codici delle donazioni e Spotify
+    // (con "su_spotify_dal" il pezzo su Spotify compare da quel giorno: lo mostra app.js)
+    const spotifyOra = Boolean(b.spotify) && (!b.su_spotify_dal || b.su_spotify_dal <= oggiItalia());
+    const suSpotify = b.spotify
+      ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a></span>`
+      : "";
+    const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a>${b.chiaveCodici ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
+    const chiuso = b.colGioco
+      ? b.chiaveCodici || b.spotify
+        ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(strade, icona.lucchetto, true)}
+          </div>`
+        : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
+          </a>`
+      : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
+          </div>`;
+    return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}${b.chiaveCodici ? ` data-codice="${b.chiaveCodici}"` : ""}>${bottone}
+          ${chiuso}</li>`;
+  };
+  const tuttiBrani = raccolte.elencoBrani.length;
+
+  // ------------------------------------------------ la via: ogni sezione è una tappa
+  // Il titolo di ogni sezione ha data-tappa: app.js (funzione via) lo accende quando il nodo ci passa.
+  const testaSezione = (id, titolo, testo, extra = "") => `<div class="colonna sezione-testa">
+      <div>
+        <h2 id="titolo-${id}" data-tappa>${titolo}</h2>
+        ${testo ? `<p>${testo}</p>` : ""}
+      </div>${extra}
+    </div>`;
+
   // Per i motori di ricerca: il nome del sito (quello che Google mostra sopra il risultato)
   // e l'artista, collegato ai suoi profili.
   const radice = sito.url ? `${sito.url.replace(/\/$/, "")}/` : "";
@@ -833,146 +886,77 @@ function paginaHome(caroselli) {
     ],
   };
 
-  const corpo = `<main id="contenuto">
+  const corpo = `<main id="contenuto" class="home">
   <section class="apertura" aria-labelledby="titolo-apertura">
-    <picture class="apertura-tavola">
-      <source type="image/webp" srcset="${indirizzo(media.apertura900, pagina)} 900w, ${indirizzo(media.apertura1620, pagina)} 1620w" sizes="(min-width: 900px) 50rem, 100vw">
-      <img src="${indirizzo(media.apertura900, pagina)}" width="900" height="1125" alt="" fetchpriority="high">
-    </picture>
-    ${sigillo(pagina)}
-    <h1 id="titolo-apertura">${esc(sito.apertura?.titolo || sito.nome)}</h1>
-    ${sito.apertura?.motto ? `<p class="motto">${esc(sito.apertura.motto)}</p>` : ""}
-    ${sito.apertura?.testo ? `<p class="apertura-testo">${esc(sito.apertura.testo)}</p>` : ""}
-    <div class="azioni">
-      <a class="bottone primario" href="${indirizzo("/caroselli/", pagina)}">Sfoglia le pillole di conoscenza</a>
-      <a class="bottone" href="${indirizzo("/#musica", pagina)}">Ascolta</a>
-    </div>
-  </section>
-
-  ${sezioneUscita}
-
-  <section class="sezione" id="gioco" aria-labelledby="titolo-gioco">
-    ${via()}
-    <div class="colonna">
-      <div class="gioco-invito">
-        ${immagineGioco(pagina, "(min-width: 800px) 36rem, 100vw", true)}
-        <div class="gioco-invito-testo">
-          ${gioco.disponibile ? "" : '<span class="stato">In arrivo</span>'}
-          <h2 id="titolo-gioco">${esc(gioco.titolo || "Il gioco")}</h2>
-          <p>${esc(gioco.testo || "")}</p>
-          ${giocoTesto}
-        </div>
+    <img class="apertura-ritratto" src="${indirizzo(media.ritratto900, pagina)}" srcset="${indirizzo(media.ritratto600, pagina)} 600w, ${indirizzo(media.ritratto900, pagina)} 900w, ${indirizzo(media.ritratto1122, pagina)} 1122w" sizes="(min-width: 56.25em) 52vw, 100vw" width="1122" height="1402" alt="TAUH con la maschera e un teschio in mano, nel bosco" fetchpriority="high" decoding="async">
+    <div class="colonna apertura-dentro">
+      <h1 id="titolo-apertura">${esc(sito.apertura?.titolo || sito.nome)}</h1>
+      ${sito.apertura?.motto ? `<p class="motto">${esc(sito.apertura.motto)}</p>` : ""}
+      ${sito.apertura?.testo ? `<p class="apertura-testo">${esc(sito.apertura.testo)}</p>` : ""}
+      ${bloccoUscita}
+      <div class="azioni apertura-azioni">
+        ${raccolte.brani.length ? `<a class="bottone filo" href="${indirizzo("/#musica", pagina)}" data-ascolta><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span><span data-ascolta-testo>Ascolta</span></a>` : ""}
+        <a class="bottone ${uscita ? "filo" : "primario"}" href="${indirizzo("/caroselli/", pagina)}">Sfoglia le pillole</a>
       </div>
     </div>
   </section>
 
-  <section class="sezione" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
-    ${via()}
-    <div class="colonna sezione-testa">
-      <div>
-        <h2 id="titolo-caroselli">Pillole di conoscenza</h2>
-        <p>${esc(sito.caroselli?.testo || "")}</p>
-      </div>
+  <div class="via-percorso" data-via>
+  <span class="via-viandante" aria-hidden="true"><span class="via-nodo"></span></span>
+
+  <section class="sezione tappa gioco-tappa" id="gioco" aria-labelledby="titolo-gioco">
+    ${testaSezione("gioco", esc(gioco.titolo || "Il gioco"), "")}
+    ${schermoGioco}
+    <div class="colonna gioco-testo">
+      ${gioco.disponibile ? "" : '<p class="gioco-presto">In arrivo</p>'}
+      <p>${esc(gioco.testo || "")}</p>
+      ${gioco.disponibile
+        ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">${icona.gioca}Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
+        : `<a class="bottone filo" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`}
+    </div>
+  </section>
+
+  <section class="sezione tappa" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
+    ${testaSezione(
+      "caroselli",
+      "Pillole di conoscenza",
+      esc(sito.caroselli?.testo || ""),
+      `
       <div class="frecce">
         <button class="freccia" type="button" data-binario-indietro aria-label="Copertine precedenti">${icona.sinistra}</button>
         <button class="freccia" type="button" data-binario-avanti aria-label="Altre copertine">${icona.destra}</button>
-      </div>
-    </div>
+      </div>`,
+    )}
     <ul class="binario" role="list">
-      ${recenti.map((c, i) => `<li>${scheda(c, pagina, { lazy: i > 2 })}</li>`).join("\n      ")}
+      ${recenti.map((c) => `<li>${scheda(c, pagina)}</li>`).join("\n      ")}
     </ul>
     <div class="colonna sezione-piede">
-      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Tutte le ${caroselli.length} pillole, ${totaleTavole} tavole</a>
+      <a class="bottone primario" href="${indirizzo("/caroselli/", pagina)}">Tutte le ${caroselli.length} pillole, ${totaleTavole} tavole</a>
     </div>
   </section>
 
-  ${prossime.length ? `<section class="sezione" id="in-arrivo" aria-labelledby="titolo-in-arrivo">
-    ${via()}
-    <div class="colonna">
-      <div class="sezione-testa">
-        <div>
-          <h2 id="titolo-in-arrivo">${esc(sito.sezioni_in_arrivo.titolo || "In arrivo")}</h2>
-          ${sito.sezioni_in_arrivo.testo ? `<p>${esc(sito.sezioni_in_arrivo.testo)}</p>` : ""}
-        </div>
-      </div>
-      <ul class="prossime" role="list">
-        ${prossime
-          .map((v) =>
-            v.link
-              ? `<li><a class="prossima aperta" href="${esc(v.link)}"><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</a></li>`
-              : `<li><div class="prossima"><span class="prossima-icona">${icona.lucchetto}</span><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}<span class="prossima-stato">In arrivo</span></div></li>`,
-          )
-          .join("\n        ")}
-      </ul>
-    </div>
-  </section>` : ""}
-
-  <section class="sezione" id="musica" aria-labelledby="titolo-musica">
-    ${via()}
+  <section class="sezione tappa" id="musica" aria-labelledby="titolo-musica">
+    ${testaSezione("musica", "Musica", esc(musica.testo || ""))}
     <div class="colonna musica">
-      <div class="musica-testa">
-        <h2 id="titolo-musica">Ascolta</h2>
-        <p>${esc(musica.testo || "")}</p>
-      </div>
-      ${raccolte.elencoBrani.length ? `<div class="musica-brani">
-        <ol class="brani" role="list">
-          ${raccolte.elencoBrani
-            .map((b) => {
-              const nota = [b.nota, b.durata ? minuti(b.durata) : ""].filter(Boolean).join(" · ");
-              // la nota sotto il titolo: testo semplice, oppure già HTML (con i link) se notaHtml è vero
-              const interno = (testo, simbolo, notaHtml = false) => `
-            <img class="brano-copertina" src="${indirizzo(b.urlCopertina, pagina)}" width="512" height="512" alt="" loading="lazy" decoding="async">
-            <span class="brano-testo"><span class="brano-titolo">${esc(b.titolo)}</span>${testo ? `<span class="brano-nota">${notaHtml ? testo : esc(testo)}</span>` : ""}</span>
-            <span class="brano-icona">${simbolo}</span>`;
-              // «in arrivo» senza data: solo il riquadro chiuso, niente bottone (il brano non è nel lettore)
-              if (b.chiusa) return `<li><div class="brano brano-chiuso brano-in-arrivo">${interno("In arrivo", icona.lucchetto)}
-          </div></li>`;
-              const bottone = `<button class="brano" type="button" data-brano="${b.indice}" aria-pressed="false"${b.bloccata ? " hidden" : ""}>${interno(nota, `<span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span>`)}
-          </button>`;
-              if (!b.bloccata) return `<li>${bottone}</li>`;
-              // finché il brano è chiuso, al posto del bottone c'è il link al gioco oppure «In arrivo» (app.js li scambia)
-              // il brano del gioco: il link al gioco e, se ci sono, i codici delle donazioni e Spotify
-              // (con "su_spotify_dal" il pezzo su Spotify compare da quel giorno: lo mostra app.js)
-              const spotifyOra = Boolean(b.spotify) && (!b.su_spotify_dal || b.su_spotify_dal <= oggiItalia());
-              const suSpotify = b.spotify
-                ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a></span>`
-                : "";
-              const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a>${b.chiaveCodici ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
-              const chiuso = b.colGioco
-                ? b.chiaveCodici || b.spotify
-                  ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(strade, icona.lucchetto, true)}
-          </div>`
-                  : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
-          </a>`
-                : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
-          </div>`;
-              return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}${b.chiaveCodici ? ` data-codice="${b.chiaveCodici}"` : ""}>${bottone}
-          ${chiuso}</li>`;
-            })
-            .join("\n          ")}
+      ${tuttiBrani ? `<div class="musica-brani">
+        <ol class="brani" id="elenco-brani" role="list" data-brani-in-vista="${BRANI_IN_VISTA}">
+          ${raccolte.elencoBrani.map(voceBrano).join("\n          ")}
         </ol>
+        ${tuttiBrani > BRANI_IN_VISTA ? `<button class="bottone filo brani-tutti" type="button" data-tutti-brani aria-controls="elenco-brani" aria-expanded="false" hidden>Tutti i brani (${tuttiBrani})</button>` : ""}
         <p class="brani-aiuto">La musica continua mentre giri per il sito.${link.telegram ? ` I pezzi li scarichi gratis dal <a href="${esc(link.telegram)}" rel="me noopener">canale Telegram</a>.` : ""}</p>
         <p class="brani-app" data-avviso-app hidden>Dentro <span data-nome-app>questa app</span> la musica si ferma quando esci dall'app o spegni lo schermo. Per ascoltarla anche così, apri il sito nel browser dal menu ⋯ in alto.</p>
       </div>` : ""}
-      <ul class="canali musica-canali" role="list">
-        ${canaliMusica.join("\n        ")}
-      </ul>
       <div class="musica-fuori">
-      ${lettoreSpotify}
-      ${lettoreYoutube}
+        ${piattaforme.length ? `<p class="musica-altrove">Anche su ${elencoPiattaforme}.</p>` : ""}
+        ${lettoreSpotify}
+        ${lettoreYoutube}
       </div>
     </div>
   </section>
 
-  ${`<section class="sezione" id="scarica" aria-labelledby="titolo-scarica">
-    ${via()}
-    <div class="colonna">
-      <div class="sezione-testa">
-        <div>
-          <h2 id="titolo-scarica">${raccolte.biblioteca.length ? "Da leggere e da scaricare" : "Da scaricare"}</h2>
-          <p>${esc(sito.scarica?.testo || "")}</p>
-        </div>
-      </div>
+  <section class="sezione tappa" id="scarica" aria-labelledby="titolo-scarica">
+    ${testaSezione("scarica", raccolte.biblioteca.length ? "Da leggere e da scaricare" : "Da scaricare", esc(sito.scarica?.testo || ""))}
+    <div class="colonna scarica">
       <div class="porte">
         ${raccolte.opere.length ? `<a class="porta" href="${indirizzo("/artwork/", pagina)}">
           <img src="${indirizzo(raccolte.opere[0].urlAnteprima, pagina)}" width="${raccolte.opere[0].anteprimaW || 540}" height="${raccolte.opere[0].anteprimaH || 675}" alt="" loading="lazy" decoding="async">
@@ -991,32 +975,30 @@ function paginaHome(caroselli) {
           <span class="porta-testo"><strong>${esc(sito.tools?.titolo || "Tools per artisti")}</strong><span>${vociTools(raccolte.tools.length)}</span></span>
         </a>` : ""}
       </div>
-    </div>
-  </section>`}
-
-  ${link.telegram ? `<section class="sezione" id="telegram" aria-labelledby="titolo-telegram">
-    ${via()}
-    <div class="colonna">
-      <div class="riquadro">
-        <h2 id="titolo-telegram">${esc(tg.titolo || "Il canale Telegram")}</h2>
+      ${prossime.length ? `<div class="prossime-blocco" id="in-arrivo">
+        <h3>${esc(sito.sezioni_in_arrivo.titolo || "In arrivo")}</h3>
+        ${sito.sezioni_in_arrivo.testo ? `<p>${esc(sito.sezioni_in_arrivo.testo)}</p>` : ""}
+        <ul class="prossime" role="list">
+          ${prossime
+            .map((v) =>
+              v.link
+                ? `<li><a class="prossima aperta" href="${esc(v.link)}"><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</a></li>`
+                : `<li class="prossima"><span class="prossima-icona">${icona.lucchetto}<span class="nascosto">In arrivo:</span></span><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</li>`,
+            )
+            .join("\n          ")}
+        </ul>
+      </div>` : ""}
+      ${link.telegram ? `<div class="riquadro" id="telegram">
+        <h3>${esc(tg.titolo || "Il canale Telegram")}</h3>
         <p>${esc(tg.testo || "")}</p>
-        <div class="azioni">
-          <a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale</a>
-          ${link.instagram ? `<a class="bottone filo" href="${esc(link.instagram)}" rel="me noopener">Segui TAUH su Instagram</a>` : ""}
-        </div>
-      </div>
+        <a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale</a>
+      </div>` : ""}
     </div>
-  </section>` : ""}
+  </section>
 
-  ${raccolte.merch.length ? `<section class="sezione" id="merch" aria-labelledby="titolo-merch">
-    ${via()}
+  ${raccolte.merch.length ? `<section class="sezione tappa" id="merch" aria-labelledby="titolo-merch">
+    ${testaSezione("merch", esc(sito.merch.titolo || "Merch"), sito.merch.testo ? esc(sito.merch.testo) : "")}
     <div class="colonna">
-      <div class="sezione-testa">
-        <div>
-          <h2 id="titolo-merch">${esc(sito.merch.titolo || "Merch")}</h2>
-          ${sito.merch.testo ? `<p>${esc(sito.merch.testo)}</p>` : ""}
-        </div>
-      </div>
       <ul class="merch" role="list">
         ${raccolte.merch
           .map(
@@ -1024,25 +1006,22 @@ function paginaHome(caroselli) {
           <div class="maglia-foto">
             ${a.immagini.map((im) => `<img src="${indirizzo(im.url, pagina)}" width="${im.larghezza || 800}" height="${im.altezza || 1000}" alt="${esc(im.alt || "")}" loading="lazy" decoding="async">`).join("\n            ")}
           </div>
-          <div class="maglia-testo">
-            <h3>${esc(a.titolo)}</h3>
-            ${a.dettagli ? `<p>${esc(a.dettagli)}</p>` : ""}
-            ${sito.merch.link ? `<a class="bottone primario" href="${esc(sito.merch.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sito.merch.bottone || "Chiedi in DM su Instagram")}</a>` : ""}
-          </div>
+          <h3>${esc(a.titolo)}</h3>
+          ${a.dettagli ? `<p>${esc(a.dettagli)}</p>` : ""}
         </li>`,
           )
           .join("\n        ")}
       </ul>
+      ${sito.merch.link ? `<a class="bottone primario merch-bottone" href="${esc(sito.merch.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sito.merch.bottone || "Chiedi in DM su Instagram")}</a>` : ""}
     </div>
   </section>` : ""}
 
-  ${sostieni ? `<section class="sezione" id="sostieni" aria-labelledby="titolo-sostieni">
-    ${via()}
+  ${sostieni ? `<section class="sezione tappa" id="sostieni" aria-labelledby="titolo-sostieni">
+    ${testaSezione("sostieni", esc(sostieni.titolo || "Sostienimi"), "")}
     <div class="colonna">
       <div class="sostieni">
         ${media.sostieniSigillo ? `<img class="sostieni-sigillo" src="${indirizzo(media.sostieniSigillo, pagina)}" width="360" height="360" alt="" loading="lazy" decoding="async">` : ""}
         <div class="sostieni-testo">
-          <h2 id="titolo-sostieni">${esc(sostieni.titolo || "Sostienimi")}</h2>
           ${sostieni.testo ? `<p>${esc(sostieni.testo)}</p>` : ""}
           <div class="sostieni-azioni">
             <a class="bottone primario sostieni-bottone" href="${esc(sostieni.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sostieni.bottone || "Dona con PayPal")}</a>
@@ -1063,41 +1042,30 @@ function paginaHome(caroselli) {
           </form>` : ""}
         </div>
       </div>
+      ${grazie ? `<details class="apribile grazie" id="ringraziamenti" data-ancora>
+        <summary>
+          <h3>${esc(grazie.titolo || "Ringraziamenti")}</h3>
+          <span class="apribile-invito"><span class="se-chiuso">Tocca per aprirli</span><span class="se-aperto">Chiudi</span>${icona.apri}</span>
+        </summary>
+        <div class="apribile-dentro">
+          ${grazie.voci.length ? `${grazie.intro ? `<p class="grazie-intro">${esc(grazie.intro)}</p>` : ""}
+          <ul class="grazie-elenco" role="list">
+            ${grazie.voci.map((v) => `<li><span class="grazie-chi">${esc(v.chi)}</span>${v.per ? `<span class="grazie-per">${esc(v.per)}</span>` : ""}</li>`).join("\n            ")}
+          </ul>` : ""}
+          ${grazie.sostenitori.length ? `<div class="grazie-sostenitori">
+            <h4>${esc(grazie.sostenitori_titolo || "Sostenitori")}</h4>
+            <ul class="sostenitori" role="list">
+              ${grazie.sostenitori.map((s) => `<li${s.nota ? ` class="con-nota"` : ""}>${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.nome)}</a>` : `<span>${esc(s.nome)}</span>`}${s.nota ? `<span class="sostenitore-nota">${esc(s.nota)}</span>` : ""}</li>`).join("\n              ")}
+            </ul>
+          </div>` : ""}
+        </div>
+      </details>` : ""}
     </div>
   </section>` : ""}
 
-  ${grazie ? `<section class="sezione" id="ringraziamenti" aria-labelledby="titolo-ringraziamenti">
-    ${via()}
+  ${raccolte.social.length ? `<section class="sezione tappa" id="social" aria-labelledby="titolo-social">
+    ${testaSezione("social", esc(sito.social.titolo || "I miei social"), sito.social.testo ? esc(sito.social.testo) : "")}
     <div class="colonna">
-      <div class="sezione-testa">
-        <div>
-          <h2 id="titolo-ringraziamenti">${esc(grazie.titolo || "Ringraziamenti")}</h2>
-        </div>
-      </div>
-      <div class="grazie">
-        ${grazie.voci.length ? `${grazie.intro ? `<p class="grazie-intro">${esc(grazie.intro)}</p>` : ""}
-        <ul class="grazie-elenco" role="list">
-          ${grazie.voci.map((v) => `<li><span class="grazie-chi">${esc(v.chi)}</span>${v.per ? `<span class="grazie-per">${esc(v.per)}</span>` : ""}</li>`).join("\n          ")}
-        </ul>` : ""}
-        ${grazie.sostenitori.length ? `<div class="grazie-sostenitori">
-          <h3>${esc(grazie.sostenitori_titolo || "Sostenitori")}</h3>
-          <ul class="sostenitori" role="list">
-            ${grazie.sostenitori.map((s) => `<li${s.nota ? ` class="con-nota"` : ""}>${s.link ? `<a href="${esc(s.link)}" target="_blank" rel="noopener">${esc(s.nome)}</a>` : `<span>${esc(s.nome)}</span>`}${s.nota ? `<span class="sostenitore-nota">${esc(s.nota)}</span>` : ""}</li>`).join("\n            ")}
-          </ul>
-        </div>` : ""}
-      </div>
-    </div>
-  </section>` : ""}
-
-  ${raccolte.social.length ? `<section class="sezione" id="social" aria-labelledby="titolo-social">
-    ${via()}
-    <div class="colonna">
-      <div class="sezione-testa">
-        <div>
-          <h2 id="titolo-social">${esc(sito.social.titolo || "I miei social")}</h2>
-          ${sito.social.testo ? `<p>${esc(sito.social.testo)}</p>` : ""}
-        </div>
-      </div>
       <ul class="social" role="list"${raccolte.social.some((v) => v.forma3d) ? ` data-sigilli-3d="${indirizzo(risorse.sigilli3d, pagina)}"` : ""}>
         ${raccolte.social
           .map(
@@ -1112,13 +1080,12 @@ function paginaHome(caroselli) {
     </div>
   </section>` : ""}
 
-  ${manifesto.length ? `<section class="sezione" id="manifesto" aria-labelledby="titolo-manifesto">
-    ${via()}
+  ${manifesto.length ? `<section class="sezione tappa" id="manifesto" aria-labelledby="titolo-manifesto">
     <div class="colonna">
-      <details class="manifesto" data-manifesto>
+      <details class="apribile manifesto" data-manifesto>
         <summary>
-          <h2 id="titolo-manifesto">${esc(sito.manifesto.titolo || "Manifesto")}</h2>
-          <span class="manifesto-invito"><span class="se-chiuso">${esc(sito.manifesto.invito || "Tocca per aprirlo")}</span><span class="se-aperto">Chiudi</span>${icona.apri}</span>
+          <h2 id="titolo-manifesto" data-tappa>${esc(sito.manifesto.titolo || "Manifesto")}</h2>
+          <span class="apribile-invito"><span class="se-chiuso">${esc(sito.manifesto.invito || "Tocca per aprirlo")}</span><span class="se-aperto">Chiudi</span>${icona.apri}</span>
         </summary>
         <ol class="manifesto-punti" role="list">
           ${manifesto
@@ -1134,6 +1101,7 @@ function paginaHome(caroselli) {
       </details>
     </div>
   </section>` : ""}
+  </div>
 </main>`;
 
   return documento({
@@ -1208,7 +1176,7 @@ function paginaCarosello(c, indice, caroselli) {
       ${c.tavole
         .map(
           (t, i) => `<figure class="tavola" id="tavola-${i + 1}" aria-label="Tavola ${i + 1} di ${n}">
-        <img src="${indirizzo(fileMedia(c, t.immagine), pagina)}" width="1080" height="1350" alt="Tavola ${i + 1} di ${n}: ${esc(t.titolo)}"${i === 0 ? ' fetchpriority="high"' : i > 1 ? ' loading="lazy"' : ""} decoding="async">
+        <img src="${indirizzo(fileMedia(c, t.immagine), pagina)}"${t.ridotta ? ` srcset="${indirizzo(fileMedia(c, t.ridotta), pagina)} 810w, ${indirizzo(fileMedia(c, t.immagine), pagina)} 1080w" sizes="(min-width: 1000px) min(36rem, 50vw), min(100vw - 2rem, 36rem)"` : ""} width="1080" height="1350" alt="Tavola ${i + 1} di ${n}: ${esc(t.titolo)}"${i === 0 ? ' fetchpriority="high"' : i > 1 ? ' loading="lazy"' : ""} decoding="async">
       </figure>`,
         )
         .join("\n      ")}
@@ -1344,7 +1312,7 @@ function paginaArtwork() {
         ${o.versione ? `<p class="opera-versione">${esc(o.versione)}</p>` : ""}
         ${o.carosello && raccolte.slugCaroselli.has(o.carosello) ? `<a class="opera-fonte" href="${indirizzo(`/caroselli/${o.carosello}/`, pagina)}">Dalla pillola</a>` : ""}
         ${o.descrizione ? `<p>${esc(o.descrizione)}</p>` : ""}
-        <a class="bottone primario stretto" href="${indirizzo(o.urlFile, pagina)}" download="${esc(nome)}">${icona.scarica}Scarica</a>
+        <a class="bottone filo stretto" href="${indirizzo(o.urlFile, pagina)}" download="${esc(nome)}">${icona.scarica}Scarica<span class="nascosto"> «${esc(completo)}»</span></a>
         <span class="opera-meta">${formato}${misure}, ${peso(o.peso)}</span>
       </div>
     </li>`;
@@ -1586,8 +1554,8 @@ function paginaTool(x) {
     ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
     <div class="azioni">
       ${scarica}
-      ${x.leggimi ? `<a class="bottone filo" href="${indirizzo(x.urlLeggimi, pagina)}" target="_blank" rel="noopener">LEGGIMI${x.versioni.length ? ` ${esc(x.etichetta || x.sistema)}` : ""}<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
-      ${x.versioni.filter((v) => v.urlLeggimi).map((v) => `<a class="bottone filo" href="${indirizzo(v.urlLeggimi, pagina)}" target="_blank" rel="noopener">LEGGIMI ${esc(v.etichetta || v.sistema)}<span class="nascosto"> (si apre in un'altra scheda)</span></a>`).join("\n      ")}
+      ${x.leggimi ? `<a class="bottone filo" href="${indirizzo(x.urlLeggimi, pagina)}" target="_blank" rel="noopener">Istruzioni${x.versioni.length ? ` per ${esc(x.etichetta || x.sistema)}` : ""}<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
+      ${x.versioni.filter((v) => v.urlLeggimi).map((v) => `<a class="bottone filo" href="${indirizzo(v.urlLeggimi, pagina)}" target="_blank" rel="noopener">Istruzioni per ${esc(v.etichetta || v.sistema)}<span class="nascosto"> (si apre in un'altra scheda)</span></a>`).join("\n      ")}
     </div>
     <span class="tool-meta">${esc(meta)}</span>
     ${x.versioni.map((v) => `<span class="tool-meta">${esc([v.sistema, path.extname(v.file).slice(1).toUpperCase(), peso(v.peso), v.nota].filter(Boolean).join(" · "))}</span>`).join("\n    ")}
@@ -1720,7 +1688,7 @@ async function adattaGioco(brani) {
   const senzaGoogle = html.replace(/<link[^>]+fonts\.(?:googleapis|gstatic)\.com[^>]*>\s*/gi, "");
   if (senzaGoogle !== html) {
     html = senzaGoogle;
-    aggiunte.push(`<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`);
+    aggiunte.push(`<style>@font-face{font-family:"Cinzel";src:url("${indirizzo("/assets/font/cinzel-var.woff2", pagina)}") format("woff2"),url("${indirizzo("/assets/font/cinzel-var.woff", pagina)}") format("woff");font-weight:400 900;font-display:swap}@font-face{font-family:"Montserrat";src:url("${indirizzo("/assets/font/montserrat-var.woff2", pagina)}") format("woff2"),url("${indirizzo("/assets/font/montserrat-var.woff", pagina)}") format("woff");font-weight:100 900;font-display:swap}</style>`);
   }
   const bloccati = brani.filter((b) => b.bloccata && b.colGioco);
   if (bloccati.length) aggiunte.push(scriptSblocco(bloccati, pagina));
@@ -1777,6 +1745,10 @@ async function principale() {
     soglia: await versioneImg("soglia-900.webp"),
     ogHome: await versioneImg("og-home.jpg"),
     copertinaBrano: await versioneImg("copertina-riserva-512.webp"),
+    copertinaBranoMini: await versioneImg("copertina-riserva-160.webp"),
+    ritratto600: await versioneImg("ritratto-600.webp"),
+    ritratto900: await versioneImg("ritratto-900.webp"),
+    ritratto1122: await versioneImg("ritratto-1122.webp"),
   });
   const copertinaGioco = sito.gioco?.immagine;
   if (copertinaGioco && existsSync(path.join(RADICE, "src", "img", `${copertinaGioco}-1280.webp`))) {
@@ -1784,6 +1756,22 @@ async function principale() {
     media.giocoCopertina640 = await versioneImg(`${copertinaGioco}-640.webp`);
   }
   if (existsSync(path.join(RADICE, "src", "img", "og-gioco.jpg"))) media.ogGioco = await versioneImg("og-gioco.jpg");
+  // l'anteprima del gioco nella home: qualche secondo di partita, muta (contenuti/gioco/anteprima-1280.webm/.mp4,
+  // anteprima-640.webm/.mp4 e poster-640.webp, poster-1280.webp). Senza questi file resta la copertina del gioco.
+  {
+    const cartella = path.join(CONTENUTI, "gioco");
+    const fonti = [];
+    for (const [larghezza, schermo] of [[1280, "(min-width: 700px)"], [640, ""]]) {
+      for (const [est, tipo] of [["webm", "video/webm"], ["mp4", "video/mp4"]]) {
+        const nome = `anteprima-${larghezza}.${est}`;
+        if (existsSync(path.join(cartella, nome))) fonti.push({ media: schermo, url: (await copiaConImpronta(path.join(cartella, nome), "media/gioco", nome)).url, tipo });
+      }
+    }
+    const poster = async (nome) => (existsSync(path.join(cartella, nome)) ? (await copiaConImpronta(path.join(cartella, nome), "media/gioco", nome)).url : "");
+    const piccolo = await poster("poster-640.webp");
+    const grande = await poster("poster-1280.webp");
+    if (fonti.length && (piccolo || grande)) media.giocoClip = { fonti, poster: piccolo || grande, posterGrande: grande, w: 1280, h: 720 };
+  }
   if (sito.uscita?.copertina) {
     const sorgente = path.join(CONTENUTI, "uscita", sito.uscita.copertina);
     if (existsSync(sorgente)) {
@@ -1800,6 +1788,14 @@ async function principale() {
     const dest = path.join(USCITA, "media", "caroselli", c.slug);
     await mkdir(dest, { recursive: true });
     const nomi = new Set([...c.tavole.map((t) => t.immagine), c.copertina, c.og]);
+    // la versione da 810 px di ogni tavola (strumenti/miniature.py), se c'è
+    for (const t of c.tavole) {
+      const ridotta = t.immagine.replace(/\.webp$/i, "-810.webp");
+      if (ridotta !== t.immagine && existsSync(path.join(c.dir, ridotta))) {
+        t.ridotta = ridotta;
+        nomi.add(ridotta);
+      }
+    }
     for (const nome of nomi) {
       const dati = await readFile(path.join(c.dir, nome));
       impronte.set(path.join(c.dir, nome), impronta(dati));
@@ -1812,12 +1808,19 @@ async function principale() {
   for (const b of brani) {
     const copiaCopertina = async () =>
       b.sorgenteCopertina ? (await copiaConImpronta(b.sorgenteCopertina, "media/musica", b.copertina)).url : media.copertinaBrano;
+    // la copertina da 160 px per l'elenco e il lettore (strumenti/miniature.py); senza, quella grande
+    const copiaMini = async () => {
+      if (!b.sorgenteCopertina) return media.copertinaBranoMini;
+      const nome = b.copertina.replace(/\.webp$/i, "-160.webp");
+      const sorgente = path.join(path.dirname(b.sorgenteCopertina), nome);
+      return nome !== b.copertina && existsSync(sorgente) ? (await copiaConImpronta(sorgente, "media/musica", nome)).url : "";
+    };
     if (b.chiusa) {
-      raccolte.elencoBrani.push({ ...b, urlCopertina: await copiaCopertina() });
+      raccolte.elencoBrani.push({ ...b, urlCopertina: await copiaCopertina(), urlMini: await copiaMini() });
       continue;
     }
     const { url, dati } = await copiaConImpronta(b.sorgente, "media/musica", b.file);
-    const voce = { ...b, url, urlCopertina: await copiaCopertina(), durata: durataMp3(dati), indice: raccolte.brani.length };
+    const voce = { ...b, url, urlCopertina: await copiaCopertina(), urlMini: await copiaMini(), durata: durataMp3(dati), indice: raccolte.brani.length };
     raccolte.brani.push(voce);
     raccolte.elencoBrani.push(voce);
   }

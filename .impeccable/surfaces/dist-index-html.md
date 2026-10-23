@@ -1,0 +1,28 @@
+---
+version: 1
+slug: "dist-index-html"
+primary_target: "dist/index.html"
+related_targets: ["build.mjs","src/stile.css","src/app.js"]
+---
+
+# Home di «La via delle ombre»
+
+Ambito: la pagina iniziale (generata da paginaHome in build.mjs, stile in src/stile.css, comportamento in src/app.js). Modo: Persuade (chi arriva dai social decide se pre-salvare, ascoltare, giocare, seguire). Mondo visivo già stabilito (palette e caratteri dei caroselli, sigillo, linea col nodo): estensione, non un mondo nuovo. Direzione scelta da TAUH sull'analisi del 23 ottobre 2026 («procedi con tutto»); niente immagini generate: costruzione dal codice.
+
+Pubblico e azione: follower dal telefono, spesso nel browser di Instagram. Azione prima: pre-salvare (poi ascoltare) l'ultima uscita; poi gioco, pillole, musica, Telegram, merch, donazioni, social.
+
+Restano dove li ha voluti TAUH: il gioco subito dopo l'uscita, il Manifesto in fondo e chiuso, i Ringraziamenti chiusi e apribili.
+
+## Direction contract
+
+THESIS: la home è la via delle ombre da percorrere: una sola linea lime che scende lungo tutta la pagina con il nodo viola che la percorre mentre scorri e accende ogni tappa. Rifiuta la pila di riquadri arrotondati tutti uguali (titolo lime + paragrafo grigio + bottone lime) che c'era prima.
+
+OWN-WORLD: fondo nero pieno; lime #CFFE7E per la linea, i titoli Cinzel e un solo bottone pieno per tappa; viola #674CC0 per il nodo e per il box in corsivo dei caroselli (solo il Telegram); grigio #B3B3B3 per i testi secondari; immagini vere di TAUH (ritratto con la maschera, tavole, copertine, magliette, sigilli, partita vera del gioco). Niente sfumature radiali, niente aloni su riquadri e bottoni, niente maiuscoletto spaziato: l'unico alone è quello dei titoli grandi.
+
+STORY: chi arriva vede TAUH (ritratto e sigillo) e la nuova uscita con «Pre-salva», poi scende la via: gioca, sfoglia le pillole, ascolta, legge e scarica, entra nel Telegram, guarda il merch, sostiene, segue i social, apre il Manifesto.
+
+FIRST VIEWPORT: telefono 390×844: sotto la testata il ritratto a tutta larghezza (maschera in alto), il sigillo che fa da ponte sul bordo basso del ritratto, «La via delle ombre» in Cinzel lime, il motto, e la riga dell'uscita (copertina, «Come Dio», data e giorni che mancano, bottone lime «Pre-salvalo su Spotify») tutta dentro la prima schermata. Computer: ritratto alto a destra fino al bordo, a sinistra sigillo, titolo, motto, riga dell'uscita e due azioni secondarie (Ascolta, Sfoglia le pillole).
+
+FORM: «via» verticale con nodo che scende (idea dell'analisi taste-skill, posizione 1 di 1: direzione fissata da TAUH, nessun tiro). seed: none (unavailable)
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

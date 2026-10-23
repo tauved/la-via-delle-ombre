@@ -88,6 +88,7 @@ const lettore = (() => {
       ...b,
       file: new URL(b.file, location.href).href,
       copertina: b.copertina ? new URL(b.copertina, location.href).href : "",
+      mini: b.mini ? new URL(b.mini, location.href).href : "",
     }));
   } catch {
     return null;
@@ -190,7 +191,9 @@ const lettore = (() => {
     barra.classList.toggle("in-ascolto", suona);
     document.documentElement.classList.toggle("musica-accesa", suona);
     titolo.textContent = b.titolo;
-    if (copertina && b.copertina && copertina.src !== b.copertina) copertina.src = b.copertina;
+    // nella barra la copertina piccola; quella grande resta per la schermata di blocco
+    const piccola = b.mini || b.copertina;
+    if (copertina && piccola && copertina.src !== piccola) copertina.src = piccola;
     bottone.setAttribute("aria-label", `${suona ? "Metti in pausa" : "Ascolta"} ${b.titolo} di TAUH`);
     if (!trascinando) disegnaVia(posizione());
     if (sessione) sessione.playbackState = suona ? "playing" : "paused";
@@ -469,8 +472,8 @@ function menu(signal) {
     { signal },
   );
   document.addEventListener("click", (e) => aperto() && !testata.contains(e.target) && apri(false), { signal });
-  // lo stesso punto del CSS (@media max-width: 62.4375em)
-  window.matchMedia("(min-width: 62.5em)").addEventListener("change", (e) => e.matches && apri(false), { signal });
+  // lo stesso punto del CSS (@media max-width: 69.9375em)
+  window.matchMedia("(min-width: 70em)").addEventListener("change", (e) => e.matches && apri(false), { signal });
 }
 
 // ---------------------------------------------------------------- player esterni
@@ -975,6 +978,26 @@ function sblocco(signal) {
 // ---------------------------------------------------------------- elenco dei brani nella home
 
 function elencoBrani(signal) {
+  // all'inizio se ne vedono pochi; «Tutti i brani» apre il resto (senza JS si vedono tutti)
+  const elenco = $("[data-brani-in-vista]");
+  const tutti = $("[data-tutti-brani]");
+  if (elenco && tutti) {
+    elenco.classList.add("raccolti");
+    tutti.hidden = false;
+    tutti.addEventListener(
+      "click",
+      () => {
+        const apri = elenco.classList.contains("raccolti");
+        elenco.classList.toggle("raccolti", !apri);
+        tutti.setAttribute("aria-expanded", String(apri));
+        tutti.textContent = apri ? "Meno brani" : tutti.dataset.testo;
+        // richiudendo, si torna all'inizio dell'elenco invece di restare in fondo alla pagina
+        if (!apri) elenco.scrollIntoView({ block: "nearest", behavior: riduci.matches ? "auto" : "smooth" });
+      },
+      { signal },
+    );
+    tutti.dataset.testo = tutti.textContent;
+  }
   const bottoni = $$("[data-brano]");
   if (!bottoni.length || !lettore) return;
   // brani col lucchetto: finché sono chiusi, al posto del bottone c'è il link al gioco o «In arrivo»
@@ -1026,17 +1049,22 @@ function elencoBrani(signal) {
 
 function manifesto(signal) {
   const box = $("[data-manifesto]");
-  if (!box) return;
-  const apri = () => {
-    if (location.hash === "#manifesto") box.open = true;
+  if (box && !box.id) box.id = "manifesto-testo";
+  // il manifesto risponde a #manifesto (l'id è della sezione); i ringraziamenti al loro id
+  const voci = [...(box ? [["manifesto", box]] : []), ...$$("details[data-ancora][id]").map((d) => [d.id, d])];
+  if (!voci.length) return;
+  const apri = (hash) => {
+    for (const [nome, d] of voci) if (hash === `#${nome}`) d.open = true;
   };
-  apri();
-  window.addEventListener("hashchange", apri, { signal });
+  apri(location.hash);
+  window.addEventListener("hashchange", () => apri(location.hash), { signal });
   document.addEventListener(
     "click",
     (e) => {
-      const a = e.target.closest('a[href$="#manifesto"]');
-      if (a && new URL(a.href, location.href).pathname === location.pathname) box.open = true;
+      const a = e.target.closest('a[href*="#"]');
+      if (!a) return;
+      const url = new URL(a.href, location.href);
+      if (url.pathname === location.pathname) apri(url.hash);
     },
     { signal },
   );
@@ -1055,11 +1083,12 @@ const appOspite = (() => {
 })();
 
 function avvisoApp() {
-  const avviso = $("[data-avviso-app]");
-  if (!avviso || !appOspite) return;
-  const nome = $("[data-nome-app]", avviso);
-  if (nome) nome.textContent = appOspite;
-  avviso.hidden = false;
+  if (!appOspite) return;
+  for (const avviso of $$("[data-avviso-app]")) {
+    const nome = $("[data-nome-app]", avviso);
+    if (nome) nome.textContent = appOspite;
+    avviso.hidden = false;
+  }
 }
 
 // ---------------------------------------------------------------- striscia della nuova uscita
@@ -1116,6 +1145,125 @@ function sigilli3d(signal) {
   signal.addEventListener("abort", () => vicino.disconnect(), { once: true });
 }
 
+// ---------------------------------------------------------------- la via della home
+// Una linea lime scende lungo la home; il nodo viola la percorre (CSS, position: sticky) e
+// accende i titoli delle sezioni (data-tappa) quando ci passa. La parte di linea già fatta
+// è piena, il resto è spento (--via-fatto).
+
+function via(signal) {
+  const percorso = $("[data-via]");
+  if (!percorso) return;
+  const tappe = $$("[data-tappa]", percorso);
+  let attesa = 0;
+  const aggiorna = () => {
+    attesa = 0;
+    const r = percorso.getBoundingClientRect();
+    const meta = window.innerHeight * 0.5;
+    percorso.style.setProperty("--via-fatto", `${Math.round(Math.max(0, Math.min(r.height, meta - r.top)))}px`);
+    for (const t of tappe) t.classList.toggle("accesa", t.getBoundingClientRect().top < meta);
+  };
+  const chiedi = () => {
+    if (!attesa) attesa = requestAnimationFrame(aggiorna);
+  };
+  window.addEventListener("scroll", chiedi, { passive: true, signal });
+  window.addEventListener("resize", chiedi, { signal });
+  signal.addEventListener("abort", () => cancelAnimationFrame(attesa), { once: true });
+  percorso.classList.add("in-cammino");
+  aggiorna();
+}
+
+// ---------------------------------------------------------------- «Ascolta» nell'apertura
+// Senza JS porta all'elenco dei brani; con il lettore fa partire la musica.
+
+function ascoltaSubito(signal) {
+  const bottone = $("[data-ascolta]");
+  if (!bottone || !lettore) return;
+  bottone.addEventListener(
+    "click",
+    (e) => {
+      e.preventDefault();
+      if (lettore.inAscolto()) lettore.pausa();
+      else lettore.avvia();
+    },
+    { signal },
+  );
+  lettore.ascolta(({ suona }) => {
+    bottone.classList.toggle("in-ascolto", suona);
+    const testo = $("[data-ascolta-testo]", bottone);
+    if (testo) testo.textContent = suona ? "Pausa" : "Ascolta";
+  }, signal);
+}
+
+// ---------------------------------------------------------------- anteprima del gioco
+// Qualche secondo di partita, muta, che gira solo quando è sullo schermo. Con «riduci movimento»
+// resta ferma sul primo fotogramma; il bottone in basso la ferma o la fa ripartire.
+
+function clip(signal) {
+  const video = $("[data-clip]");
+  if (!video) return;
+  const bottone = $("[data-clip-pausa]");
+  const etichetta = bottone && $("[data-clip-etichetta]", bottone);
+  let fermata = riduci.matches;
+  let inVista = false;
+  const disegna = () => {
+    if (!bottone) return;
+    const gira = !video.paused;
+    bottone.setAttribute("aria-pressed", String(!gira));
+    bottone.classList.toggle("in-ascolto", gira);
+    if (etichetta) etichetta.textContent = gira ? "Ferma l'anteprima del gioco" : "Fai partire l'anteprima del gioco";
+  };
+  const decidi = () => {
+    if (inVista && !fermata && !document.hidden) video.play().catch(() => {});
+    else video.pause();
+  };
+  video.addEventListener("play", disegna, { signal });
+  video.addEventListener("pause", disegna, { signal });
+  if (bottone) {
+    bottone.hidden = false;
+    bottone.addEventListener(
+      "click",
+      () => {
+        fermata = !video.paused;
+        if (!fermata) inVista = true;
+        decidi();
+      },
+      { signal },
+    );
+  }
+  if ("IntersectionObserver" in window) {
+    const guarda = new IntersectionObserver(
+      ([voce]) => {
+        inVista = voce.isIntersecting;
+        decidi();
+      },
+      { threshold: 0.25 },
+    );
+    guarda.observe(video);
+    // sugli schermi larghi, quando sta per comparire, il primo fotogramma passa a quello grande
+    const grande = video.dataset.posterGrande;
+    const vicino = new IntersectionObserver(
+      ([voce]) => {
+        if (!voce.isIntersecting) return;
+        vicino.disconnect();
+        if (grande && window.matchMedia("(min-width: 700px)").matches) video.poster = grande;
+      },
+      { rootMargin: "800px 0px" },
+    );
+    vicino.observe(video);
+    signal.addEventListener(
+      "abort",
+      () => {
+        guarda.disconnect();
+        vicino.disconnect();
+      },
+      { once: true },
+    );
+  }
+  document.addEventListener("visibilitychange", decidi, { signal });
+  signal.addEventListener("abort", () => video.pause(), { once: true });
+  disegna();
+}
+
 // ---------------------------------------------------------------- avvio delle parti
 
 let spegniPagina = null;
@@ -1123,7 +1271,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

@@ -19,10 +19,12 @@ contenuti/
   ebook/<nome>/              un ebook per cartella, con ebook.json (pagina per ora nascosta)
   biblioteca/                i libri consigliati, con i link (biblioteca.json), e le tue guide da scaricare
   tools/<nome>/              un programma per cartella, con tool.json, lo zip e le immagini
-src/                         stile.css, app.js, immagini del sito e caratteri
+  gioco/                     l'anteprima del gioco per la home (video muti e primo fotogramma)
+src/                         stile.css, app.js, immagini del sito (anche il ritratto) e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
-strumenti/                   script per aggiungere caroselli
+strumenti/                   script per aggiungere caroselli e preparare le immagini
 build.mjs                    genera il sito nella cartella dist/
+PRODUCT.md, DESIGN.md        a chi è rivolto il sito, le regole da rispettare e il suo stile
 wrangler.jsonc               configurazione di Cloudflare
 ```
 
@@ -68,7 +70,7 @@ Per togliere un carosello cancella la sua cartella.
 
 ### Cambiare testi e link
 
-Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, Apple Music (`"apple_music"`), TIDAL (`"tidal"`), TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito). Spotify, Apple Music, TIDAL e YouTube compaiono nella sezione Ascolta. La frase in fondo a ogni pagina è alla voce `"piede"`.
+Tutto sta in `contenuti/sito.json`: titolo e motto della home, testi delle sezioni, link a Instagram, YouTube, Spotify, Apple Music (`"apple_music"`), TIDAL (`"tidal"`), TikTok e Telegram (alla voce `"link"`; quelli che lasci vuoti spariscono dal sito). Spotify, Apple Music, TIDAL e YouTube compaiono nella sezione Musica, nella riga «Anche su …». La frase in fondo a ogni pagina è alla voce `"piede"`.
 
 ### I miei social
 
@@ -90,9 +92,17 @@ Verso il fondo della home, dopo i Ringraziamenti, c'è la sezione «I miei socia
 **Sigilli in 3D.** Sul sito ogni sigillo diventa un medaglione col segno in rilievo, che gira piano e si inclina sotto il dito o il mouse (`src/sigilli3d.js`, WebGL senza librerie, caricato solo quando la sezione sta per comparire). Per ogni sigillo servono due file in `contenuti/social/3d/`, la forma del segno (`<nome>.webp`) e i suoi contorni (`<nome>.json`), preparati da `python3 strumenti/sigilli_3d.py` (serve Python con Pillow, numpy, OpenCV e SciPy). Va rifatto solo quando aggiungi o cambi un sigillo; un sigillo senza quei file resta un'immagine. Senza WebGL, o se il 3D non parte, si vedono le immagini di sempre; con il movimento ridotto i medaglioni stanno fermi.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
+### La home: la via
+
+La home è una via da percorrere: sotto l'apertura una linea lime scende lungo tutte le sezioni e il nodo viola (quello dei caroselli) la percorre mentre si scorre, accendendo il titolo di ogni sezione quando ci passa. In fondo la via incontra la linea del piede, dove c'è il sigillo con l'anello «NON SERVIAM · LUX IN TENEBRIS · LUCIFER», che gira mentre si scorre la pagina.
+
+L'ordine è: apertura (ritratto, titolo, motto e nuova uscita), Gioco, Pillole di conoscenza, Musica, Da leggere e da scaricare (Artwork, Biblioteca, Tools, poi «In arrivo» e il canale Telegram), Merch, Sostienimi (con i Ringraziamenti, chiusi), I miei social, Manifesto.
+
+Il ritratto dell'apertura è `src/img/ritratto-600.webp`, `ritratto-900.webp` e `ritratto-1122.webp` (la stessa foto in tre misure, in verticale 4:5). Per cambiarlo sostituisci i tre file tenendo i nomi; la maschera deve stare nella parte alta, perché sul telefono titolo e uscita stanno sopra la parte bassa della foto.
+
 ### Un'uscita in arrivo (pre-save)
 
-In cima alla home, sotto l'apertura, c'è il riquadro della prossima uscita con il bottone per il pre-save. Si cambia in `contenuti/sito.json`, alla voce `"uscita"`:
+Nell'apertura della home, sotto il titolo, c'è la prossima uscita con il bottone per il pre-save: la vede subito chiunque arrivi, anche dal telefono. Si cambia in `contenuti/sito.json`, alla voce `"uscita"`:
 
 ```json
 "uscita": {
@@ -112,11 +122,13 @@ In cima alla home, sotto l'apertura, c'è il riquadro della prossima uscita con 
 
 Prima della data il sito mostra quanti giorni mancano. Dal giorno dell'uscita (a mezzanotte, senza fare niente) il pre-save diventa «Ascolta l'ultima uscita»: al posto di `"tipo"`, `"testo"` e `"bottone"` compaiono `"tipo_dopo"`, `"testo_dopo"` e `"bottone_dopo"`, e sotto il titolo c'è «Uscito oggi», poi «Uscito il …». Il bottone resta sul link di HyperFollow, che dopo l'uscita porta al brano su Spotify e sulle altre piattaforme; se vuoi mandarlo altrove (per esempio dritto al brano su Spotify) scrivi l'indirizzo in `"link_dopo"`. Il riquadro resta così finché non lo cambi con la prossima uscita. Per mettere la copertina salvala in `contenuti/uscita/` (quadrata, per esempio 1000×1000) e scrivi il nome del file in `"copertina"`; senza copertina compare un disco con il logo, che gira mentre suona la musica del sito. Per togliere il riquadro cancella la voce `"uscita"`.
 
-Con `"striscia_instagram": { "giorni_dopo": 7 }` chi arriva da Instagram (link della bio, che Instagram segna con `utm_source=ig`, o browser interno dell'app) vede anche, in ogni pagina e subito sotto il menu, una striscia con copertina, titolo, «esce il …» e il bottone «Pre-salva»; dal giorno dell'uscita diventa «è fuori» con «Ascolta» (stesso link del riquadro, o `"link_dopo"`) e sparisce da sola dopo `giorni_dopo` giorni (0 = sparisce il giorno dell'uscita). Chi la chiude, o tocca il bottone, non la rivede più fino alla fase dopo. Per cambiare le scritte dei bottoni aggiungi `"bottone"` e `"bottone_dopo"` dentro `"striscia_instagram"`; per toglierla cancella la voce. Gli altri visitatori non la vedono.
+Con `"striscia_instagram": { "giorni_dopo": 7 }` chi arriva da Instagram (link della bio, che Instagram segna con `utm_source=ig`, o browser interno dell'app) vede anche, in ogni pagina e subito sotto il menu, una striscia con copertina, titolo, «esce il …» e il bottone «Pre-salva»; dal giorno dell'uscita diventa «è fuori» con «Ascolta» (stesso link del riquadro, o `"link_dopo"`) e sparisce da sola dopo `giorni_dopo` giorni (0 = sparisce il giorno dell'uscita). Chi la chiude, o tocca il bottone, non la rivede più fino alla fase dopo. Per cambiare le scritte dei bottoni aggiungi `"bottone"` e `"bottone_dopo"` dentro `"striscia_instagram"`; per toglierla cancella la voce. Gli altri visitatori non la vedono, e nella home non compare, perché lì l'uscita è già in cima.
 
 ### La musica in sottofondo
 
-In basso a destra c'è il lettore «Ascolta TAUH» (sul telefono, finché non suona, è solo il tondo col ▶, per non coprire i bottoni della pagina). La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra; la × sulla barra la ferma e richiude il lettore. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, alla voce Ascolta, c'è l'elenco dei brani.
+In basso a destra c'è il lettore «Ascolta TAUH» (sul telefono, finché non suona, è solo il tondo col ▶, per non coprire i bottoni della pagina). La musica parte solo quando chi visita preme play e continua mentre si passa da una pagina all'altra; la × sulla barra la ferma e richiude il lettore. Sul telefono compare anche nella schermata di blocco, con titolo e copertina. Nella home, nella sezione Musica, c'è l'elenco dei brani: se ne vedono 6, gli altri con «Tutti i brani». Nell'apertura il bottone «Ascolta» fa partire la musica.
+
+Le copertine dei brani si vedono piccole: per l'elenco e il lettore il sito usa la versione da 160 px (`<nome>-160.webp`, accanto alla copertina in `contenuti/musica/`), che si prepara con `python3 strumenti/miniature.py`. Lo stesso comando prepara anche le tavole delle pillole da 810 px (`01-810.webp`, …), che i telefoni meno densi e i computer scaricano al posto di quelle grandi. Va lanciato quando aggiungi una copertina o un carosello; se non lo fai il sito funziona lo stesso, con le immagini grandi.
 
 - **A schermo spento**: in Safari e Chrome la musica continua anche col telefono bloccato o mentre si usa un'altra app. Nel browser interno di Instagram, Facebook e TikTok invece si ferma quando si esce dall'app (lo decide l'app, il sito non può farci niente): lì, sotto l'elenco dei brani, compare un avviso che spiega di aprire il sito nel browser.
 - **Un player alla volta**: se chi visita carica il player di Spotify, il lettore del sito si ferma e si chiude; se poi fa ripartire la musica del sito, il player di Spotify torna al bottone «Carica il player» (così si ferma anche lui).
@@ -292,7 +304,7 @@ In `"codici_sblocco"`, sotto il titolo esatto del brano, non ci sono i codici ma
 
 ### Ringraziamenti
 
-Dopo «Sostienimi» c'è la sezione Ringraziamenti, alla voce `"ringraziamenti"` di `contenuti/sito.json`. Ogni voce ha `"chi"` (in verde) e `"per"` (sotto):
+Sotto «Sostienimi» ci sono i Ringraziamenti: sono chiusi e si aprono toccandoli (l'indirizzo `/#ringraziamenti` li apre già). Stanno alla voce `"ringraziamenti"` di `contenuti/sito.json`. Ogni voce ha `"chi"` (in verde) e `"per"` (sotto):
 
 ```json
 "ringraziamenti": {
@@ -327,11 +339,11 @@ Proprio in fondo alla home c'è il Manifesto: è chiuso e si apre toccandolo; la
 
 I punti si numerano da soli, con i numeri romani, nell'ordine in cui sono scritti. Per togliere il Manifesto (e la voce del menu) cancella la voce `"manifesto"`.
 
-L'ordine della home è: apertura, pre-save, Gioco, Pillole di conoscenza, In arrivo, Ascolta, Da leggere e da scaricare, Telegram, Merch, Sostienimi, Ringraziamenti, I miei social, Manifesto.
+L'ordine della home è nella sezione «La home: la via».
 
 ### Sezioni in arrivo
 
-Dopo le Pillole di conoscenza c'è «In arrivo», con le sezioni che verranno: per ora «Impara la Chaos Magick» e «Impara a fare i sigilli», col lucchetto. Si cambia in `contenuti/sito.json`, alla voce `"sezioni_in_arrivo"`:
+Nella sezione «Da leggere e da scaricare», sotto Artwork, Biblioteca e Tools, c'è «In arrivo», con le sezioni che verranno, una per riga col lucchetto. Si cambia in `contenuti/sito.json`, alla voce `"sezioni_in_arrivo"`:
 
 ```json
 "sezioni_in_arrivo": {
@@ -344,7 +356,7 @@ Dopo le Pillole di conoscenza c'è «In arrivo», con le sezioni che verranno: p
 }
 ```
 
-Una voce senza `"link"` compare col lucchetto e «In arrivo»; quando la sezione è pronta si aggiunge il `"link"` (e, se vuoi, un `"testo"`) e il riquadro diventa cliccabile. Per togliere tutta la parte cancella la voce `"sezioni_in_arrivo"`.
+Una voce senza `"link"` compare col lucchetto; quando la sezione è pronta si aggiunge il `"link"` (e, se vuoi, un `"testo"`) e la voce diventa un link. Per togliere tutta la parte cancella la voce `"sezioni_in_arrivo"`.
 
 ### Biblioteca
 
@@ -393,6 +405,8 @@ I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli d
 I testi della pagina (storia, comandi, descrizione dell'immagine) sono in `contenuti/sito.json`, alla voce `"gioco"`. La copertina della pagina è `src/img/incubo-1280.webp` (con `incubo-640.webp` per i telefoni) e l'anteprima per i link è `src/img/og-gioco.jpg` (1200×630): sono schermate vere del gioco, da rifare quando cambia la grafica.
 Con `"disponibile": false` la pagina torna a mostrare «In arrivo».
 
+Nella home, nella sezione del gioco, gira qualche secondo di partita vera, muta: i file sono in `contenuti/gioco/` (`anteprima-1280.webm` e `.mp4` per i computer, `anteprima-640.webm` e `.mp4` per i telefoni, `poster-640.webp` e `poster-1280.webp` per il primo fotogramma). Il video parte solo quando è sullo schermo, si ferma col bottone in basso a destra e, con il movimento ridotto, resta fermo. Senza quei file al suo posto c'è la copertina del gioco.
+
 ## Provarlo sul computer
 
 ```
@@ -405,7 +419,7 @@ Genera il sito e lo apre su http://localhost:8787 con le stesse regole di Cloudf
 
 ## Note
 
-- I caratteri sono Cinzel e Montserrat, con licenza SIL Open Font License (i file sono in `src/font`). Il font Who asks Satan non è usato nel sito perché è gratuito solo per uso non commerciale.
+- I caratteri sono Cinzel e Montserrat, con licenza SIL Open Font License (i file sono in `src/font`, in WOFF2 e, per i browser vecchi, in WOFF). Il font Who asks Satan non è usato nel sito perché è gratuito solo per uso non commerciale.
 - Il sito non usa cookie propri. I player di Spotify e YouTube si caricano solo quando chi visita preme il bottone.
 - Per ricordare il brano e il punto in cui era, il lettore usa la memoria della scheda del browser (si cancella quando la scheda si chiude).
 - Che il primo livello del gioco è finito, invece, il browser lo ricorda nella memoria del sito (la stessa dove il gioco salva volume e sensibilità): serve solo a sbloccare i brani col lucchetto e non esce dal browser.

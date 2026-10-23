@@ -35,7 +35,7 @@
     ]
   },
   "musica": {
-    "testo": "I brani di TAUH da ascoltare qui, mentre giri per il sito. Li trovi anche su Spotify e YouTube.",
+    "testo": "I brani di TAUH da ascoltare qui, mentre giri per il sito.",
     "spotify_artista": "4wjw3C2aMvge2YdHKnvYYn",
     "youtube_video": ""
   },
@@ -127,7 +127,7 @@
     "titolo": "Merch",
     "testo": "Le magliette di TAUH, stampate in serigrafia con colori a base acqua. Per taglie, prezzi e spedizione chiedi in DM su Instagram.",
     "link": "https://ig.me/m/tauh616",
-    "bottone": "Chiedi in DM su IG",
+    "bottone": "Chiedi in DM su Instagram",
     "articoli": [
       {
         "titolo": "Donna col caprone",
