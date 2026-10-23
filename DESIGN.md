@@ -267,7 +267,7 @@ Ringraziamenti e Manifesto chiusi tra due fili: titolo a sinistra, a destra «To
 Il logo di TAUH dentro due cerchi lime con l'anello «NON SERVIAM · LUX IN TENEBRIS · LUCIFER» in Cinzel 700. Chiude la via nel piede (clamp(9.5rem, 34vw, 12.5rem)); sul computer apre anche l'apertura. L'anello ruota solo mentre si scorre la pagina.
 
 ### Il lettore fisso
-In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94% con sfocatura, tondo viola 46px con il triangolo lime e «Ascolta TAUH» (sul telefono solo il tondo). In ascolto diventa una barra di 26rem con angoli 20px: copertina 44px, titolo Cinzel lime, tempo, via di avanzamento con un nodo da 14px, tondo lime per la pausa, prossimo e chiudi. La musica continua cambiando pagina.
+In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94% con sfocatura, tondo viola 46px con il triangolo lime e «Ascolta TAUH» (sul telefono solo il tondo). Finché l'uscita dell'apertura è sullo schermo, il lettore fermo si fa da parte (dissolvenza di 0.25s), così il pre-save resta l'unico bottone pieno. In ascolto diventa una barra di 26rem con angoli 20px: copertina 44px, titolo Cinzel lime, tempo, via di avanzamento con un nodo da 14px, tondo lime per la pausa, prossimo e chiudi. La musica continua cambiando pagina.
 
 ### Il visore delle pillole
 Le tavole 4:5 in una pista a scatto con angoli 12px su viola notte; sotto: freccia, via con nodo, contatore a pillola (viola al 25%, cifre lime tabellari), freccia; poi tre bottoni a filo da 44px (Schermo intero, Condividi, Su Instagram). Sul computer resta fisso accanto al testo.

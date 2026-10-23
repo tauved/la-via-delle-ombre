@@ -110,7 +110,7 @@
       "name": "Lettore fisso",
       "kind": "custom",
       "refersTo": "lettore-fisso",
-      "description": "Il lettore in basso a destra, da fermo: pillola viola notte con il tondo viola e l'invito.",
+      "description": "Il lettore in basso a destra, da fermo: pillola viola notte con il tondo viola e l'invito; si fa da parte finché l'uscita dell'apertura è sullo schermo.",
       "html": "<div class=\"ds-ascolto\"><button class=\"ds-ascolto-suona\" type=\"button\" aria-label=\"Ascolta TAUH\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 2.5v11l9-5.5z\" fill=\"currentColor\"/></svg></button><span class=\"ds-ascolto-invito\">Ascolta TAUH</span></div>",
       "css": ".ds-ascolto { display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.45rem 1.1rem 0.45rem 0.45rem; border-radius: 999px; background: rgba(17, 11, 32, 0.94); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.75), 0 12px 32px rgba(0, 0, 0, 0.65); } .ds-ascolto-suona { display: grid; place-items: center; width: 46px; height: 46px; padding: 0; border: 0; border-radius: 50%; background: var(--viola, #674cc0); color: var(--lime, #cffe7e); cursor: pointer; } .ds-ascolto-suona:hover { background: var(--viola-acceso, #7d63d4); } .ds-ascolto-suona:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; } .ds-ascolto-invito { color: var(--bianco, #fff); font: 600 var(--t-piccolo, 0.9375rem) var(--corpo, Montserrat, sans-serif); white-space: nowrap; }"
     }
