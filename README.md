@@ -86,6 +86,8 @@ Verso il fondo della home, dopo i Ringraziamenti, c'è la sezione «I miei socia
 ```
 
 `canale` prende l'indirizzo dalla voce `"link"` (in alternativa si scrive `"link"` direttamente nella voce). I sigilli stanno in `contenuti/social/`: ci sono anche `pentacolo.webp` e `pietra-filosofale.webp`, liberi per un social in più.
+
+**Sigilli in 3D.** Sul sito ogni sigillo diventa un medaglione col segno in rilievo, che gira piano e si inclina sotto il dito o il mouse (`src/sigilli3d.js`, WebGL senza librerie, caricato solo quando la sezione sta per comparire). Per ogni sigillo servono due file in `contenuti/social/3d/`, la forma del segno (`<nome>.webp`) e i suoi contorni (`<nome>.json`), preparati da `python3 strumenti/sigilli_3d.py` (serve Python con Pillow, numpy, OpenCV e SciPy). Va rifatto solo quando aggiungi o cambi un sigillo; un sigillo senza quei file resta un'immagine. Senza WebGL, o se il 3D non parte, si vedono le immagini di sempre; con il movimento ridotto i medaglioni stanno fermi.
 Per mettere un video in evidenza nella sezione musica scrivi in `"youtube_video"` il codice del video (la parte dopo `v=` nell'indirizzo).
 
 ### Un'uscita in arrivo (pre-save)

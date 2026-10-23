@@ -3211,8 +3211,28 @@ body:has(.ascolto) {
   font-size: 0.88rem;
 }
 
+/* i sigilli in 3D (src/sigilli3d.js): la tela prende il posto dell'immagine */
+.sigillo-3d {
+  display: block;
+  width: min(100%, 10rem);
+  height: auto;
+  aspect-ratio: 1;
+  margin-bottom: 0.4rem;
+  transition: transform 0.25s ease;
+}
+
+.sigilli-in-3d .social-voce img {
+  display: none;
+}
+
+.social-voce:hover .sigillo-3d,
+.social-voce:focus-visible .sigillo-3d {
+  transform: scale(1.04);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .social-voce img {
+  .social-voce img,
+  .sigillo-3d {
     transition: none;
   }
 }

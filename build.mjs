@@ -1098,10 +1098,10 @@ function paginaHome(caroselli) {
           ${sito.social.testo ? `<p>${esc(sito.social.testo)}</p>` : ""}
         </div>
       </div>
-      <ul class="social" role="list">
+      <ul class="social" role="list"${raccolte.social.some((v) => v.forma3d) ? ` data-sigilli-3d="${indirizzo(risorse.sigilli3d, pagina)}"` : ""}>
         ${raccolte.social
           .map(
-            (v) => `<li><a class="social-voce" href="${esc(v.link)}" target="_blank" rel="me noopener">
+            (v) => `<li><a class="social-voce" href="${esc(v.link)}" target="_blank" rel="me noopener"${v.forma3d ? ` data-maschera="${indirizzo(v.forma3d.maschera, pagina)}" data-contorni="${indirizzo(v.forma3d.contorni, pagina)}"` : ""}>
           ${v.url ? `<img src="${indirizzo(v.url, pagina)}" width="360" height="360" alt="" loading="lazy" decoding="async">` : ""}
           <span class="social-nome">${esc(v.nome || v.canale)}</span>
           ${v.dettaglio ? `<span class="social-dettaglio">${esc(v.dettaglio)}</span>` : ""}
@@ -1759,7 +1759,7 @@ async function principale() {
   await cp(path.join(RADICE, "src", "font"), path.join(USCITA, "assets", "font"), { recursive: true });
 
   // foglio di stile e script con l'impronta nel nome, così la cache si aggiorna da sola
-  for (const [chiave, nome] of [["css", "stile.css"], ["js", "app.js"]]) {
+  for (const [chiave, nome] of [["css", "stile.css"], ["js", "app.js"], ["sigilli3d", "sigilli3d.js"]]) {
     const dati = await readFile(path.join(RADICE, "src", nome));
     const [base, est] = nome.split(".");
     const finale = `${base}-${impronta(dati)}.${est}`;
@@ -1901,7 +1901,19 @@ async function principale() {
     raccolte.merch.push(a);
   }
   for (const v of social) {
-    if (v.sigillo) v.url = (await copiaConImpronta(path.join(v.dir, v.sigillo), "media/social", v.sigillo)).url;
+    if (v.sigillo) {
+      v.url = (await copiaConImpronta(path.join(v.dir, v.sigillo), "media/social", v.sigillo)).url;
+      // la versione in 3D, se strumenti/sigilli_3d.py l'ha preparata
+      const base = path.parse(v.sigillo).name;
+      const maschera = path.join(v.dir, "3d", `${base}.webp`);
+      const contorni = path.join(v.dir, "3d", `${base}.json`);
+      if (existsSync(maschera) && existsSync(contorni)) {
+        v.forma3d = {
+          maschera: (await copiaConImpronta(maschera, "media/social/3d", `${base}.webp`)).url,
+          contorni: (await copiaConImpronta(contorni, "media/social/3d", `${base}.json`)).url,
+        };
+      }
+    }
     raccolte.social.push(v);
   }
   raccolte.sostieni = caricaSostieni();

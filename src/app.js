@@ -1095,6 +1095,27 @@ function striscia(segnale) {
   );
 }
 
+// ---------------------------------------------------------------- sigilli in 3D
+// I sigilli di «I miei social» diventano medaglioni in rilievo (src/sigilli3d.js). Il modulo
+// si scarica solo quando la sezione sta per comparire; senza WebGL restano le immagini.
+
+function sigilli3d(signal) {
+  const lista = $("[data-sigilli-3d]");
+  if (!lista || !("IntersectionObserver" in window)) return;
+  const vicino = new IntersectionObserver(
+    (voci) => {
+      if (!voci.some((v) => v.isIntersecting)) return;
+      vicino.disconnect();
+      import(lista.getAttribute("data-sigilli-3d"))
+        .then((m) => m.avvia(lista, signal))
+        .catch((errore) => console.warn("Sigilli in 3D non disponibili:", errore));
+    },
+    { rootMargin: "600px 0px" },
+  );
+  vicino.observe(lista);
+  signal.addEventListener("abort", () => vicino.disconnect(), { once: true });
+}
+
 // ---------------------------------------------------------------- avvio delle parti
 
 let spegniPagina = null;
@@ -1102,7 +1123,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia]) {
+  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {
