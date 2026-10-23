@@ -1400,13 +1400,14 @@ const voceBiblioteca = (sezioni) => {
   return n === 1 ? "1 lettura consigliata" : `${n} letture consigliate`;
 };
 
-// Prima lettera del titolo, per il segno in cima a ogni scheda della biblioteca.
-const iniziale = (titolo) =>
-  String(titolo)
+// Il nome di una sezione della biblioteca come ancora: «Il peso dell'esistenza» → il-peso-dell-esistenza
+const ancora = (testo) =>
+  String(testo)
     .normalize("NFD")
-    .replace(/[^\p{L}\p{N}]/gu, "")
-    .charAt(0)
-    .toUpperCase();
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 
 function paginaBiblioteca() {
   const pagina = "/biblioteca/";
@@ -1415,8 +1416,9 @@ function paginaBiblioteca() {
   const fuori = `<span class="nascosto"> (si apre in un'altra scheda)</span>`;
   const schedaLibro = (v) => {
     const estensione = v.file ? path.extname(v.file).toLowerCase() : "";
-    // per un file da scaricare, formato e peso vanno nella riga sotto l'autore: «2026 · PDF, 178 KB»
-    const edizione = [[v.editore, v.anno].filter(Boolean).join(", "), v.file ? `${estensione.slice(1).toUpperCase()}, ${peso(v.peso)}` : ""]
+    // una riga sola sotto l'autore: tipo, editore e anno e, per un file da scaricare, formato e peso
+    // («Guida · 2026 · PDF, 178 KB»)
+    const edizione = [v.tipo, [v.editore, v.anno].filter(Boolean).join(", "), v.file ? `${estensione.slice(1).toUpperCase()}, ${peso(v.peso)}` : ""]
       .filter(Boolean)
       .join(" · ");
     const bottoni = [
@@ -1428,18 +1430,14 @@ function paginaBiblioteca() {
         : "",
     ].filter(Boolean);
     return `<li class="libro">
-        <span class="libro-segno" aria-hidden="true">${esc(iniziale(v.titolo))}</span>
-        <div class="libro-testo">
-          ${v.tipo ? `<span class="libro-tipo">${esc(v.tipo)}</span>` : ""}
-          <h3 class="libro-titolo">${esc(v.titolo)}</h3>
-          ${v.autore ? `<p class="libro-autore">${esc(v.autore)}</p>` : ""}
-          ${edizione ? `<p class="libro-edizione">${esc(edizione)}</p>` : ""}
-          ${v.descrizione ? `<p class="libro-descrizione">${esc(v.descrizione)}</p>` : ""}
-          <div class="libro-azioni">
-            ${bottoni.join("\n            ")}
-          </div>
-          ${v.approfondimenti === "telegram" ? `<p class="libro-approfondimenti">Per approfondimenti c'è il <a href="${esc(link.telegram)}" target="_blank" rel="me noopener">canale Telegram${fuori}</a>.</p>` : ""}
+        <h3 class="libro-titolo">${esc(v.titolo)}</h3>
+        ${v.autore ? `<p class="libro-autore">${esc(v.autore)}</p>` : ""}
+        ${edizione ? `<p class="libro-edizione">${esc(edizione)}</p>` : ""}
+        ${v.descrizione ? `<p class="libro-descrizione">${esc(v.descrizione)}</p>` : ""}
+        <div class="libro-azioni">
+          ${bottoni.join("\n          ")}
         </div>
+        ${v.approfondimenti === "telegram" ? `<p class="libro-approfondimenti">Per approfondimenti c'è il <a href="${esc(link.telegram)}" target="_blank" rel="me noopener">canale Telegram${fuori}</a>.</p>` : ""}
       </li>`;
   };
   const corpo = `<main id="contenuto" class="colonna">
@@ -1448,9 +1446,14 @@ function paginaBiblioteca() {
     ${b.testo ? `<p>${esc(b.testo)}</p>` : ""}
     ${b.nota ? `<p class="licenza">${esc(b.nota)}</p>` : ""}
   </header>
+  ${raccolte.biblioteca.length > 1 ? `<nav class="indice" aria-label="Le sezioni della Biblioteca">
+    <ul role="list">
+      ${raccolte.biblioteca.map((s) => `<li><a href="#${ancora(s.titolo)}">${esc(s.titolo)}<span class="indice-n">${s.voci.length}<span class="nascosto"> ${s.voci.length === 1 ? "lettura" : "letture"}</span></span></a></li>`).join("\n      ")}
+    </ul>
+  </nav>` : ""}
   ${raccolte.biblioteca
     .map(
-      (s, i) => `<section class="scaffale" aria-labelledby="scaffale-${i + 1}">
+      (s, i) => `<section class="scaffale" id="${ancora(s.titolo)}" aria-labelledby="scaffale-${i + 1}">
     <div class="scaffale-testa">
       <h2 id="scaffale-${i + 1}">${esc(s.titolo)}</h2>
       ${s.testo ? `<p>${esc(s.testo)}</p>` : ""}
@@ -1495,9 +1498,9 @@ const schedaTool = (x, pagina) => `<li class="tool">
         ${x.urlAnteprima ? `<img src="${indirizzo(x.urlAnteprima, pagina)}" width="${x.anteprimaW || 1200}" height="${x.anteprimaH || 750}" alt="" loading="lazy" decoding="async">` : `<img src="${indirizzo(media.soglia, pagina)}" width="900" height="1125" alt="" loading="lazy" decoding="async">`}
       </a>
       <div class="tool-testo">
-        ${x.sistema ? `<span class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
         <h2><a href="${indirizzo(`/tools/${x.slug}/`, pagina)}">${esc(x.titolo)}</a></h2>
         ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
+        ${x.sistema ? `<p class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</p>` : ""}
         ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
         <div class="azioni">
           <a class="bottone primario" href="${indirizzo(`/tools/${x.slug}/`, pagina)}">Cosa fa e come si installa</a>
@@ -1548,9 +1551,9 @@ function paginaTool(x) {
   const corpo = `<main id="contenuto" class="colonna tool-pagina">
   <p class="briciole"><a href="${indirizzo("/tools/", pagina)}">Tools per artisti</a></p>
   <header class="archivio-testa tool-testa">
-    ${x.sistema ? `<span class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</span>` : ""}
     <h1>${esc(x.titolo)}</h1>
     ${x.sottotitolo ? `<p class="sottotitolo">${esc(x.sottotitolo)}</p>` : ""}
+    ${x.sistema ? `<p class="tool-tipo">${esc(x.sistemi || x.sistema)}${x.versione ? ` · versione ${esc(x.versione)}` : ""}</p>` : ""}
     ${x.descrizione ? `<p>${esc(x.descrizione)}</p>` : ""}
     <div class="azioni">
       ${scarica}

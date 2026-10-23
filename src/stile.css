@@ -85,7 +85,7 @@ body {
   flex-direction: column;
   background: var(--nero);
   color: var(--testo);
-  font: 400 1.0625rem/1.65 var(--corpo);
+  font: 400 var(--t-corpo) / 1.65 var(--corpo);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -129,14 +129,14 @@ h3 {
 
 h1 {
   font-weight: 700;
-  font-size: clamp(2.2rem, 6.5vw, 3.75rem);
+  font-size: var(--t-grande);
   line-height: 1.06;
   letter-spacing: 0.01em;
 }
 
 h2 {
   font-weight: 600;
-  font-size: clamp(1.75rem, 4.6vw, 2.75rem);
+  font-size: var(--t-titolo);
   line-height: 1.1;
 }
 
@@ -296,7 +296,7 @@ body::before {
   border-radius: 999px;
   background: var(--viola);
   color: var(--bianco);
-  font: 600 1rem/1.2 var(--corpo);
+  font: 600 var(--t-corpo) / 1.2 var(--corpo);
   text-decoration: none;
   cursor: pointer;
 }
@@ -738,7 +738,7 @@ body::before {
 .scheda-titolo {
   display: block;
   margin-top: 0.75rem;
-  font: 600 1.05rem/1.25 var(--titoli);
+  font: 600 var(--t-corpo) / 1.25 var(--titoli);
   color: var(--bianco);
 }
 
@@ -749,7 +749,7 @@ body::before {
 .scheda-meta {
   display: block;
   margin-top: 0.2rem;
-  font-size: 0.85rem;
+  font-size: var(--t-meta);
   color: var(--grigio);
 }
 
@@ -982,7 +982,7 @@ body::before {
 }
 
 .firma {
-  font: 600 1rem/1.4 var(--titoli);
+  font: 600 var(--t-corpo) / 1.4 var(--titoli);
   color: var(--grigio);
   max-width: none;
 }
@@ -1022,7 +1022,7 @@ body::before {
   border-radius: 999px;
   background: var(--viola-notte);
   color: var(--bianco);
-  font: 500 1rem var(--corpo);
+  font: 500 var(--t-corpo) var(--corpo);
 }
 
 .cerca input::placeholder {
@@ -1038,7 +1038,7 @@ body::before {
 .esito {
   margin-top: 0.25rem;
   color: var(--grigio);
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .griglia {
@@ -1104,12 +1104,12 @@ body::before {
 
 .striscia-testo strong {
   color: var(--lime);
-  font: 600 1.05rem/1.2 var(--titoli);
+  font: 600 var(--t-corpo) / 1.2 var(--titoli);
 }
 
 .striscia-testo span {
   color: var(--grigio);
-  font-size: 0.82rem;
+  font-size: var(--t-meta);
 }
 
 .striscia .bottone {
@@ -1160,7 +1160,7 @@ body::before {
   gap: 0.4rem;
   color: var(--grigio);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--t-piccolo);
   text-decoration: none;
 }
 
@@ -1173,14 +1173,19 @@ body::before {
   gap: 0.6rem;
 }
 
+/* il titolo di una pillola (e del gioco) sta nella colonna del testo: misura da titolo, non da apertura */
+.carosello-testa h1 {
+  font-size: var(--t-titolo);
+}
+
 .carosello-testa .sottotitolo {
-  font: 600 clamp(1.15rem, 3vw, 1.5rem) / 1.3 var(--titoli);
+  font: 600 var(--t-sotto) / 1.3 var(--titoli);
   color: var(--bianco);
 }
 
 .carosello-testa .data {
   color: var(--grigio);
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .visore {
@@ -1244,7 +1249,7 @@ body::before {
   background: rgba(103, 76, 192, 0.25);
   color: var(--lime);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
   text-align: center;
   font-variant-numeric: tabular-nums;
 }
@@ -1260,7 +1265,7 @@ body::before {
 .visore-azioni .bottone {
   min-height: 44px;
   padding: 0.55em 1.1em;
-  font-size: 0.92rem;
+  font-size: var(--t-piccolo);
 }
 
 .visore:fullscreen {
@@ -1297,7 +1302,7 @@ body::before {
 }
 
 .testo-tavole > h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.75rem);
+  font-size: var(--t-sotto);
   margin-bottom: 0.75rem;
 }
 
@@ -1339,7 +1344,7 @@ body::before {
 }
 
 .testo-tavola h3 {
-  font-size: 1.15rem;
+  font-size: var(--t-sotto);
   font-weight: 600;
   line-height: 1.3;
 }
@@ -1365,13 +1370,13 @@ body::before {
 .numero {
   flex-shrink: 0;
   min-width: 1.6rem;
-  font: 600 0.85rem/1 var(--corpo);
+  font: 600 var(--t-meta) / 1 var(--corpo);
   color: var(--grigio);
   font-variant-numeric: tabular-nums;
 }
 
 .testo-tavola p {
-  font-size: 0.98rem;
+  font-size: var(--t-corpo);
 }
 
 .testo-tavola strong {
@@ -1381,7 +1386,7 @@ body::before {
 
 .testo-tavola .nota {
   color: var(--grigio);
-  font-size: 0.88rem;
+  font-size: var(--t-piccolo);
 }
 
 .testo-tavola .box {
@@ -1486,14 +1491,14 @@ body::before {
 .vicino small {
   display: block;
   color: var(--grigio);
-  font-size: 0.82rem;
+  font-size: var(--t-meta);
   font-weight: 500;
 }
 
 .vicino strong {
   display: block;
   margin-top: 0.2rem;
-  font: 600 1.05rem/1.25 var(--titoli);
+  font: 600 var(--t-corpo) / 1.25 var(--titoli);
   color: var(--lime);
 }
 
@@ -1541,7 +1546,7 @@ body::before {
 }
 
 .scena-testo > p {
-  font-size: clamp(1.05rem, 2.4vw, 1.2rem);
+  font-size: var(--t-sotto);
 }
 
 .gioco {
@@ -1639,7 +1644,7 @@ body::before {
 }
 
 .gioco-storia p:first-child {
-  font-size: clamp(1.1rem, 2.4vw, 1.3rem);
+  font-size: var(--t-sotto);
   font-weight: 500;
   line-height: 1.55;
   color: var(--bianco);
@@ -1650,7 +1655,7 @@ body::before {
 }
 
 .comandi h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.75rem);
+  font-size: var(--t-sotto);
   margin-bottom: 0.75rem;
 }
 
@@ -1671,7 +1676,7 @@ body::before {
 .comandi dt {
   color: var(--lime);
   font-weight: 700;
-  font-size: 0.92rem;
+  font-size: var(--t-piccolo);
 }
 
 .comandi dd {
@@ -1680,7 +1685,7 @@ body::before {
 
 .comandi h3 {
   margin: 1.6rem 0 0.6rem;
-  font-size: 1.1rem;
+  font-size: var(--t-sotto);
   font-weight: 600;
 }
 
@@ -1749,7 +1754,7 @@ body::before {
     border-radius: 999px;
     background: transparent;
     color: var(--bianco);
-    font: 600 0.95rem/1 var(--corpo);
+    font: 600 var(--t-piccolo) / 1 var(--corpo);
     box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45);
     cursor: pointer;
   }
@@ -1796,7 +1801,7 @@ body::before {
 
   .js .testata-nav a {
     padding: 0.95rem 0;
-    font-size: 1.1rem;
+    font-size: var(--t-corpo);
     border-bottom: 1px solid var(--filo);
   }
 
@@ -1903,7 +1908,7 @@ body:has(.ascolto) {
 .ascolto-invito {
   color: var(--bianco);
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: var(--t-piccolo);
   white-space: nowrap;
 }
 
@@ -1937,7 +1942,7 @@ body:has(.ascolto) {
   flex: 1;
   min-width: 0;
   overflow: hidden;
-  font: 600 0.98rem/1.25 var(--titoli);
+  font: 600 var(--t-corpo) / 1.25 var(--titoli);
   color: var(--lime);
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -1946,7 +1951,7 @@ body:has(.ascolto) {
 .ascolto-tempo {
   flex-shrink: 0;
   color: var(--grigio);
-  font-size: 0.78rem;
+  font-size: var(--t-meta);
   font-variant-numeric: tabular-nums;
 }
 
@@ -2342,13 +2347,13 @@ body:has(.ascolto) {
 
 .licenza {
   color: var(--grigio);
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .bottone.stretto {
   min-height: 44px;
   padding: 0.5em 1.05em;
-  font-size: 0.92rem;
+  font-size: var(--t-piccolo);
 }
 
 .opere {
@@ -2400,7 +2405,7 @@ body:has(.ascolto) {
 .opera-versione {
   margin-top: -0.3rem;
   color: var(--grigio);
-  font-size: 0.88rem;
+  font-size: var(--t-piccolo);
 }
 
 .opera-testo {
@@ -2410,20 +2415,20 @@ body:has(.ascolto) {
 }
 
 .opera-titolo {
-  font-size: 1.12rem;
+  font-size: var(--t-sotto);
   font-weight: 600;
   line-height: 1.25;
   color: var(--bianco);
 }
 
 .opera-fonte {
-  font-size: 0.88rem;
+  font-size: var(--t-piccolo);
 }
 
 .opera-meta,
 .ebook-meta {
   color: var(--grigio);
-  font-size: 0.82rem;
+  font-size: var(--t-meta);
 }
 
 .lightbox {
@@ -2466,7 +2471,7 @@ body:has(.ascolto) {
 }
 
 .lightbox-quadro figcaption {
-  font: 600 1.15rem/1.3 var(--titoli);
+  font: 600 var(--t-sotto) / 1.3 var(--titoli);
   color: var(--lime);
   text-align: center;
 }
@@ -2513,11 +2518,11 @@ body:has(.ascolto) {
 }
 
 .ebook-testo h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+  font-size: var(--t-sotto);
 }
 
 .ebook-testo .sottotitolo {
-  font: 600 1.05rem/1.3 var(--titoli);
+  font: 600 var(--t-corpo) / 1.3 var(--titoli);
   color: var(--bianco);
 }
 
@@ -2544,7 +2549,7 @@ body:has(.ascolto) {
   display: none;
   align-self: center;
   color: var(--grigio);
-  font-size: 0.95rem;
+  font-size: var(--t-piccolo);
   line-height: 1.4;
 }
 
@@ -2598,7 +2603,7 @@ body:has(.ascolto) {
 }
 
 .tool-testo h2 {
-  font-size: clamp(1.4rem, 3.5vw, 1.85rem);
+  font-size: var(--t-sotto);
 }
 
 .tool-testo h2 a {
@@ -2611,15 +2616,14 @@ body:has(.ascolto) {
 }
 
 .tool-tipo {
-  font: 700 0.78rem/1.2 var(--corpo);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
   color: var(--grigio);
+  font-size: var(--t-piccolo);
+  font-weight: 600;
 }
 
 .tool-testo .sottotitolo,
 .tool-testa .sottotitolo {
-  font: 600 1.05rem/1.35 var(--titoli);
+  font: 600 var(--t-corpo) / 1.35 var(--titoli);
   color: var(--bianco);
 }
 
@@ -2632,7 +2636,7 @@ body:has(.ascolto) {
 
 .briciole {
   margin: 0 0 1rem;
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .briciole a {
@@ -2655,7 +2659,7 @@ body:has(.ascolto) {
 
 .tool-meta {
   color: var(--grigio);
-  font-size: 0.82rem;
+  font-size: var(--t-meta);
 }
 
 .tool-figura {
@@ -2678,7 +2682,7 @@ body:has(.ascolto) {
 
 .tool-sezione h2 {
   margin-bottom: 0.8rem;
-  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-size: var(--t-sotto);
 }
 
 .tool-elenco {
@@ -2714,7 +2718,7 @@ body:has(.ascolto) {
 
 .tool-schermate figcaption {
   color: var(--grigio);
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .tool-fine {
@@ -2734,22 +2738,57 @@ body:has(.ascolto) {
 .scaffale-testa {
   display: grid;
   gap: 0.35rem;
-  margin-bottom: 1.25rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--filo);
-}
-
-.scaffale-testa h2 {
-  font-size: clamp(1.5rem, 3.6vw, 2rem);
+  margin-bottom: 0.5rem;
+  padding-top: 1.75rem;
+  border-top: 2px solid var(--lime);
 }
 
 .scaffale-testa p {
   color: var(--grigio);
 }
 
+/* l'indice delle sezioni, in cima alla pagina */
+.indice {
+  margin: 0 0 clamp(2.25rem, 6vw, 3.25rem);
+}
+
+.indice ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.indice a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.4rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.4);
+  color: var(--bianco);
+  font-size: var(--t-piccolo);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.indice a:hover {
+  color: var(--lime);
+  box-shadow: inset 0 0 0 1.5px var(--lime);
+}
+
+.indice-n {
+  color: var(--grigio);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* le schede: righe separate da un filo, due colonne sul computer */
 .libri {
   display: grid;
-  gap: 1rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -2758,50 +2797,21 @@ body:has(.ascolto) {
 @media (min-width: 900px) {
   .libri {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: clamp(2rem, 4vw, 3.5rem);
   }
 }
 
 .libro {
   display: grid;
-  grid-template-columns: 3rem minmax(0, 1fr);
-  gap: 1rem;
-  padding: clamp(1rem, 3vw, 1.4rem);
-  border-radius: 16px;
-  background: var(--viola-notte);
-  box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.55);
-}
-
-.libro-segno {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3.75rem;
-  border-radius: 1.5rem 1.5rem 4px 4px;
-  background: linear-gradient(180deg, var(--viola), #33246b);
-  box-shadow: inset 0 0 0 1px rgba(207, 254, 126, 0.35);
-  color: var(--lime);
-  font: 700 1.55rem/1 var(--titoli);
-  padding-top: 0.35rem;
-}
-
-.libro-testo {
-  display: grid;
   align-content: start;
   justify-items: start;
-  gap: 0.3rem;
-  min-width: 0;
-}
-
-.libro-tipo {
-  color: var(--lime);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  gap: 0.2rem;
+  padding: 1.15rem 0 1.3rem;
+  border-bottom: 1px solid var(--filo);
 }
 
 .libro-titolo {
-  font-size: 1.2rem;
+  font-size: var(--t-sotto);
   font-weight: 600;
   line-height: 1.25;
   color: var(--bianco);
@@ -2809,31 +2819,30 @@ body:has(.ascolto) {
 
 .libro-autore {
   color: var(--lime);
-  font-size: 0.95rem;
+  font-size: var(--t-piccolo);
   font-weight: 600;
 }
 
 .libro-edizione {
   color: var(--grigio);
-  font-size: 0.85rem;
+  font-size: var(--t-meta);
 }
 
 .libro-descrizione {
-  margin-top: 0.3rem;
-  font-size: 0.95rem;
+  margin-top: 0.4rem;
 }
 
 .libro-azioni {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.65rem;
+  margin-top: 0.7rem;
 }
 
 .libro-approfondimenti {
   margin-top: 0.35rem;
   color: var(--grigio);
-  font-size: 0.9rem;
+  font-size: var(--t-piccolo);
 }
 
 .libro-approfondimenti a {
@@ -3063,7 +3072,7 @@ body:has(.ascolto) {
 .sostieni-qr figcaption {
   max-width: 13rem;
   color: var(--grigio);
-  font-size: 0.88rem;
+  font-size: var(--t-piccolo);
 }
 
 /* il codice da inquadrare col telefono serve solo su computer */
@@ -3092,7 +3101,7 @@ body:has(.ascolto) {
 .sblocco-titolo {
   margin: 0;
   color: var(--lime);
-  font: 600 1.1rem/1.3 var(--titoli);
+  font: 600 var(--t-sotto) / 1.3 var(--titoli);
 }
 
 .sblocco-testo {
@@ -3116,7 +3125,7 @@ body:has(.ascolto) {
   border-radius: 999px;
   background: var(--nero);
   color: var(--bianco);
-  font: 600 1rem var(--corpo);
+  font: 600 var(--t-corpo) var(--corpo);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -3136,7 +3145,7 @@ body:has(.ascolto) {
 .sblocco-esito {
   margin: 0;
   color: var(--grigio);
-  font-size: 0.92rem;
+  font-size: var(--t-piccolo);
 }
 
 /* vuoto non occupa spazio, ma resta nella pagina: così gli screen reader leggono anche il primo messaggio */
@@ -3154,7 +3163,7 @@ body:has(.ascolto) {
 
 .sblocco.fatto .sblocco-esito {
   color: var(--lime);
-  font-size: 1rem;
+  font-size: var(--t-corpo);
 }
 
 /* ------------------------------------------------------------ ringraziamenti */
@@ -3390,7 +3399,7 @@ body:has(.ascolto) {
 }
 
 .social-nome {
-  font: 600 1.2rem/1.2 var(--titoli);
+  font: 600 var(--t-sotto) / 1.2 var(--titoli);
   color: var(--lime);
 }
 
@@ -3400,7 +3409,7 @@ body:has(.ascolto) {
 
 .social-dettaglio {
   color: var(--grigio);
-  font-size: 0.88rem;
+  font-size: var(--t-piccolo);
 }
 
 /* i sigilli in 3D (src/sigilli3d.js): la tela prende il posto dell'immagine */
@@ -3481,7 +3490,7 @@ body:has(.ascolto) {
 }
 
 .piede-motto {
-  font: 600 clamp(1.1rem, 2.6vw, 1.35rem) / 1.3 var(--titoli);
+  font: 600 var(--t-sotto) / 1.3 var(--titoli);
   color: var(--lime);
   text-align: center;
 }

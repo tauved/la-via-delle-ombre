@@ -1,0 +1,31 @@
+# A ogni push su main (e a ogni pull request) genera il sito e lancia le prove di prove/sito.mjs:
+# tutte le pagine su telefono e computer, la home, il menu, una pillola e la biblioteca.
+# Se una prova fallisce, su GitHub il commit ha la crocetta rossa e nei log c'è l'elenco dei problemi.
+# Cloudflare pubblica comunque: le prove servono ad accorgersi subito di cosa si è rotto.
+name: Prove del sito
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Genera il sito
+        run: node build.mjs
+      - name: Installa Playwright e Chromium
+        run: |
+          npm install --no-save --no-package-lock playwright@1.55.0
+          npx playwright install --with-deps chromium
+      - name: Prove
+        run: node prove/sito.mjs

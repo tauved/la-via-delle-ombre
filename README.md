@@ -23,6 +23,7 @@ contenuti/
 src/                         stile.css, app.js, immagini del sito (anche il ritratto) e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
 strumenti/                   script per aggiungere caroselli e preparare le immagini
+prove/                       le prove automatiche (npm run prove) e un piccolo server per dist/
 build.mjs                    genera il sito nella cartella dist/
 PRODUCT.md, DESIGN.md        a chi è rivolto il sito, le regole da rispettare e il suo stile
 wrangler.jsonc               configurazione di Cloudflare
@@ -387,6 +388,8 @@ La pagina Biblioteca consiglia libri e articoli di altri autori senza ospitarli:
 
 `dove` decide la scritta del bottone: `gratis` («Leggilo gratis»), `editore` («Dall'editore»), `libreria` («In libreria») o `biblioteca` («In biblioteca»). Per una scritta diversa usa `"etichetta"`. I link si aprono in un'altra scheda.
 
+In cima alla pagina c'è l'indice delle sezioni, con quante letture ha ciascuna; ogni scheda ha titolo, autore, una riga con tipo, editore e anno, la descrizione e il bottone.
+
 Un testo tuo, per esempio una guida alla lettura, si può invece scaricare dalla Biblioteca: metti il file in `contenuti/biblioteca/` e al posto di `"link"` scrivi `"file": "nome.pdf"`. Il bottone diventa «Scarica gratis» (o la tua `"etichetta"`), formato e peso compaiono accanto all'anno, e il file si scarica da `/scarica/biblioteca/` con il nome «TAUH - Titolo.pdf». Con `"approfondimenti": "telegram"` sotto il bottone compare «Per approfondimenti c'è il canale Telegram», con il link al canale. I libri degli altri restano solo con il link, anche se in rete girano gratis. L'intro della pagina è in `contenuti/sito.json`, alla voce `"biblioteca"`; lì `"pubblica": false` nasconde la pagina e la voce del menu.
 
 ### Il gioco
@@ -416,6 +419,10 @@ npm run dev
 Genera il sito e lo apre su http://localhost:8787 con le stesse regole di Cloudflare (la prima volta scarica `wrangler`).
 
 `strumenti/importa_carosello.py` converte i canvas dei caroselli in tavole e testi: lo usa Claude, e serve Python con Playwright.
+
+### Prove automatiche
+
+`npm run prove` genera il sito e lo prova in un browser vero (serve il pacchetto `playwright` con Chromium): ogni pagina su telefono e computer (niente errori, niente scorrimento di lato, immagini con il testo alternativo, link e bottoni con un nome, un solo titolo h1), la nuova uscita nella prima schermata del telefono, la via della home, «Tutti i brani», il lettore, il menu a tendina, le frecce di una pillola e l'indice della Biblioteca. Su GitHub le stesse prove partono da sole a ogni push (`.github/workflows/prove.yml`): se qualcosa si rompe il commit ha la crocetta rossa e nei log c'è l'elenco dei problemi. Cloudflare pubblica comunque.
 
 ## Note
 
