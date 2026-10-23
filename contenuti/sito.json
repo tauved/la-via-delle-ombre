@@ -93,7 +93,7 @@
     ]
   },
   "scarica": {
-    "testo": "Gli artwork di TAUH da scaricare gratis, senza registrazione, e i libri che consigliamo."
+    "testo": "Gli artwork da scaricare gratis e senza registrazione, i libri che consiglio e i programmi che uso per fare musica."
   },
   "artwork": {
     "testo": "Le copertine dei brani di TAUH in alta risoluzione. Scaricale gratis, senza registrazione.",
@@ -121,7 +121,7 @@
   "biblioteca": {
     "pubblica": true,
     "testo": "I libri e gli scritti che TAUH consiglia a chi cammina sulla via delle ombre: miti antichi, gnosi, magia, coscienza, orrore.",
-    "nota": "Qui non trovi i PDF: ogni scheda porta dove leggerli gratis, quando l'autore o l'editore li hanno messi online, o dove trovarli in libreria. Molti si possono prendere in prestito nelle biblioteche pubbliche."
+    "nota": "Dei libri di altri autori qui non trovi i PDF: ogni scheda porta dove leggerli gratis, quando l'autore o l'editore li hanno messi online, o dove trovarli in libreria. Molti si possono prendere in prestito nelle biblioteche pubbliche."
   },
   "merch": {
     "titolo": "Merch",

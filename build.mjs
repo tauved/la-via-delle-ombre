@@ -546,6 +546,7 @@ function barraAscolto(pagina) {
     <span class="ascolto-via" data-lettore-via role="slider" tabindex="0" aria-label="Posizione nel brano" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00 di ${minuti(primo.durata)}"><span></span></span>
   </div>
   <button class="ascolto-prossimo" type="button" data-lettore-prossimo aria-label="Brano successivo"${raccolte.brani.length < 2 ? " hidden" : ""}>${icona.prossimo}</button>
+  <button class="ascolto-chiudi" type="button" data-lettore-chiudi aria-label="Ferma la musica e chiudi il lettore">${icona.chiudi}</button>
 </div>
 <script type="application/json" id="brani-dati">${JSON.stringify(elenco).replace(/</g, "\\u003c")}</script>`;
 }
@@ -1050,15 +1051,15 @@ function paginaHome(caroselli) {
               <figcaption>${esc(sostieni.qr_testo || "Inquadra il codice col telefono per donare.")}</figcaption>
             </figure>` : ""}
           </div>
-          ${braniConCodice.length ? `<form class="sblocco" data-sblocco data-brani="${esc(JSON.stringify(Object.fromEntries(braniConCodice.map((b) => [b.chiaveCodici, { titolo: b.titolo, codici: b.codici, fino: b.bloccata, gioco: b.colGioco }]))))}" hidden>
-            <p class="sblocco-titolo">${esc(sostieni.sblocco_titolo || "Hai già donato?")}</p>
+          ${braniConCodice.length ? `<form class="sblocco" data-sblocco aria-labelledby="titolo-sblocco" data-brani="${esc(JSON.stringify(Object.fromEntries(braniConCodice.map((b) => [b.chiaveCodici, { titolo: b.titolo, codici: b.codici, fino: b.bloccata, gioco: b.colGioco }]))))}" hidden>
+            <h3 class="sblocco-titolo" id="titolo-sblocco">${esc(sostieni.sblocco_titolo || "Hai già donato?")}</h3>
             <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi")} ${esc(elencoTitoli(braniConCodice))}.</p>
             <div class="sblocco-riga">
               <label class="nascosto" for="codice-sblocco">Codice di sblocco</label>
-              <input id="codice-sblocco" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" required>
+              <input id="codice-sblocco" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" aria-describedby="esito-sblocco" required>
               <button class="bottone filo" type="submit">Sblocca</button>
             </div>
-            <p class="sblocco-esito" data-sblocco-esito role="status" aria-live="polite"></p>
+            <p class="sblocco-esito" id="esito-sblocco" data-sblocco-esito role="status" aria-live="polite"></p>
           </form>` : ""}
         </div>
       </div>
@@ -1268,7 +1269,7 @@ function paginaGioco() {
     ${g.sottotitolo ? `<p class="sottotitolo">${esc(g.sottotitolo)}</p>` : ""}
   </header>
   <div class="schermo-gioco" data-schermo-gioco style="--proporzioni: ${esc(g.proporzioni || "16 / 9")}">
-    <a class="avvia" href="${percorso}" data-avvia data-titolo="${esc(titolo)}">
+    <a class="avvia" href="${percorso}" data-avvia data-titolo="${esc(titolo)}" aria-label="Gioca a ${esc(titolo)}">
       ${immagineGioco(pagina, "(min-width: 76rem) 76rem, 100vw", false, g.descrizione_immagine || "")}
       <span class="avvia-bottone">${icona.gioca}Gioca</span>
     </a>
@@ -1301,7 +1302,7 @@ function paginaGioco() {
     ${g.in_arrivo ? `<p>${esc(g.in_arrivo)}</p>` : ""}
     <div class="azioni">
       ${link.telegram ? `<a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale Telegram</a>` : ""}
-      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia i caroselli</a>
+      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia le pillole</a>
     </div>
   </div>
 </main>`;
@@ -1406,7 +1407,7 @@ function paginaEbook() {
       ${link.telegram ? `<a class="bottone primario" href="${esc(link.telegram)}" rel="me noopener">Entra nel canale Telegram</a>` : ""}
       ${raccolte.biblioteca.length
         ? `<a class="bottone filo" href="${indirizzo("/biblioteca/", pagina)}">Intanto sfoglia la biblioteca</a>`
-        : `<a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia i caroselli</a>`}
+        : `<a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Intanto sfoglia le pillole</a>`}
     </div>
   </div>`;
   const corpo = `<main id="contenuto" class="colonna">
@@ -1633,7 +1634,7 @@ function pagina404() {
     <p>La pagina che cerchi non c'è, oppure ha cambiato indirizzo.</p>
     <div class="azioni">
       <a class="bottone primario" href="${indirizzo("/", pagina)}">Torna all'inizio</a>
-      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Vai ai caroselli</a>
+      <a class="bottone filo" href="${indirizzo("/caroselli/", pagina)}">Sfoglia le pillole</a>
     </div>
   </div>
 </main>`;

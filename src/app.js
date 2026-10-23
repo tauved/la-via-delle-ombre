@@ -339,6 +339,11 @@ const lettore = (() => {
 
   bottone.addEventListener("click", () => (audio.paused ? avvia() : pausa()));
   avanti?.addEventListener("click", prossimo);
+  // × : la musica si ferma e la barra torna al bottone «Ascolta TAUH»
+  $("[data-lettore-chiudi]", barra)?.addEventListener("click", () => {
+    chiudi();
+    bottone.focus();
+  });
 
   // la linea del brano: si tocca o si trascina per spostarsi, con la tastiera vanno le frecce
   const frazione = (e) => {
@@ -464,7 +469,8 @@ function menu(signal) {
     { signal },
   );
   document.addEventListener("click", (e) => aperto() && !testata.contains(e.target) && apri(false), { signal });
-  window.matchMedia("(min-width: 920px)").addEventListener("change", (e) => e.matches && apri(false), { signal });
+  // lo stesso punto del CSS (@media max-width: 62.4375em)
+  window.matchMedia("(min-width: 62.5em)").addEventListener("change", (e) => e.matches && apri(false), { signal });
 }
 
 // ---------------------------------------------------------------- player esterni
@@ -491,6 +497,8 @@ function incorporati(signal) {
         frame.referrerPolicy = "strict-origin-when-cross-origin";
         box.replaceChildren(frame);
         box.classList.add("caricato");
+        // il bottone premuto non c'è più: il focus passa al player invece di finire sulla pagina
+        frame.focus();
       },
       { signal },
     );
@@ -558,9 +566,27 @@ function visore(signal) {
     sostituisciIndirizzo(i === 0 ? location.pathname + location.search : `#tavola-${i + 1}`);
   };
 
+  // Mentre la pista scorre da sola verso una tavola (frecce, tasti, titoli), le posizioni
+  // intermedie non contano: il contatore non annuncia 2, 1, 2… e una seconda freccia premuta
+  // subito parte dalla tavola di arrivo, non da quella che sta passando.
+  let destinazione = -1;
+  let scadenza = 0;
+  const arrivata = () => {
+    destinazione = -1;
+    clearTimeout(scadenza);
+  };
+  const tavolaInVista = () => Math.max(0, Math.min(totale - 1, Math.round(pista.scrollLeft / pista.clientWidth)));
+
   const vai = (i, liscio = true) => {
     const n = Math.max(0, Math.min(totale - 1, i));
-    pista.scrollTo({ left: tavole[n].offsetLeft, behavior: liscio && !riduci.matches ? "smooth" : "auto" });
+    const anima = liscio && !riduci.matches;
+    arrivata();
+    if (anima) {
+      destinazione = n;
+      // se il browser non avvisa della fine dello scorrimento
+      scadenza = setTimeout(arrivata, 1500);
+    }
+    pista.scrollTo({ left: tavole[n].offsetLeft, behavior: anima ? "smooth" : "auto" });
     mostra(n);
   };
 
@@ -572,11 +598,22 @@ function visore(signal) {
       inAttesa = true;
       requestAnimationFrame(() => {
         inAttesa = false;
-        const i = Math.round(pista.scrollLeft / pista.clientWidth);
-        mostra(Math.max(0, Math.min(totale - 1, i)));
+        if (destinazione >= 0) {
+          if (Math.abs(pista.scrollLeft - tavole[destinazione].offsetLeft) < 2) arrivata();
+          return;
+        }
+        mostra(tavolaInVista());
       });
     },
     { passive: true, signal },
+  );
+  pista.addEventListener(
+    "scrollend",
+    () => {
+      arrivata();
+      mostra(tavolaInVista());
+    },
+    { signal },
   );
 
   indietro.addEventListener("click", () => vai(attuale - 1), { signal });
@@ -895,6 +932,7 @@ function sblocco(signal) {
     esito.textContent = testo;
     form.classList.toggle("sbagliato", classe === "sbagliato");
     form.classList.toggle("fatto", classe === "fatto");
+    campo.setAttribute("aria-invalid", String(classe === "sbagliato"));
   };
   form.addEventListener(
     "submit",
@@ -1044,6 +1082,14 @@ function striscia(segnale) {
         /* senza memoria del browser si chiude solo per questa pagina */
       }
       radice.classList.remove("ig-prima", "ig-dopo");
+      // chiusa col ×, il focus non resta su un bottone sparito: va all'inizio del contenuto
+      if (e.target.closest("[data-striscia-chiudi]")) {
+        const principale = $("main");
+        if (principale) {
+          if (!principale.hasAttribute("tabindex")) principale.setAttribute("tabindex", "-1");
+          principale.focus({ preventScroll: true });
+        }
+      }
     },
     { signal: segnale },
   );
