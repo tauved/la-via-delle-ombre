@@ -14,7 +14,9 @@ permissions:
 
 jobs:
   prove:
-    runs-on: ubuntu-latest
+    # Ubuntu 24.04 fisso: da fine ottobre 2026 ubuntu-latest è Ubuntu 26, che Playwright non conosce ancora,
+    # e lì il passo «Installa Playwright e Chromium» si ferma subito.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
