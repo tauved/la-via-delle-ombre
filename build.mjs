@@ -283,6 +283,10 @@ async function caricaMusica() {
     }
     // "spotify": il link del brano su Spotify, offerto a chi non lo sblocca; "su_spotify_dal": da quel giorno
     if (b.spotify && !/^https:\/\//.test(b.spotify)) throw new ErroreContenuti(`Nel brano «${b.titolo}» il link "spotify" deve iniziare con https://`);
+    // "spotify_dentro": il titolo dell'uscita che contiene il brano, se su Spotify non ha un titolo suo
+    if (b.spotify_dentro != null && (typeof b.spotify_dentro !== "string" || !b.spotify_dentro.trim() || !b.spotify)) {
+      throw new ErroreContenuti(`Nel brano «${b.titolo}» "spotify_dentro" deve essere il titolo dell'uscita e serve anche "spotify".`);
+    }
     if (b.su_spotify_dal && !/^\d{4}-\d{2}-\d{2}$/.test(b.su_spotify_dal)) {
       throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «su_spotify_dal» deve essere nel formato AAAA-MM-GG.`);
     }
@@ -838,7 +842,7 @@ function paginaHome(caroselli) {
     // (con "su_spotify_dal" il pezzo su Spotify compare da quel giorno: lo mostra app.js)
     const spotifyOra = Boolean(b.spotify) && (!b.su_spotify_dal || b.su_spotify_dal <= oggiItalia());
     const suSpotify = b.spotify
-      ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a></span>`
+      ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a>${b.spotify_dentro ? ` dentro «${esc(b.spotify_dentro)}»` : ""}</span>`
       : "";
     const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a>${b.chiaveCodici ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
     const chiuso = b.colGioco

@@ -171,7 +171,7 @@ Con `"bloccata_fino_al": "AAAA-MM-GG"` il brano ha il lucchetto: nell'elenco com
 
 Con `"bloccata_fino_al": true`, senza data, il lucchetto non scade mai: nel lettore del sito il brano si ascolta solo finendo il livello o con il codice di una donazione (vedi sotto). Adesso ce l'ha «Incubo», la traccia del gioco, anche dopo l'uscita.
 
-A chi non lo sblocca si può offrire il brano su Spotify: con `"spotify": "https://open.spotify.com/…"` nel brano chiuso compare anche «oppure ascoltala su Spotify», e con `"su_spotify_dal": "AAAA-MM-GG"` compare solo da quel giorno (per esempio il giorno dell'uscita).
+A chi non lo sblocca si può offrire il brano su Spotify: con `"spotify": "https://open.spotify.com/…"` nel brano chiuso compare anche «oppure ascoltala su Spotify», e con `"su_spotify_dal": "AAAA-MM-GG"` compare solo da quel giorno (per esempio il giorno dell'uscita). Se su Spotify il brano sta dentro un'uscita con un altro titolo, metti il link dell'uscita in `"spotify"` e il suo titolo in `"spotify_dentro"`: la frase diventa «oppure ascoltala su Spotify dentro «Titolo»».
 
 Lo sblocco funziona perché, durante la generazione, alla pagina del gioco si aggiunge un piccolo script: quando compare la schermata di vittoria («Le anime sono libere») segna il livello finito e mostra «Hai sbloccato…» con il link alla musica del sito. Il codice del gioco non cambia, quindi resta così anche quando si aggiorna il gioco, purché la schermata di vittoria si chiami ancora `won`.
 
