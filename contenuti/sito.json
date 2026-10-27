@@ -17,9 +17,10 @@
     "bottone": "Pre-salvalo su Spotify",
     "tipo_dopo": "Ultima uscita",
     "testo_dopo": "È fuori su Spotify e su tutte le piattaforme.",
-    "bottone_dopo": "Ascolta l'ultima uscita",
+    "bottone_dopo": "Ascolta ora",
+    "link_dopo": "https://open.spotify.com/album/471NYsnc0iLDSj32U5f8Oc",
     "copertina": "come-dio.webp",
-    "striscia_instagram": { "giorni_dopo": 7 }
+    "striscia_instagram": { "giorni_dopo": 7, "bottone_dopo": "Ascolta ora" }
   },
   "caroselli": {
     "testo": "Le tavole pubblicate su Instagram, da sfogliare e leggere con calma.",
