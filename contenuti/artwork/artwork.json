@@ -1,6 +1,12 @@
 {
   "opere": [
     {
+      "titolo": "Come Dio",
+      "file": "come-dio.jpg",
+      "anteprima": "come-dio-600.webp",
+      "grande": "come-dio-1600.webp"
+    },
+    {
       "titolo": "Non ho un cuore",
       "file": "non-ho-un-cuore.jpg",
       "anteprima": "non-ho-un-cuore-600.webp",
