@@ -1,0 +1,229 @@
+{
+  "titolo": "Sistemi di magia",
+  "sottotitolo": "Ne esistono otto, e vogliono cose opposte.",
+  "descrizione": "Ne esistono otto, e vogliono cose opposte. Dal malocchio della nonna alla magia del caos.",
+  "data": "2026-10-29",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Sistemi di magia",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "LA MAGIA NON ESISTE"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ne esistono otto, e vogliono cose opposte."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dal malocchio della nonna alla magia del caos"
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "Il simile chiama il simile",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "I · MAGIA SIMPATICA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il simile chiama il simile"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La bambolina, la foto, la ciocca di capelli. Frazer (<em>Il ramo d'oro</em>, 1890) la riduce a due leggi: ciò che si somiglia si influenza, ciò che è stato unito <strong>resta unito</strong>. È in quasi ogni cultura della Terra."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La bambola trafitta da 13 aghi del Louvre non viene da Haiti: è egizia, ha circa 1700 anni ed era un legamento d'amore. Museo del Louvre, E 27145"
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Le virtù nascoste delle cose",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "II · MAGIA NATURALE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Le virtù nascoste delle cose"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Erbe, pietre, stelle, stagioni. Niente spiriti e niente cerimonie: solo proprietà da scoprire e usare. È la forma più antica, e da qui escono <strong>alchimia, chimica e medicina</strong>. A Napoli, nel 1558, Della Porta ne fa un libro: <em>Magiae naturalis</em>."
+        },
+        {
+          "tipo": "box",
+          "html": "Qui non si prega nessuno. Si osserva, si prova, si usa."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "La magia di tua nonna",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "III · MAGIA POPOLARE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La magia di tua nonna"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nodi, amuleti, il ferro di cavallo sulla porta, l'olio nel piatto contro il malocchio. Formule passate a voce, spesso la vigilia di Natale, e mai scritte. De Martino la trovò viva in Lucania negli anni Cinquanta (<em>Sud e magia</em>, 1959)."
+        },
+        {
+          "tipo": "box",
+          "html": "La mattina a messa, la sera a togliere il malocchio. Nessuno la chiamava magia: era quello che si faceva."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Odino se le è prese da solo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "IV · MAGIA DELLE RUNE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Odino se le è prese da solo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In norreno <em>rún</em> vuol dire segreto. Le rune non si leggevano soltanto: si incidevano, si arrossavano col sangue, si cantavano. Nella saga di Egill un corno avvelenato <strong>si spacca</strong> appena lui ci incide sopra le rune."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Pendetti dall'albero sferzato dal vento nove notti intere, ferito di lancia, offerto io stesso a me stesso. Urlando presi le rune.» Hávamál, 138-139"
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Tuniche, cerchi, ore esatte",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "V · MAGIA CERIMONIALE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Tuniche, cerchi, ore esatte"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'alta magia: rituali precisi, giorni di preparazione, ore planetarie, nomi divini. Nel 1888 a Londra nasce la Golden Dawn, e da lì esce gran parte dell'occultismo moderno, Crowley compreso. Lo scopo dichiarato: <strong>il contatto con il divino</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "È una macchina con due direzioni: in su verso Dio, in giù verso gli spiriti. Teurgia e goetia."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "L'opera di Dio",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VI · TEURGIA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L'opera di Dio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<em>Theourgía</em>, opera divina. Con Giamblico, intorno al 300, diventa la vetta della tradizione: purificarsi finché l'anima si unisce al divino. Non vuole comandare niente: <strong>vuole tornare a casa</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Per me qui le strade si dividono. La Mano Destra si scioglie in Dio, la Sinistra resta sé stessa. Un'anima che si scioglie nel parassita non torna a casa: diventa il suo pasto."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Demoni in nome di Dio",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VII · GOETIA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Demoni in nome di Dio"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La più temuta e la più fraintesa. Nella <em>Chiave minore di Salomone</em> (XVII secolo) il mago sta chiuso nel cerchio e chiama uno dei 72 spiriti nel triangolo. Non lo adora: <strong>lo costringe</strong>, recitando i nomi di Dio."
+        },
+        {
+          "tipo": "box",
+          "html": "Il goeta classico non è un ribelle. È il secondino del parassita: incatena gli spiriti in nome del loro carceriere."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Nulla è vero, tutto è permesso",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VIII · MAGIA DEL CAOS"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Nulla è vero, tutto è permesso"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "L'ultima nata: Inghilterra, 1978, il <em>Liber Null</em> di Peter Carroll, sulle orme dei sigilli di Austin Osman Spare. L'idea che rovescia tutto: nessun sistema è vero, <strong>il credere è uno strumento</strong>. Indossi un paradigma, lo usi, lo butti."
+        },
+        {
+          "tipo": "box",
+          "html": "Per il caos un sigillo inventato da te vale quanto quello di Salomone: conta quanto ci credi mentre lo usi, non chi l'ha firmato."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "La magia non esiste",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FINE · IL PADRONE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La magia non esiste"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Era la tesi dell'ottavo sistema, fin dalla copertina. Esistono mappe, e quasi tutte hanno un padrone: la natura, la tradizione, gli dèi, Dio. Il caos è l'unica che <strong>il padrone lo lascia scegliere a te</strong>."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Come Dio è fuori su Spotify e su tutte le piattaforme."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Tu quale sceglieresti? Scrivi il numero."
+        }
+      ]
+    }
+  ]
+}
