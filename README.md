@@ -1,6 +1,6 @@
 # La via delle ombre
 
-Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere (sul sito si chiamano «Pillole di conoscenza»), gli artwork da scaricare, la biblioteca, il merch, il canale Telegram e il gioco.
+Il sito di TAUH: la musica da ascoltare mentre si gira per il sito, i caroselli da sfogliare e leggere (sul sito si chiamano «Pillole di conoscenza»), gli artwork da scaricare, la biblioteca, il merch, il canale Telegram, il gioco e i video del Satanismo del Chaos, da sbloccare con una donazione.
 È un sito statico (HTML, CSS e JavaScript senza librerie) generato da un piccolo script e pubblicato su Cloudflare.
 
 ## Com'è fatto
@@ -19,6 +19,7 @@ contenuti/
   ebook/<nome>/              un ebook per cartella, con ebook.json (pagina per ora nascosta)
   biblioteca/                i libri consigliati, con i link (biblioteca.json), e le tue guide da scaricare
   tools/<nome>/              un programma per cartella, con tool.json, lo zip e le immagini
+  satanismo/                 la pagina Satanismo del Chaos: satanismo.json e le copertine dei video
   gioco/                     l'anteprima del gioco per la home (video muti e primo fotogramma)
 src/                         stile.css, app.js, immagini del sito (anche il ritratto) e caratteri
 static/                      file copiati così come sono (_headers, favicon, il gioco)
@@ -358,6 +359,45 @@ Nella sezione «Da leggere e da scaricare», sotto Artwork, Biblioteca e Tools, 
 ```
 
 Una voce senza `"link"` compare col lucchetto; quando la sezione è pronta si aggiunge il `"link"` (e, se vuoi, un `"testo"`) e la voce diventa un link. Per togliere tutta la parte cancella la voce `"sezioni_in_arrivo"`.
+
+### Satanismo del Chaos (video da sbloccare con una donazione)
+
+La pagina `/satanismo-del-chaos/` raccoglie i video lunghi di TAUH, divisi in Filosofia, Teoria e Pratica; ci si arriva dalla voce «Satanismo del Chaos» di «In arrivo», nella home, o dal link diretto (per esempio nella bio). I video sono su YouTube «non in elenco» e sul sito si vedono solo con un codice, che TAUH manda in DM a chi ha donato, come per i pezzi del gioco. Finché il video è chiuso, la copertina è scura col lucchetto e accanto ci sono il bottone di PayPal e il campo per il codice. Chi scrive il codice giusto vede il video in un player dentro la pagina, che si carica solo quando lo avvia, e il link per guardarlo su YouTube; il browser se lo ricorda e la volta dopo il video è già aperto. Una parte senza video dice «In arrivo».
+
+Sta tutto in `contenuti/satanismo/satanismo.json`, con le copertine dei video nella stessa cartella (16:9, per esempio 1280×720; quella piccola da 640 di larghezza è facoltativa):
+
+```json
+{
+  "titolo": "Satanismo del Chaos",
+  "testo": "La filosofia, la teoria e la pratica",
+  "parti": [
+    {
+      "titolo": "Filosofia",
+      "video": [
+        {
+          "nome": "introduzione",
+          "titolo": "Introduzione",
+          "durata": "5:27",
+          "testo": "Cos'è, da dove nasce…",
+          "copertina": "introduzione.webp",
+          "copertina_piccola": "introduzione-640.webp",
+          "sblocco": { "sale": "la-via-delle-ombre:video:introduzione", "giri": 250000, "serrature": [{ "iv": "…", "dati": "…" }] }
+        }
+      ]
+    },
+    { "titolo": "Teoria" },
+    { "titolo": "Pratica" }
+  ]
+}
+```
+
+Il codice del video di YouTube (la parte dopo `youtu.be/`) non si scrive da nessuna parte, perché il repository è pubblico e chiunque potrebbe leggerlo: se nel video trova `"youtube"`, `"id"`, `"link"` o `"url"`, il sito non si genera. Al suo posto c'è `"sblocco"`, con una «serratura» per ogni codice: il codice del video chiuso con quel codice. Chi scrive un codice giusto apre la sua serratura e il browser legge il video; senza codice le serrature restano illeggibili. Per un video nuovo:
+
+1. Caricalo su YouTube «non in elenco» e copia la parte dopo `youtu.be/`.
+2. Aggiungi il video in `satanismo.json`, nella sua parte, con un `"nome"` (lettere minuscole, numeri e trattini) e la copertina.
+3. Scrivi `node strumenti/codice-sblocco.mjs --video NOME CODICE-YOUTUBE 30`: stampa 30 codici nuovi e il blocco da mettere alla voce `"sblocco"` del video. I codici li tieni tu, uno per ogni persona che dona; nei file del sito va solo il blocco.
+
+Ogni video ha i suoi codici: quelli di «Incubo» non aprono i video, e quelli di un video non aprono gli altri. Per aggiungere codici a un video, al posto del numero scrivi `--codici AAAAA-BBBBB,CCCCC-DDDDD` con i codici che vuoi: le serrature stampate si aggiungono in fondo a `"serrature"`. Le serrature sono nello stesso ordine dei codici, quindi per bloccare un codice che gira si toglie la sua (la decima per il decimo codice), oppure chiedi a Claude. Come per il gioco, lo sblocco vive solo nel browser, e chi ha aperto il video ha anche il link di YouTube e può passarlo ad altri: è il limite di un video non in elenco. Per nascondere la pagina scrivi `"pubblica": false` in `satanismo.json`.
 
 ### Biblioteca
 

@@ -418,6 +418,47 @@ async function caricaTools() {
   return elenco;
 }
 
+// Satanismo del Chaos: una pagina con le sue parti (Filosofia, Teoria, Pratica) e i video. I video
+// sono non in elenco su YouTube e si sbloccano col codice di una donazione: il loro codice YouTube non
+// è scritto da nessuna parte, c'è solo cifrato una volta per ogni codice di sblocco («serrature»,
+// fatte con strumenti/codice-sblocco.mjs --video). Una parte senza video compare come «In arrivo».
+async function caricaSatanismo() {
+  const dir = path.join(CONTENUTI, "satanismo");
+  const file = path.join(dir, "satanismo.json");
+  if (!existsSync(file)) return null;
+  const s = await leggiJson(file);
+  if (s.pubblica === false) return null;
+  if (!s.titolo) throw new ErroreContenuti("In satanismo.json manca il titolo.");
+  const percorso = s.percorso || "/satanismo-del-chaos/";
+  if (!/^\/[a-z0-9-]+\/$/.test(percorso)) throw new ErroreContenuti(`In satanismo.json, «percorso» deve essere come /satanismo-del-chaos/.`);
+  const nomi = new Set();
+  const parti = [];
+  for (const p of Array.isArray(s.parti) ? s.parti : []) {
+    if (!p?.titolo) continue;
+    const video = [];
+    for (const v of Array.isArray(p.video) ? p.video : []) {
+      if (!v?.titolo || !v.nome) throw new ErroreContenuti(`In satanismo.json ogni video vuole «titolo» e «nome».`);
+      if (!/^[a-z0-9-]+$/.test(v.nome) || nomi.has(v.nome)) throw new ErroreContenuti(`In satanismo.json il nome del video «${v.titolo}» deve essere unico, con lettere minuscole, numeri e trattini.`);
+      nomi.add(v.nome);
+      if (["youtube", "id", "link", "url"].some((k) => k in v)) {
+        throw new ErroreContenuti(`Nel video «${v.titolo}» il codice di YouTube non va scritto in chiaro: il repository è pubblico. Fai le serrature con strumenti/codice-sblocco.mjs --video.`);
+      }
+      const b = v.sblocco;
+      const base64 = /^[A-Za-z0-9+/]+={0,2}$/;
+      if (!b?.sale || !Number.isInteger(b.giri) || b.giri < 100000 || !Array.isArray(b.serrature) || !b.serrature.length ||
+        b.serrature.some((x) => !base64.test(x?.iv || "") || !base64.test(x?.dati || ""))) {
+        throw new ErroreContenuti(`Nel video «${v.titolo}» manca il blocco «sblocco» fatto con strumenti/codice-sblocco.mjs --video.`);
+      }
+      if (!v.copertina || !existsSync(path.join(dir, v.copertina))) throw new ErroreContenuti(`Nel video «${v.titolo}» manca la copertina ${v.copertina || ""}.`);
+      if (v.copertina_piccola && !existsSync(path.join(dir, v.copertina_piccola))) throw new ErroreContenuti(`Nel video «${v.titolo}» manca la copertina ${v.copertina_piccola}.`);
+      video.push({ ...v, sblocco: { sale: b.sale, giri: b.giri, serrature: b.serrature.map((x) => ({ iv: x.iv, dati: x.dati })) } });
+    }
+    parti.push({ titolo: p.titolo, testo: p.testo || "", ancora: ancora(p.titolo), video });
+  }
+  if (!parti.length) throw new ErroreContenuti("In satanismo.json non c'è nessuna parte.");
+  return { ...s, percorso, parti, dir };
+}
+
 function caricaMerch() {
   const m = sito.merch;
   if (!m || !Array.isArray(m.articoli) || !m.articoli.length) return [];
@@ -988,7 +1029,7 @@ function paginaHome(caroselli) {
           ${prossime
             .map((v) =>
               v.link
-                ? `<li><a class="prossima aperta" href="${esc(v.link)}"><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</a></li>`
+                ? `<li><a class="prossima aperta" href="${v.link.startsWith("/") ? indirizzo(v.link, pagina) : esc(v.link)}"><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</a></li>`
                 : `<li class="prossima"><span class="prossima-icona">${icona.lucchetto}<span class="nascosto">In arrivo:</span></span><span class="prossima-titolo">${esc(v.titolo)}</span>${v.testo ? `<span class="prossima-testo">${esc(v.testo)}</span>` : ""}</li>`,
             )
             .join("\n          ")}
@@ -1600,6 +1641,77 @@ function paginaTool(x) {
   });
 }
 
+// ---------------------------------------------------------------- Satanismo del Chaos
+
+function paginaSatanismo() {
+  const s = raccolte.satanismo;
+  const pagina = s.percorso;
+  const sostieni = raccolte.sostieni;
+  const schedaVideo = (v) => {
+    const dati = { nome: v.nome, titolo: v.titolo, ...v.sblocco };
+    const copertina = `<img src="${indirizzo(v.urlCopertina, pagina)}"${v.urlPiccola ? ` srcset="${indirizzo(v.urlPiccola, pagina)} ${v.piccolaW}w, ${indirizzo(v.urlCopertina, pagina)} ${v.copertinaW}w" sizes="(min-width: 56rem) 52rem, 100vw"` : ""} width="${v.copertinaW || 1280}" height="${v.copertinaH || 720}" alt="" decoding="async">`;
+    return `<article class="video-scheda" data-video-sblocco="${esc(JSON.stringify(dati))}" aria-labelledby="video-${v.nome}">
+      <div class="video-schermo" data-video-schermo>
+        ${copertina}
+        <span class="video-lucchetto">${icona.lucchetto}Si sblocca con una donazione</span>
+      </div>
+      <div class="video-info">
+        <h3 id="video-${v.nome}">${esc(v.titolo)}</h3>
+        ${v.durata ? `<p class="video-meta">Video · ${esc(v.durata)}</p>` : ""}
+        ${v.testo ? `<p>${esc(v.testo)}</p>` : ""}
+      </div>
+      <div class="video-chiuso" data-video-chiuso>
+        <p>Per vederlo dona con PayPal e lasciami il tuo profilo nella causale: ti mando il codice che lo sblocca.</p>
+        ${sostieni?.link ? `<a class="bottone primario" href="${esc(sostieni.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sostieni.bottone || "Dona con PayPal")}<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
+        <form class="sblocco" data-sblocco-video aria-labelledby="sblocco-${v.nome}" hidden>
+          <h4 class="sblocco-titolo" id="sblocco-${v.nome}">${esc(sostieni?.sblocco_titolo || "Hai già donato?")}</h4>
+          <p class="sblocco-testo">Scrivi il codice che ti ho mandato e sblocchi il video.</p>
+          <div class="sblocco-riga">
+            <label class="nascosto" for="codice-${v.nome}">Codice di sblocco</label>
+            <input id="codice-${v.nome}" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" aria-describedby="esito-${v.nome}" required>
+            <button class="bottone filo" type="submit">Sblocca</button>
+          </div>
+          <p class="sblocco-esito" id="esito-${v.nome}" data-sblocco-esito role="status" aria-live="polite"></p>
+        </form>
+      </div>
+      <div class="video-aperto" data-video-aperto hidden>
+        <p class="video-nota">Il video arriva da YouTube e si carica solo quando lo avvii.</p>
+        <a class="bottone filo" data-video-link href="#" target="_blank" rel="noopener">${icona.esterno}Guardalo su YouTube<span class="nascosto"> (si apre in un'altra scheda)</span></a>
+      </div>
+    </article>`;
+  };
+  const corpo = `<main id="contenuto" class="colonna satanismo-pagina">
+  <header class="archivio-testa">
+    <h1>${esc(s.titolo)}</h1>
+    ${s.testo ? `<p>${esc(s.testo)}</p>` : ""}
+  </header>
+  ${s.parti
+    .map(
+      (p) => `<section class="satanismo-parte" id="${p.ancora}" aria-labelledby="parte-${p.ancora}">
+    <h2 id="parte-${p.ancora}">${esc(p.titolo)}</h2>
+    ${p.testo ? `<p class="satanismo-parte-testo">${esc(p.testo)}</p>` : ""}
+    ${p.video.length
+      ? `<div class="video-elenco">
+      ${p.video.map(schedaVideo).join("\n      ")}
+    </div>`
+      : `<p class="satanismo-in-arrivo">${icona.lucchetto}In arrivo</p>`}
+  </section>`,
+    )
+    .join("\n  ")}
+</main>`;
+  const primo = s.parti.flatMap((p) => p.video)[0];
+  return documento({
+    pagina,
+    titolo: s.titolo,
+    descrizione: s.descrizione || s.testo || `${s.titolo}, nei video di TAUH.`,
+    immagine: primo?.urlCopertina || media.ogHome,
+    larghezzaImmagine: primo?.urlCopertina ? primo.copertinaW : 1200,
+    altezzaImmagine: primo?.urlCopertina ? primo.copertinaH : 630,
+    attiva: "satanismo",
+    corpo,
+  });
+}
+
 function pagina404() {
   const pagina = "/404.html";
   const corpo = `<main id="contenuto" class="scena">
@@ -1624,7 +1736,7 @@ const media = {};
 const risorse = {};
 // brani: quelli che si possono ascoltare (anche se chiusi fino a una data), nell'ordine del lettore;
 // elencoBrani: tutti, nell'ordine di musica.json, compresi quelli «in arrivo» senza data e senza MP3.
-const raccolte = { brani: [], elencoBrani: [], ebook: [], tools: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, slugCaroselli: new Set() };
+const raccolte = { brani: [], elencoBrani: [], ebook: [], tools: [], opere: [], biblioteca: [], merch: [], social: [], sostieni: null, grazie: null, satanismo: null, slugCaroselli: new Set() };
 const impronte = new Map();
 
 const fileMedia = (c, nome) => `/media/caroselli/${c.slug}/${nome}?v=${impronte.get(path.join(c.dir, nome))}`;
@@ -1724,6 +1836,7 @@ async function principale() {
   const social = caricaSocial();
   const opere = await caricaArtwork();
   raccolte.biblioteca = sito.biblioteca?.pubblica === false ? [] : await caricaBiblioteca();
+  const satanismo = await caricaSatanismo();
   datiStriscia(); // controlla «striscia_instagram» prima di cancellare dist/
 
   await rm(USCITA, { recursive: true, force: true });
@@ -1936,6 +2049,18 @@ async function principale() {
   if (raccolte.sostieni?.qr) {
     media.sostieniQr = (await copiaConImpronta(path.join(CONTENUTI, "sostieni", raccolte.sostieni.qr), "media/sostieni", raccolte.sostieni.qr)).url;
   }
+  if (satanismo) {
+    for (const v of satanismo.parti.flatMap((p) => p.video)) {
+      const grande = await copiaConImpronta(path.join(satanismo.dir, v.copertina), "media/satanismo", v.copertina);
+      const dg = dimensioniImmagine(grande.dati);
+      Object.assign(v, { urlCopertina: grande.url, copertinaW: dg?.w, copertinaH: dg?.h });
+      if (v.copertina_piccola) {
+        const piccola = await copiaConImpronta(path.join(satanismo.dir, v.copertina_piccola), "media/satanismo", v.copertina_piccola);
+        Object.assign(v, { urlPiccola: piccola.url, piccolaW: dimensioniImmagine(piccola.dati)?.w || 640 });
+      }
+    }
+    raccolte.satanismo = satanismo;
+  }
 
   const pagine = [
     ["/", paginaHome(caroselli)],
@@ -1946,6 +2071,7 @@ async function principale() {
     ...(ebookAttivi() ? [["/ebook/", paginaEbook()]] : []),
     ...(raccolte.biblioteca.length ? [["/biblioteca/", paginaBiblioteca()]] : []),
     ...(raccolte.tools.length ? [["/tools/", paginaTools()], ...raccolte.tools.map((x) => [`/tools/${x.slug}/`, paginaTool(x)])] : []),
+    ...(raccolte.satanismo ? [[raccolte.satanismo.percorso, paginaSatanismo()]] : []),
     ["/404.html", pagina404()],
   ];
   for (const [percorso, html] of pagine) await scrivi(percorso, html);

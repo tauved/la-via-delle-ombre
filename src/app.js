@@ -481,11 +481,14 @@ function menu(signal) {
 
 // Un player alla volta: aprendo Spotify (o YouTube) il lettore del sito si ferma e si
 // chiude; se poi riparte la musica del sito, il player esterno torna al suo bottone.
+// collegaIncorporato serve anche ai player che compaiono dopo, come il video sbloccato con un codice.
+let collegaIncorporato = () => {};
+
 function incorporati(signal) {
   const aperti = new Map();
-  for (const box of $$("[data-incorpora]")) {
+  collegaIncorporato = (box) => {
     const bottone = $("button", box);
-    if (!bottone) continue;
+    if (!bottone) return;
     const originale = [...box.childNodes];
     bottone.addEventListener(
       "click",
@@ -505,7 +508,8 @@ function incorporati(signal) {
       },
       { signal },
     );
-  }
+  };
+  for (const box of $$("[data-incorpora]")) collegaIncorporato(box);
   lettore?.ascolta(({ suona }) => {
     if (!suona || !aperti.size) return;
     for (const [box, originale] of aperti) {
@@ -975,6 +979,134 @@ function sblocco(signal) {
   );
 }
 
+// ---------------------------------------------------------------- video sbloccati con una donazione
+// Satanismo del Chaos: i video non in elenco su YouTube. Il codice del video non è nella pagina: per
+// ogni codice di sblocco c'è una «serratura», il codice del video cifrato con una chiave che si ricava
+// solo dal codice di sblocco (PBKDF2 e AES-GCM, come strumenti/codice-sblocco.mjs --video). Chi scrive
+// un codice giusto apre la sua serratura; il browser ricorda il video sbloccato e la volta dopo lo
+// mostra subito. Il player di YouTube si carica solo quando la persona lo avvia.
+
+const chiaveVideo = (nome) => `tauh-video:${nome}`;
+const codiceVideoValido = (id) => typeof id === "string" && /^[A-Za-z0-9_-]{6,20}$/.test(id);
+
+async function apriSerratura(codice, blocco) {
+  const testo = new TextEncoder();
+  const da64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+  const base = await crypto.subtle.importKey("raw", testo.encode(codice), "PBKDF2", false, ["deriveKey"]);
+  const chiave = await crypto.subtle.deriveKey(
+    { name: "PBKDF2", salt: testo.encode(blocco.sale), iterations: blocco.giri, hash: "SHA-256" },
+    base,
+    { name: "AES-GCM", length: 256 },
+    false,
+    ["decrypt"],
+  );
+  for (const s of blocco.serrature) {
+    try {
+      const chiaro = await crypto.subtle.decrypt({ name: "AES-GCM", iv: da64(s.iv) }, chiave, da64(s.dati));
+      const id = new TextDecoder().decode(chiaro);
+      if (codiceVideoValido(id)) return id;
+    } catch {
+      /* non è la sua serratura */
+    }
+  }
+  return null;
+}
+
+function videoSbloccabili(signal) {
+  for (const scheda of $$("[data-video-sblocco]")) {
+    let dati;
+    try {
+      dati = JSON.parse(scheda.dataset.videoSblocco);
+    } catch {
+      continue;
+    }
+    const schermo = $("[data-video-schermo]", scheda);
+    const chiuso = $("[data-video-chiuso]", scheda);
+    const aperto = $("[data-video-aperto]", scheda);
+    const form = $("[data-sblocco-video]", scheda);
+    const campo = $("input", form);
+    const invia = $("button[type=submit]", form);
+    const esito = $("[data-sblocco-esito]", form);
+    const di = (testo, classe = "") => {
+      esito.textContent = testo;
+      form.classList.toggle("sbagliato", classe === "sbagliato");
+      form.classList.toggle("fatto", classe === "fatto");
+      campo.setAttribute("aria-invalid", String(classe === "sbagliato"));
+    };
+    // il video sbloccato: la copertina diventa il bottone che carica il player, più il link a YouTube
+    const mostra = (id) => {
+      const copertina = $("img", schermo).cloneNode();
+      const bottone = document.createElement("button");
+      bottone.type = "button";
+      bottone.className = "video-avvia";
+      bottone.setAttribute("aria-label", `Guarda «${dati.titolo}» qui sul sito (il video arriva da YouTube)`);
+      const etichetta = document.createElement("span");
+      etichetta.className = "video-play";
+      etichetta.innerHTML = '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></svg>Guarda il video';
+      bottone.append(copertina, etichetta);
+      schermo.replaceChildren(bottone);
+      schermo.dataset.incorpora = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      schermo.dataset.titolo = `${dati.titolo} – TAUH su YouTube`;
+      schermo.dataset.altezza = "360";
+      collegaIncorporato(schermo);
+      $("[data-video-link]", aperto).href = `https://youtu.be/${id}`;
+      chiuso.hidden = true;
+      aperto.hidden = false;
+      scheda.classList.add("sbloccato");
+    };
+    let salvato = null;
+    try {
+      salvato = localStorage.getItem(chiaveVideo(dati.nome));
+    } catch {
+      /* memoria non disponibile */
+    }
+    if (codiceVideoValido(salvato)) {
+      mostra(salvato);
+      continue;
+    }
+    // senza JavaScript il codice non si può controllare: il modulo compare solo qui
+    form.hidden = false;
+    form.addEventListener(
+      "submit",
+      async (e) => {
+        e.preventDefault();
+        const pulito = campo.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+        if (!pulito) return;
+        invia.disabled = true;
+        di("Controllo il codice…");
+        let id = null;
+        try {
+          id = await apriSerratura(pulito, dati);
+        } catch {
+          invia.disabled = false;
+          di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
+          return;
+        }
+        invia.disabled = false;
+        if (!id) {
+          di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
+          campo.select();
+          return;
+        }
+        let ricordato = true;
+        try {
+          localStorage.setItem(chiaveVideo(dati.nome), id);
+        } catch {
+          ricordato = false;
+        }
+        campo.value = "";
+        mostra(id);
+        const nota = $(".video-nota", aperto);
+        nota.textContent = ricordato
+          ? "Fatto, grazie del sostegno! Il video è sbloccato in questo browser. Arriva da YouTube e si carica solo quando lo avvii."
+          : "Fatto, grazie del sostegno! Il browser non permette di ricordare lo sblocco: la prossima volta riscrivi il codice.";
+        $("button", schermo)?.focus();
+      },
+      { signal },
+    );
+  }
+}
+
 // ---------------------------------------------------------------- elenco dei brani nella home
 
 function elencoBrani(signal) {
@@ -1300,7 +1432,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
+  for (const parte of [menu, incorporati, videoSbloccabili, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

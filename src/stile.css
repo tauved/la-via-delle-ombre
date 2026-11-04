@@ -3210,6 +3210,212 @@ body:has(.ascolto) {
   font-size: var(--t-corpo);
 }
 
+/* ------------------------------------------------------------ satanismo del chaos: i video da sbloccare */
+
+.satanismo-pagina {
+  padding-bottom: clamp(3rem, 8vw, 5rem);
+}
+
+.satanismo-parte {
+  display: grid;
+  gap: 1.25rem;
+  padding-block: clamp(1.75rem, 5vw, 2.75rem);
+  border-top: 1px solid var(--filo);
+}
+
+.satanismo-parte-testo {
+  color: var(--grigio);
+}
+
+.satanismo-in-arrivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--grigio);
+  font-size: var(--t-piccolo);
+}
+
+.satanismo-in-arrivo svg {
+  color: var(--lime);
+}
+
+.video-elenco {
+  display: grid;
+  gap: clamp(2.5rem, 7vw, 3.5rem);
+}
+
+.video-scheda {
+  display: grid;
+  gap: 1.15rem;
+  max-width: 52rem;
+}
+
+.video-schermo {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--viola-notte);
+}
+
+.video-schermo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* chiuso: la copertina si vede, ma scura, col lucchetto sopra */
+.video-scheda:not(.sbloccato) .video-schermo img {
+  filter: brightness(0.42) saturate(0.75);
+}
+
+.video-lucchetto,
+.video-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.video-lucchetto {
+  padding: 0.65rem 1.15rem;
+  background: rgba(0, 0, 0, 0.72);
+  color: var(--lime);
+  box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55);
+  font: 600 var(--t-piccolo) / 1.2 var(--corpo);
+}
+
+/* aperto: tutta la copertina è il bottone che carica il player di YouTube */
+.video-avvia {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: inherit;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.video-avvia:focus-visible {
+  outline-offset: -3px;
+  border-radius: inherit;
+}
+
+.video-play {
+  min-height: 52px;
+  padding: 0.7rem 1.45rem 0.7rem 1.1rem;
+  background: var(--lime);
+  color: var(--nero);
+  font: 700 var(--t-corpo) / 1 var(--corpo);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
+}
+
+.video-avvia:hover .video-play {
+  background: var(--lime-chiaro);
+}
+
+.video-schermo iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.video-info {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.video-info h3 {
+  font-size: var(--t-sotto);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.video-meta {
+  color: var(--grigio);
+  font-size: var(--t-meta);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.video-info p:not(.video-meta) {
+  color: var(--testo);
+  line-height: 1.6;
+}
+
+.video-chiuso {
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  padding: clamp(1.1rem, 3.5vw, 1.6rem);
+  border-radius: 14px;
+  background: rgba(103, 76, 192, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(125, 99, 212, 0.45);
+}
+
+.video-chiuso > p {
+  line-height: 1.55;
+}
+
+.video-aperto {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.5rem;
+}
+
+.video-chiuso[hidden],
+.video-aperto[hidden] {
+  display: none;
+}
+
+.video-nota {
+  flex: 1 1 18rem;
+  color: var(--grigio);
+  font-size: var(--t-piccolo);
+}
+
+/* su schermo largo il modo per sbloccarlo sta accanto al video, non sotto */
+@media (min-width: 62.5em) {
+  .video-scheda {
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    gap: 1.15rem clamp(1.75rem, 3vw, 2.75rem);
+    align-items: start;
+    max-width: none;
+  }
+
+  .video-schermo {
+    grid-row: 1 / span 2;
+  }
+
+  .video-info,
+  .video-chiuso,
+  .video-aperto {
+    grid-column: 2;
+  }
+}
+
+@media (max-width: 479px) {
+  .video-lucchetto,
+  .video-play {
+    font-size: var(--t-meta);
+  }
+}
+
 /* ------------------------------------------------------------ ringraziamenti */
 
 /* ringraziamenti e manifesto: chiusi, si aprono toccando il titolo */
