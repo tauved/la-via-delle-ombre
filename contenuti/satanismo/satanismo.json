@@ -2,6 +2,132 @@
   "titolo": "Satanismo del Chaos",
   "testo": "La filosofia, la teoria e la pratica",
   "descrizione": "La filosofia, la teoria e la pratica del Satanismo del Chaos, nei video di TAUH.",
+  "sblocco": {
+    "sale": "la-via-delle-ombre:satanismo",
+    "giri": 250000,
+    "serrature": [
+      {
+        "iv": "fIjNDa9XrNyktGmG",
+        "dati": "0pnnoT5Bod1mVxJnnooZjwJ5BNR+Vhb0jYS15YTFt9BU0eiXlCrln+Zok+biSPAn"
+      },
+      {
+        "iv": "3mdcHUrvWyVM6PrK",
+        "dati": "U8GkSotOEuOC+h/3J/OIpzKVk7l5Q/A1s8HAFP0TrLm7dJ/XIm7GoFxHA0M7J7q7"
+      },
+      {
+        "iv": "4RWEd7OK0/t21WLW",
+        "dati": "dn05ifYAJYWi5p5P6bu9gu2Jms8Ej0rXYDpuXwhfcAmPfCVqm4dShgrprLA5fS+r"
+      },
+      {
+        "iv": "2sda+hXMOyhpAofV",
+        "dati": "Ps/vJoKxQZx7toflsY5YB3IbdpLSOIOnDdvHttecbLnIjI6M6GXs7vusFY9gwrB3"
+      },
+      {
+        "iv": "ZZoUA/z7DbK03Z3R",
+        "dati": "1Xln6DPWAvlXkHZaKMuhc2H+mUM7Cz/IjcRVYYpeguCVX9Tc4rd8ZH/T6SFni90+"
+      },
+      {
+        "iv": "URYjhCD4ZtJFztq2",
+        "dati": "MzPnD/CP0YWL6KXTFugDT8w8PjmyiHNF05C46mjBQVVpgTBOx5+fr53pCZrdHJQC"
+      },
+      {
+        "iv": "90GtUcD7wtmKyyq3",
+        "dati": "y0eXbl1U8L0egOSdcj27INVtnQRznyoo/NflN+Gp5ZE5HBsbetNrPcdCV8h+oSXw"
+      },
+      {
+        "iv": "HJT8lOJAok+/hj17",
+        "dati": "dTTXJrU9eM2ltkadFbTqJ9naHmA0mK7uLw/rPzc7pmx90gtgaCtlZ7qh5kHEGGce"
+      },
+      {
+        "iv": "gUiJAj8GQmlotpVv",
+        "dati": "2vCwnSJivei25akt3YZh5jco+2RmWoTajY6edxdLa934RdTsVDRYlIT/Ace8IHv/"
+      },
+      {
+        "iv": "Rl2FLGmwR2We34Ep",
+        "dati": "bIGp0a8syc4EO/eAoVh+BhM4ow82BxoCCX5dOOePrtvrysLXL8kkK3ePr7L5Cekt"
+      },
+      {
+        "iv": "r9TzCLAFwl8ZUXkH",
+        "dati": "tbfskvwu93+8eWK4qgz8nHEXnhZG8rWrr9w/yLX56APeOyKh4gLmgmA6Qoo+CPC3"
+      },
+      {
+        "iv": "x3K6P4CkdyTCTBrc",
+        "dati": "Z4WW3qV/9UHKNjWs/mXXRsItXzKxlMOMlz4JG/oppn+rvA3fA5T8nM7EOsFun7tN"
+      },
+      {
+        "iv": "56ScLHeytbSoxzeP",
+        "dati": "pCFv30RnwtoS5u1s17nMv9Bpif4y/3jR2cJVmPJHJLsIqnsteIohSs5oWPkN1gr/"
+      },
+      {
+        "iv": "q6SYSaBTXe1BoeVQ",
+        "dati": "JTitwWiN/YAJpZMAqVhHYyhbI7KW22/OH2rZzL8tsBq014RRf+h3h1rq1cIHHveE"
+      },
+      {
+        "iv": "Eww1EoQ7niFUiee2",
+        "dati": "EG/P1lnS34S3j0czqFNrHdqPzzQJz33gximbI39vkOBU3flpMSpnxFxGZArIy+Xw"
+      },
+      {
+        "iv": "YZoHT3e5lKYk11mZ",
+        "dati": "Met1/0QvWTB/h0ZfqDVyMjGfQpdWREWUi/Vemq7/W/BIywWVBLbMZINTr8L1VkBS"
+      },
+      {
+        "iv": "M3rh2H0pmebJ4cXO",
+        "dati": "MIlsdbCi3GfbbB3+hxOAgYinqU8sAmdjDTvzvFWDzViwHsWI96p4mJquHJ2Eh8FR"
+      },
+      {
+        "iv": "a+N7P9xY3ZlS/lhR",
+        "dati": "hvunORjnQc1jzdvQuMjvFxGQNgEu6aXHodWZr++cCfGXYtBzmz5QKXjeGZBVuor5"
+      },
+      {
+        "iv": "IoYM2JYT/3MWuH9z",
+        "dati": "+p0UMTkFrJwX7NMZ6XjalLjx/IqNJdo5LgRVm7D0sNVLpTb63g4/sqEBirJnq7fs"
+      },
+      {
+        "iv": "E/AlUZUfLqnkeyei",
+        "dati": "SM/hFjndkeqk8Dvf5LDHjShutKVKqR1eVMwhSRuBHRGehPXmTIHNXZv+Tv+qfHUT"
+      },
+      {
+        "iv": "8GwxFgeQ7BMbvlfM",
+        "dati": "xqY1li3w/dFl4WOuHLXicv+AqOMZWoqW9hXr7vG6/trk1Vape/OB0B7bPgccxH0h"
+      },
+      {
+        "iv": "3nT2GWhZTeG5dC9B",
+        "dati": "AfG8TTW2vU/nK9jqVPVxrfpe0KvW9ebKRaTbpaCP+aZTD7VVdKBof9Bh2wbbeJk2"
+      },
+      {
+        "iv": "mPCa5I1s+5av6QVL",
+        "dati": "nT6tTHv65cQWUXOzt32Syuxo9Lt5IL2BDnL2CRsYP7tVBujgcj9mJFeF8yNzK8vA"
+      },
+      {
+        "iv": "4Llzq+H5YcsHCW3+",
+        "dati": "w8WcDX1Qetks90Jw1WNOF9nKTGjPd8BwR5H0fNFLsYvBdu3DDwPZtV8Bs6qzvX4H"
+      },
+      {
+        "iv": "d7vG7H9UP83fshcl",
+        "dati": "b4IGfNmBTgEdWYAh8NyoZ5+18RIo4HVJMTP2an05OT+68LMgGc1Qhqfjf0hDXPVo"
+      },
+      {
+        "iv": "v67JwNcTQjzrjQT9",
+        "dati": "kw5qOUwKWhYa3OPbkIYQN2EiKObvQ76c1+cVwX2ypGjTiYcPsfwNfM9hidkvCJCf"
+      },
+      {
+        "iv": "q5ZUWZuo07rsXXUr",
+        "dati": "wE75NToC+ZDuXKIW4adWT6otsKg4cpAonFyYrfIQ6qSVjhUdyDyhX30Ec31FzFt1"
+      },
+      {
+        "iv": "TgfozZ5Wi5nBhCUB",
+        "dati": "b8Zm2y6oi7TiQdPQhN17bPc5zggDO45A9fD/raI9j4AeN8URw+kJUG1NOllLZHdm"
+      },
+      {
+        "iv": "l49PJWlg41mCNes4",
+        "dati": "Je09JCI40abJ1AQS1RxBn9WxGZjFmHUdLXcIVJBUSCRA7oF6I7hEJwtx2wpEim+q"
+      },
+      {
+        "iv": "fDd2B4ZjJFhZYdyW",
+        "dati": "8/aOuBcIWII5iHqA6M6COoFwoPcKfRtLlCkpY8h5Jw+bZ8gIVeROa6KH0BbGZGT2"
+      }
+    ]
+  },
   "parti": [
     {
       "titolo": "Filosofia",
@@ -13,131 +139,21 @@
           "testo": "Cos'è, da dove nasce, perché sulla via non ci sono maestri e perché per me la musica è un ipersigillo. Il primo video, a braccio.",
           "copertina": "introduzione.webp",
           "copertina_piccola": "introduzione-640.webp",
-          "sblocco": {
-            "sale": "la-via-delle-ombre:video:introduzione",
-            "giri": 250000,
-            "serrature": [
-              {
-                "iv": "1ArGtZqspXkisJRd",
-                "dati": "BOqEyY23NpEg6e5Bt6i3h8yc6SSDkj2u9Pnq"
-              },
-              {
-                "iv": "/uejr5Acyl1S19id",
-                "dati": "298OO2ZEDRomc5AulaPUkXX5A7vseRzyx2o9"
-              },
-              {
-                "iv": "v3Qda+A7aUOAJ3W/",
-                "dati": "eDTl3MFmQSmxYJ00oLgYbBXiN/IXq6awfxxJ"
-              },
-              {
-                "iv": "skpEV3R9Anr6C59z",
-                "dati": "26CNZXydrdkrKCDEiqRiKB+/xCfa5oMug5nw"
-              },
-              {
-                "iv": "kxEuE3cqGILavQ8g",
-                "dati": "8o4INoOWOzqxyH74xIQ1uYUta6MwYiVmif5p"
-              },
-              {
-                "iv": "7/XgsF8Vn4aK57rG",
-                "dati": "JQEIqK0JuuTPt8wtzYT2flaY5tcCTFpwVMMx"
-              },
-              {
-                "iv": "2sJBaiPkwDx+Tb3v",
-                "dati": "IWEUSKCHYucIb9Y7MHbOgepw1L4LjILCVLk2"
-              },
-              {
-                "iv": "YT7hMQ5lnx6U7wlr",
-                "dati": "EilCsYoEMiO58piPcRcOS5psLv9YrMqgAtRi"
-              },
-              {
-                "iv": "nU8IaCv2n0UYjxEX",
-                "dati": "AZEgN+Vi8uPtR573SrgU5NMzXmcoBuZTs294"
-              },
-              {
-                "iv": "rwmtmnUOzALHhG4r",
-                "dati": "pmgD8zW2XjvKN+8ePWj23ulQrfu4+y+lBQNS"
-              },
-              {
-                "iv": "B9Uo4zWgmrm45mUn",
-                "dati": "RVEhupqchJJidtKy4ZAeN9Kzgr88+i45DoKw"
-              },
-              {
-                "iv": "7odg6mn6UPgi0fI+",
-                "dati": "2gnS2+BkfjWVv0d59GELx/lo19qO+Io3eUNU"
-              },
-              {
-                "iv": "VK2RRkw3oq8aEDQ+",
-                "dati": "nQzpofWaxzuplDcpNs0+KCJMVssde4QPJk+9"
-              },
-              {
-                "iv": "8VVIgVAEtbMAdqwE",
-                "dati": "2F9AGIGj3iGxsTWNptA13B1dcYMrgWlFP0pU"
-              },
-              {
-                "iv": "GXIXGRV7CTA6CnYq",
-                "dati": "NJVA0D/SGGwiPiJwO+OQG8GuTIu8paSgSCaQ"
-              },
-              {
-                "iv": "ox5foB5T6cZT1egN",
-                "dati": "YZX0vV8k+zsfi1gLC1jO0kf6S0sx/j0iMfJj"
-              },
-              {
-                "iv": "MeP6YIHDhPb6jtWG",
-                "dati": "QOb+TEQqhCKos/QZ4eEml7mhnoft8viR3GP1"
-              },
-              {
-                "iv": "FW3+HZng6Y8np3lu",
-                "dati": "+0f8wx31YGfzBF0KB4S++fEtxKdXw+XL2gPD"
-              },
-              {
-                "iv": "uXWWRLthfc+alZEw",
-                "dati": "8IOnDeHJ2Ic3l1f6Uk3GnpLqZ1VRvZo1ZVyq"
-              },
-              {
-                "iv": "A8gNU6cg8w6K1G0A",
-                "dati": "Q2Qtdj21G1JJQUOCTVoYc6fn49UWJjaKkHCz"
-              },
-              {
-                "iv": "RIDcSnky/3ApZOwo",
-                "dati": "d7skUkulLFBsHSUQ8XdBVw8igjDCQPQVcYRK"
-              },
-              {
-                "iv": "9yGwooCSExgd2F/K",
-                "dati": "Wi4R+CX/kfSlqqh8xlhHUuVqwjKPAPk09GNk"
-              },
-              {
-                "iv": "8L63AMcDn1lFN/U7",
-                "dati": "BxFeIgEQWylBvZwWxeTasT5B3kjO/oTAiOoA"
-              },
-              {
-                "iv": "DPscNjNsoJ5YvJMX",
-                "dati": "er7NpEb7Qp7x70cY4ec7cCnYROw15eZY3SxG"
-              },
-              {
-                "iv": "saM4M3kGopDmJu7Q",
-                "dati": "/GancYOk916inw4VByBQYQeQqtyfLHWGs6Ym"
-              },
-              {
-                "iv": "FJOET91rFpdqRCs4",
-                "dati": "Udgz7XjbqP9HP+sA2Mi/RjIZsxS/rpV6vA1l"
-              },
-              {
-                "iv": "eJ5P/5AcPoIMN+Aa",
-                "dati": "efIQxtupTbWFwFUorMM8DvDB82FA6OfwqTsD"
-              },
-              {
-                "iv": "IjOn8pLwr23hg+WP",
-                "dati": "WJsxtn71dkX638taLy5Tj4M9KPeMv6Vqt/aH"
-              },
-              {
-                "iv": "YmbHSk3kRjI4rXEk",
-                "dati": "yNb/9uxaGzOfMTVcVqSBVy+vcTgNA9qTXnwN"
-              },
-              {
-                "iv": "Uww6hRiY3kDIMKxH",
-                "dati": "78Fq/Lx1Qqh10ZkRdPXRP94MKevEfkERU9wG"
-              }
-            ]
+          "chiuso": {
+            "iv": "597nEtLJf2R/hQ3s",
+            "dati": "BJ8316PUrm4nXt7EPWs/kKK4Es5PJGUGTmmQ"
+          }
+        },
+        {
+          "nome": "legione",
+          "titolo": "Siamo legione in uno",
+          "durata": "6:03",
+          "testo": "Perché il caos, perché anche l'Uno è una gabbia come la dualità, le verità che si intersecano e la soluzione che è legione. Il secondo video, a braccio.",
+          "copertina": "legione.webp",
+          "copertina_piccola": "legione-640.webp",
+          "chiuso": {
+            "iv": "jqTtEvePww5MR5x0",
+            "dati": "p7mTD5vLfVF8pBr4dsdt1cS4IIUeh7Wq+eK5"
           }
         }
       ]

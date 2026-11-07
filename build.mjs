@@ -419,9 +419,11 @@ async function caricaTools() {
 }
 
 // Satanismo del Chaos: una pagina con le sue parti (Filosofia, Teoria, Pratica) e i video. I video
-// sono non in elenco su YouTube e si sbloccano col codice di una donazione: il loro codice YouTube non
-// è scritto da nessuna parte, c'è solo cifrato una volta per ogni codice di sblocco («serrature»,
-// fatte con strumenti/codice-sblocco.mjs --video). Una parte senza video compare come «In arrivo».
+// sono non in elenco su YouTube e si sbloccano col codice di una donazione, e un codice vale per tutti:
+// il codice YouTube di ogni video è chiuso con la chiave della pagina («chiuso»), e la chiave è chiusa
+// una volta per ogni codice di sblocco («serrature» nel blocco «sblocco» della pagina). Tutto è fatto
+// con strumenti/codice-sblocco.mjs (--sezione, --aggiungi-video, --aggiungi-codici). Una parte senza
+// video compare come «In arrivo».
 async function caricaSatanismo() {
   const dir = path.join(CONTENUTI, "satanismo");
   const file = path.join(dir, "satanismo.json");
@@ -431,6 +433,8 @@ async function caricaSatanismo() {
   if (!s.titolo) throw new ErroreContenuti("In satanismo.json manca il titolo.");
   const percorso = s.percorso || "/satanismo-del-chaos/";
   if (!/^\/[a-z0-9-]+\/$/.test(percorso)) throw new ErroreContenuti(`In satanismo.json, «percorso» deve essere come /satanismo-del-chaos/.`);
+  const base64 = /^[A-Za-z0-9+/]+={0,2}$/;
+  const cifrato = (x) => base64.test(x?.iv || "") && base64.test(x?.dati || "");
   const nomi = new Set();
   const parti = [];
   for (const p of Array.isArray(s.parti) ? s.parti : []) {
@@ -441,22 +445,25 @@ async function caricaSatanismo() {
       if (!/^[a-z0-9-]+$/.test(v.nome) || nomi.has(v.nome)) throw new ErroreContenuti(`In satanismo.json il nome del video «${v.titolo}» deve essere unico, con lettere minuscole, numeri e trattini.`);
       nomi.add(v.nome);
       if (["youtube", "id", "link", "url"].some((k) => k in v)) {
-        throw new ErroreContenuti(`Nel video «${v.titolo}» il codice di YouTube non va scritto in chiaro: il repository è pubblico. Fai le serrature con strumenti/codice-sblocco.mjs --video.`);
+        throw new ErroreContenuti(`Nel video «${v.titolo}» il codice di YouTube non va scritto in chiaro: il repository è pubblico. Fai il «chiuso» con strumenti/codice-sblocco.mjs --aggiungi-video.`);
       }
-      const b = v.sblocco;
-      const base64 = /^[A-Za-z0-9+/]+={0,2}$/;
-      if (!b?.sale || !Number.isInteger(b.giri) || b.giri < 100000 || !Array.isArray(b.serrature) || !b.serrature.length ||
-        b.serrature.some((x) => !base64.test(x?.iv || "") || !base64.test(x?.dati || ""))) {
-        throw new ErroreContenuti(`Nel video «${v.titolo}» manca il blocco «sblocco» fatto con strumenti/codice-sblocco.mjs --video.`);
+      if (!cifrato(v.chiuso)) {
+        throw new ErroreContenuti(`Nel video «${v.titolo}» manca il «chiuso» fatto con strumenti/codice-sblocco.mjs --aggiungi-video.`);
       }
       if (!v.copertina || !existsSync(path.join(dir, v.copertina))) throw new ErroreContenuti(`Nel video «${v.titolo}» manca la copertina ${v.copertina || ""}.`);
       if (v.copertina_piccola && !existsSync(path.join(dir, v.copertina_piccola))) throw new ErroreContenuti(`Nel video «${v.titolo}» manca la copertina ${v.copertina_piccola}.`);
-      video.push({ ...v, sblocco: { sale: b.sale, giri: b.giri, serrature: b.serrature.map((x) => ({ iv: x.iv, dati: x.dati })) } });
+      video.push({ ...v, chiuso: { iv: v.chiuso.iv, dati: v.chiuso.dati } });
     }
     parti.push({ titolo: p.titolo, testo: p.testo || "", ancora: ancora(p.titolo), video });
   }
   if (!parti.length) throw new ErroreContenuti("In satanismo.json non c'è nessuna parte.");
-  return { ...s, percorso, parti, dir };
+  const b = s.sblocco;
+  if (parti.some((p) => p.video.length) &&
+    (!b?.sale || !Number.isInteger(b.giri) || b.giri < 100000 || !Array.isArray(b.serrature) || !b.serrature.length || !b.serrature.every(cifrato))) {
+    throw new ErroreContenuti(`In satanismo.json manca il blocco «sblocco» della pagina, fatto con strumenti/codice-sblocco.mjs --sezione.`);
+  }
+  const sblocco = b ? { sale: b.sale, giri: b.giri, serrature: b.serrature.map((x) => ({ iv: x.iv, dati: x.dati })) } : null;
+  return { ...s, percorso, parti, dir, sblocco };
 }
 
 function caricaMerch() {
@@ -1647,10 +1654,11 @@ function paginaSatanismo() {
   const s = raccolte.satanismo;
   const pagina = s.percorso;
   const sostieni = raccolte.sostieni;
+  const primoVideo = s.parti.flatMap((p) => p.video)[0];
   const schedaVideo = (v) => {
-    const dati = { nome: v.nome, titolo: v.titolo, ...v.sblocco };
-    const copertina = `<img src="${indirizzo(v.urlCopertina, pagina)}"${v.urlPiccola ? ` srcset="${indirizzo(v.urlPiccola, pagina)} ${v.piccolaW}w, ${indirizzo(v.urlCopertina, pagina)} ${v.copertinaW}w" sizes="(min-width: 56rem) 52rem, 100vw"` : ""} width="${v.copertinaW || 1280}" height="${v.copertinaH || 720}" alt="" decoding="async">`;
-    return `<article class="video-scheda" data-video-sblocco="${esc(JSON.stringify(dati))}" aria-labelledby="video-${v.nome}">
+    const dati = { nome: v.nome, titolo: v.titolo, chiuso: v.chiuso };
+    const copertina = `<img src="${indirizzo(v.urlCopertina, pagina)}"${v.urlPiccola ? ` srcset="${indirizzo(v.urlPiccola, pagina)} ${v.piccolaW}w, ${indirizzo(v.urlCopertina, pagina)} ${v.copertinaW}w" sizes="(min-width: 62.5em) 42rem, (min-width: 56rem) 52rem, 100vw"` : ""} width="${v.copertinaW || 1280}" height="${v.copertinaH || 720}" alt="" decoding="async"${v === primoVideo ? "" : ` loading="lazy"`}>`;
+    return `<article class="video-scheda" data-video="${esc(JSON.stringify(dati))}" aria-labelledby="video-${v.nome}">
       <div class="video-schermo" data-video-schermo>
         ${copertina}
         <span class="video-lucchetto">${icona.lucchetto}Si sblocca con una donazione</span>
@@ -1661,11 +1669,11 @@ function paginaSatanismo() {
         ${v.testo ? `<p>${esc(v.testo)}</p>` : ""}
       </div>
       <div class="video-chiuso" data-video-chiuso>
-        <p>Per vederlo dona con PayPal e lasciami il tuo profilo nella causale: ti mando il codice che lo sblocca.</p>
+        <p>Per vederlo dona con PayPal e lasciami il tuo profilo nella causale: ti mando un codice che sblocca tutti i video di questa pagina.</p>
         ${sostieni?.link ? `<a class="bottone primario" href="${esc(sostieni.link)}" target="_blank" rel="noopener">${icona.esterno}${esc(sostieni.bottone || "Dona con PayPal")}<span class="nascosto"> (si apre in un'altra scheda)</span></a>` : ""}
         <form class="sblocco" data-sblocco-video aria-labelledby="sblocco-${v.nome}" hidden>
           <h4 class="sblocco-titolo" id="sblocco-${v.nome}">${esc(sostieni?.sblocco_titolo || "Hai già donato?")}</h4>
-          <p class="sblocco-testo">Scrivi il codice che ti ho mandato e sblocchi il video.</p>
+          <p class="sblocco-testo">Scrivi il codice che ti ho mandato e sblocchi tutti i video.</p>
           <div class="sblocco-riga">
             <label class="nascosto" for="codice-${v.nome}">Codice di sblocco</label>
             <input id="codice-${v.nome}" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" aria-describedby="esito-${v.nome}" required>
@@ -1680,7 +1688,7 @@ function paginaSatanismo() {
       </div>
     </article>`;
   };
-  const corpo = `<main id="contenuto" class="colonna satanismo-pagina">
+  const corpo = `<main id="contenuto" class="colonna satanismo-pagina"${s.sblocco ? ` data-satanismo-sblocco="${esc(JSON.stringify(s.sblocco))}"` : ""}>
   <header class="archivio-testa">
     <h1>${esc(s.titolo)}</h1>
     ${s.testo ? `<p>${esc(s.testo)}</p>` : ""}

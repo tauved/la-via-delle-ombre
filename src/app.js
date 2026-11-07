@@ -980,18 +980,22 @@ function sblocco(signal) {
 }
 
 // ---------------------------------------------------------------- video sbloccati con una donazione
-// Satanismo del Chaos: i video non in elenco su YouTube. Il codice del video non è nella pagina: per
-// ogni codice di sblocco c'è una «serratura», il codice del video cifrato con una chiave che si ricava
-// solo dal codice di sblocco (PBKDF2 e AES-GCM, come strumenti/codice-sblocco.mjs --video). Chi scrive
-// un codice giusto apre la sua serratura; il browser ricorda il video sbloccato e la volta dopo lo
-// mostra subito. Il player di YouTube si carica solo quando la persona lo avvia.
+// Satanismo del Chaos: i video non in elenco su YouTube, e un codice di donazione li apre tutti. I codici
+// dei video non sono nella pagina: ognuno è chiuso con la chiave della pagina («chiuso» del video), e la
+// chiave è chiusa una volta per ogni codice di sblocco («serrature», PBKDF2 e AES-GCM, come
+// strumenti/codice-sblocco.mjs). Chi scrive un codice giusto apre la sua serratura, prende la chiave e
+// apre tutti i video; il browser ricorda la chiave e la volta dopo i video sono già aperti, anche quelli
+// aggiunti nel frattempo. Il player di YouTube si carica solo quando la persona lo avvia.
 
-const chiaveVideo = (nome) => `tauh-video:${nome}`;
+const CHIAVE_PAGINA_VIDEO = "tauh-satanismo";
+const chiaveVideo = (nome) => `tauh-video:${nome}`; // i video sbloccati prima della chiave unica
 const codiceVideoValido = (id) => typeof id === "string" && /^[A-Za-z0-9_-]{6,20}$/.test(id);
+const da64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const in64 = (b) => btoa(String.fromCharCode(...b));
 
-async function apriSerratura(codice, blocco) {
+// dal codice di sblocco alla chiave della pagina (32 byte), o null se il codice non apre nessuna serratura
+async function chiaveDaCodice(codice, blocco) {
   const testo = new TextEncoder();
-  const da64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
   const base = await crypto.subtle.importKey("raw", testo.encode(codice), "PBKDF2", false, ["deriveKey"]);
   const chiave = await crypto.subtle.deriveKey(
     { name: "PBKDF2", salt: testo.encode(blocco.sale), iterations: blocco.giri, hash: "SHA-256" },
@@ -1002,9 +1006,8 @@ async function apriSerratura(codice, blocco) {
   );
   for (const s of blocco.serrature) {
     try {
-      const chiaro = await crypto.subtle.decrypt({ name: "AES-GCM", iv: da64(s.iv) }, chiave, da64(s.dati));
-      const id = new TextDecoder().decode(chiaro);
-      if (codiceVideoValido(id)) return id;
+      const chiaro = new Uint8Array(await crypto.subtle.decrypt({ name: "AES-GCM", iv: da64(s.iv) }, chiave, da64(s.dati)));
+      if (chiaro.length === 32) return chiaro;
     } catch {
       /* non è la sua serratura */
     }
@@ -1012,29 +1015,42 @@ async function apriSerratura(codice, blocco) {
   return null;
 }
 
+async function apriVideo(chiavePagina, chiuso) {
+  try {
+    const chiave = await crypto.subtle.importKey("raw", chiavePagina, "AES-GCM", false, ["decrypt"]);
+    const id = new TextDecoder().decode(await crypto.subtle.decrypt({ name: "AES-GCM", iv: da64(chiuso.iv) }, chiave, da64(chiuso.dati)));
+    return codiceVideoValido(id) ? id : null;
+  } catch {
+    return null;
+  }
+}
+
 function videoSbloccabili(signal) {
-  for (const scheda of $$("[data-video-sblocco]")) {
+  const pagina = $("[data-satanismo-sblocco]");
+  if (!pagina) return;
+  let blocco;
+  try {
+    blocco = JSON.parse(pagina.dataset.satanismoSblocco);
+  } catch {
+    return;
+  }
+  const schede = [];
+  for (const el of $$("[data-video]", pagina)) {
     let dati;
     try {
-      dati = JSON.parse(scheda.dataset.videoSblocco);
+      dati = JSON.parse(el.dataset.video);
     } catch {
       continue;
     }
-    const schermo = $("[data-video-schermo]", scheda);
-    const chiuso = $("[data-video-chiuso]", scheda);
-    const aperto = $("[data-video-aperto]", scheda);
-    const form = $("[data-sblocco-video]", scheda);
-    const campo = $("input", form);
-    const invia = $("button[type=submit]", form);
-    const esito = $("[data-sblocco-esito]", form);
-    const di = (testo, classe = "") => {
-      esito.textContent = testo;
-      form.classList.toggle("sbagliato", classe === "sbagliato");
-      form.classList.toggle("fatto", classe === "fatto");
-      campo.setAttribute("aria-invalid", String(classe === "sbagliato"));
-    };
+    const schermo = $("[data-video-schermo]", el);
+    const chiuso = $("[data-video-chiuso]", el);
+    const aperto = $("[data-video-aperto]", el);
+    const form = $("[data-sblocco-video]", el);
+    const scheda = { el, dati, form, aperta: false };
     // il video sbloccato: la copertina diventa il bottone che carica il player, più il link a YouTube
-    const mostra = (id) => {
+    scheda.mostra = (id) => {
+      if (scheda.aperta) return;
+      scheda.aperta = true;
       const copertina = $("img", schermo).cloneNode();
       const bottone = document.createElement("button");
       bottone.type = "button";
@@ -1052,59 +1068,101 @@ function videoSbloccabili(signal) {
       $("[data-video-link]", aperto).href = `https://youtu.be/${id}`;
       chiuso.hidden = true;
       aperto.hidden = false;
-      scheda.classList.add("sbloccato");
+      el.classList.add("sbloccato");
     };
-    let salvato = null;
-    try {
-      salvato = localStorage.getItem(chiaveVideo(dati.nome));
-    } catch {
-      /* memoria non disponibile */
-    }
-    if (codiceVideoValido(salvato)) {
-      mostra(salvato);
-      continue;
-    }
-    // senza JavaScript il codice non si può controllare: il modulo compare solo qui
-    form.hidden = false;
-    form.addEventListener(
-      "submit",
-      async (e) => {
-        e.preventDefault();
-        const pulito = campo.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
-        if (!pulito) return;
-        invia.disabled = true;
-        di("Controllo il codice…");
-        let id = null;
-        try {
-          id = await apriSerratura(pulito, dati);
-        } catch {
-          invia.disabled = false;
-          di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
-          return;
-        }
-        invia.disabled = false;
-        if (!id) {
-          di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
-          campo.select();
-          return;
-        }
-        let ricordato = true;
-        try {
-          localStorage.setItem(chiaveVideo(dati.nome), id);
-        } catch {
-          ricordato = false;
-        }
-        campo.value = "";
-        mostra(id);
-        const nota = $(".video-nota", aperto);
-        nota.textContent = ricordato
-          ? "Fatto, grazie del sostegno! Il video è sbloccato in questo browser. Arriva da YouTube e si carica solo quando lo avvii."
-          : "Fatto, grazie del sostegno! Il browser non permette di ricordare lo sblocco: la prossima volta riscrivi il codice.";
-        $("button", schermo)?.focus();
-      },
-      { signal },
-    );
+    schede.push(scheda);
   }
+  if (!schede.length) return;
+
+  const apriTutti = async (chiavePagina) => {
+    for (const s of schede) {
+      if (s.aperta) continue;
+      const id = await apriVideo(chiavePagina, s.dati.chiuso);
+      if (signal.aborted) return;
+      if (id) s.mostra(id);
+    }
+  };
+  const leggi = (k) => {
+    try {
+      return localStorage.getItem(k);
+    } catch {
+      return null;
+    }
+  };
+  // video aperti prima della chiave unica: restano aperti
+  for (const s of schede) {
+    const id = leggi(chiaveVideo(s.dati.nome));
+    if (codiceVideoValido(id)) s.mostra(id);
+  }
+  let salvata = null;
+  try {
+    const v = leggi(CHIAVE_PAGINA_VIDEO);
+    if (v) salvata = da64(v);
+  } catch {
+    /* chiave rovinata: si riscrive il codice */
+  }
+  const pronto = salvata?.length === 32 ? apriTutti(salvata).catch(() => {}) : Promise.resolve();
+
+  pronto.then(() => {
+    if (signal.aborted) return;
+    for (const s of schede) {
+      if (s.aperta) continue;
+      const form = s.form;
+      const campo = $("input", form);
+      const invia = $("button[type=submit]", form);
+      const esito = $("[data-sblocco-esito]", form);
+      const di = (testo, classe = "") => {
+        esito.textContent = testo;
+        form.classList.toggle("sbagliato", classe === "sbagliato");
+        form.classList.toggle("fatto", classe === "fatto");
+        campo.setAttribute("aria-invalid", String(classe === "sbagliato"));
+      };
+      // senza JavaScript il codice non si può controllare: il modulo compare solo qui
+      form.hidden = false;
+      form.addEventListener(
+        "submit",
+        async (e) => {
+          e.preventDefault();
+          const pulito = campo.value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+          if (!pulito) return;
+          invia.disabled = true;
+          di("Controllo il codice…");
+          let chiavePagina = null;
+          try {
+            chiavePagina = await chiaveDaCodice(pulito, blocco);
+          } catch {
+            invia.disabled = false;
+            di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
+            return;
+          }
+          if (signal.aborted) return;
+          invia.disabled = false;
+          if (!chiavePagina) {
+            di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
+            campo.select();
+            return;
+          }
+          let ricordato = true;
+          try {
+            localStorage.setItem(CHIAVE_PAGINA_VIDEO, in64(chiavePagina));
+          } catch {
+            ricordato = false;
+          }
+          campo.value = "";
+          await apriTutti(chiavePagina);
+          if (signal.aborted) return;
+          const quanti = schede.filter((x) => x.aperta).length;
+          const nota = $(".video-nota", s.el);
+          nota.textContent = ricordato
+            ? `Fatto, grazie del sostegno! ${quanti > 1 ? "I video sono sbloccati" : "Il video è sbloccato"} in questo browser. Arriva${quanti > 1 ? "no" : ""} da YouTube e si caric${quanti > 1 ? "ano" : "a"} solo quando l${quanti > 1 ? "i" : "o"} avvii.`
+            : "Fatto, grazie del sostegno! Il browser non permette di ricordare lo sblocco: la prossima volta riscrivi il codice.";
+          if (s.aperta) $("button", $("[data-video-schermo]", s.el))?.focus();
+          else di("Il codice è giusto, ma questo video non si apre: scrivimi e lo sistemo.", "sbagliato");
+        },
+        { signal },
+      );
+    }
+  });
 }
 
 // ---------------------------------------------------------------- elenco dei brani nella home
