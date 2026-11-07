@@ -352,8 +352,7 @@ Nella sezione «Da leggere e da scaricare», sotto Artwork, Biblioteca e Tools, 
   "titolo": "In arrivo",
   "testo": "Le prossime sezioni della Via delle Ombre.",
   "voci": [
-    { "titolo": "Impara a fare i sigilli" },
-    { "titolo": "Impara la Chaos Magick", "link": "/chaos-magick/", "testo": "…" }
+    { "titolo": "Impara la Chaos Magick e a fare i sigilli", "link": "/chaos-magick/", "testo": "…" }
   ]
 }
 ```
@@ -362,14 +361,14 @@ Una voce senza `"link"` compare col lucchetto; quando la sezione è pronta si ag
 
 ### Satanismo del Chaos (video da sbloccare con una donazione)
 
-La pagina `/satanismo-del-chaos/` raccoglie i video lunghi di TAUH, divisi in Filosofia, Teoria e Pratica; ci si arriva dalla voce «Satanismo del Chaos» di «In arrivo», nella home, o dal link diretto (per esempio nella bio). I video sono su YouTube «non in elenco» e sul sito si vedono solo con un codice, che TAUH manda in DM a chi ha donato, come per i pezzi del gioco. **Un codice apre tutti i video della pagina**: chi ha donato per uno li vede tutti. Finché un video è chiuso, la copertina è scura col lucchetto e accanto ci sono il bottone di PayPal e il campo per il codice. Chi scrive un codice giusto vede i video in un player dentro la pagina, che si carica solo quando lo avvia, e il link per guardarli su YouTube; il browser se lo ricorda e la volta dopo i video sono già aperti, anche quelli aggiunti nel frattempo. Una parte senza video dice «In arrivo».
+La pagina `/satanismo-del-chaos/` raccoglie i video lunghi di TAUH sulla filosofia e il significato del Satanismo del Chaos, divisi in parti (per ora c'è Filosofia); ci si arriva dalla voce «Satanismo del Chaos» di «In arrivo», nella home, o dal link diretto (per esempio nella bio). I video sono su YouTube «non in elenco» e sul sito si vedono solo con un codice, che TAUH manda in DM a chi ha donato, come per i pezzi del gioco. **Un codice apre tutti i video della pagina**: chi ha donato per uno li vede tutti. Finché un video è chiuso, la copertina è scura col lucchetto e accanto ci sono il bottone di PayPal e il campo per il codice. Chi scrive un codice giusto vede i video in un player dentro la pagina, che si carica solo quando lo avvia, e il link per guardarli su YouTube; il browser se lo ricorda e la volta dopo i video sono già aperti, anche quelli aggiunti nel frattempo. Una parte senza video dice «In arrivo».
 
 Sta tutto in `contenuti/satanismo/satanismo.json`, con le copertine dei video nella stessa cartella (16:9, per esempio 1280×720; quella piccola da 640 di larghezza è facoltativa):
 
 ```json
 {
   "titolo": "Satanismo del Chaos",
-  "testo": "La filosofia, la teoria e la pratica",
+  "testo": "La filosofia e il significato",
   "sblocco": { "sale": "la-via-delle-ombre:satanismo", "giri": 250000, "serrature": [{ "iv": "…", "dati": "…" }] },
   "parti": [
     {
@@ -385,9 +384,7 @@ Sta tutto in `contenuti/satanismo/satanismo.json`, con le copertine dei video ne
           "chiuso": { "iv": "…", "dati": "…" }
         }
       ]
-    },
-    { "titolo": "Teoria" },
-    { "titolo": "Pratica" }
+    }
   ]
 }
 ```

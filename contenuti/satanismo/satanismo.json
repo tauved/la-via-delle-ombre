@@ -1,7 +1,7 @@
 {
   "titolo": "Satanismo del Chaos",
-  "testo": "La filosofia, la teoria e la pratica",
-  "descrizione": "La filosofia, la teoria e la pratica del Satanismo del Chaos, nei video di TAUH.",
+  "testo": "La filosofia e il significato",
+  "descrizione": "La filosofia e il significato del Satanismo del Chaos, nei video di TAUH.",
   "sblocco": {
     "sale": "la-via-delle-ombre:satanismo",
     "giri": 250000,
@@ -157,12 +157,6 @@
           }
         }
       ]
-    },
-    {
-      "titolo": "Teoria"
-    },
-    {
-      "titolo": "Pratica"
     }
   ]
 }

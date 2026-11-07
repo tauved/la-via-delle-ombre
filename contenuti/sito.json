@@ -30,9 +30,8 @@
     "titolo": "In arrivo",
     "testo": "Le prossime sezioni della Via delle Ombre.",
     "voci": [
-      { "titolo": "Impara la Chaos Magick" },
-      { "titolo": "Impara a fare i sigilli" },
-      { "titolo": "Satanismo del Chaos", "testo": "La filosofia, la teoria e la pratica", "link": "/satanismo-del-chaos/" }
+      { "titolo": "Impara la Chaos Magick e a fare i sigilli" },
+      { "titolo": "Satanismo del Chaos", "testo": "La filosofia e il significato", "link": "/satanismo-del-chaos/" }
     ]
   },
   "musica": {

@@ -418,7 +418,7 @@ async function caricaTools() {
   return elenco;
 }
 
-// Satanismo del Chaos: una pagina con le sue parti (Filosofia, Teoria, Pratica) e i video. I video
+// Satanismo del Chaos: una pagina con le sue parti (per ora Filosofia) e i video. I video
 // sono non in elenco su YouTube e si sbloccano col codice di una donazione, e un codice vale per tutti:
 // il codice YouTube di ogni video è chiuso con la chiave della pagina («chiuso»), e la chiave è chiusa
 // una volta per ogni codice di sblocco («serrature» nel blocco «sblocco» della pagina). Tutto è fatto
