@@ -221,7 +221,8 @@
     ],
     "sostenitori_titolo": "Sostenitori",
     "sostenitori": [
-      { "nome": "Piero Missarelli", "nota": "Primo sostenitore" }
+      { "nome": "Piero Missarelli", "nota": "Primo sostenitore" },
+      { "nome": "David Corraro" }
     ]
   },
   "social": {
