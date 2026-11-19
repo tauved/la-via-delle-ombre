@@ -1,0 +1,261 @@
+{
+  "titolo": "Il Trono del Sole Nero",
+  "sottotitolo": "Questo mondo non era nel progetto",
+  "descrizione": "Questo mondo non era nel progetto: il crollo del trono del Sole Nero. Daath, Lucifero, i Vigilanti, l’Abisso.",
+  "data": "2026-11-19",
+  "instagram": "",
+  "tavole": [
+    {
+      "immagine": "01.webp",
+      "titolo": "Il Trono del Sole Nero",
+      "blocchi": [
+        {
+          "tipo": "titolo",
+          "html": "QUESTO MONDO NON ERA NEL PROGETTO"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il crollo del trono del Sole Nero"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Daath · Lucifero · i Vigilanti · l’Abisso"
+        }
+      ]
+    },
+    {
+      "immagine": "02.webp",
+      "titolo": "L’Albero che conosci è rotto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "I · L’ALBERO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "L’Albero che conosci è rotto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dieci sfere, ventidue sentieri: lo trovi in ogni libro di esoterismo. Per l’occultista <strong>Thomas Karlsson</strong> è ciò che resta di un crollo."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Prima era un diamante. In fondo non c’era <strong>Malkuth</strong>: la materia non esisteva. E al centro, dove oggi c’è un vuoto, brillava <strong>Daath</strong>, la Conoscenza."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<em>(Karlsson, «Qabalah, Qliphoth and Goetic Magic», 2004)</em>"
+        }
+      ]
+    },
+    {
+      "immagine": "03.webp",
+      "titolo": "Il giardino era una batteria",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "II · L’EDEN"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il giardino era una batteria"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "In quell’Albero non avevamo un corpo. Vivevamo in <strong>Yesod</strong>, il piano astrale: l’Eden."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Tutto unito, tutto fermo. La forza creativa c’era, ma spenta: una batteria che deve solo restare carica. Nessuna volontà, nessuna scelta. Un’infanzia sorvegliata."
+        },
+        {
+          "tipo": "box",
+          "html": "Per me quella «pace» ha un nome: allevamento. Un parassita non cresce figli. Tiene ferme le anime di cui si nutre."
+        }
+      ]
+    },
+    {
+      "immagine": "04.webp",
+      "titolo": "Il Sole Nero stava più in alto",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "III · DUE SOLI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Il Sole Nero stava più in alto"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ti hanno sempre mostrato Michele sopra e il drago sotto. Nell’Albero di prima era il contrario: in basso <strong>Tiphareth</strong>, il sole giallo di Michele, guardiano dell’ordine. Più in alto <strong>Daath</strong>, il Sole Nero: il trono di Samael, il Portatore di Luce."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non un Lucifero in ginocchio sotto il trono di Dio. Una breccia: il punto da cui la <strong>Sitra Achra</strong>, l’Altro Lato, entra nella creazione."
+        }
+      ]
+    },
+    {
+      "immagine": "05.webp",
+      "titolo": "Non sono caduti. Sono scesi.",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "IV · I VIGILANTI"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Non sono caduti. Sono scesi."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Il serpente dell’Eden e gli angeli che scendono sulla terra: la Bibbia li racconta come due storie. In questa lettura sono la stessa, un’infiltrazione."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Lucifero-Daath e i Vigilanti, con <strong>Semeyaza</strong> e <strong>Azazel</strong> in testa, entrano nell’Eden. E accendono in noi quello che mancava: la scintilla del <strong>Fuoco Nero</strong>."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<em>«I figli di Dio videro che le figlie degli uomini erano belle» (Genesi 6,2; i nomi in 1 Enoch 6-8)</em>"
+        }
+      ]
+    },
+    {
+      "immagine": "06.webp",
+      "titolo": "Un dio che ha paura",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "V · LA PAURA"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Un dio che ha paura"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Mangiare il frutto vuol dire svegliarsi. La forza che dormiva si accende, e chi era solo un contenitore scopre di avere una volontà."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "<em>«Ecco, l’uomo è diventato come uno di noi» (Genesi 3,22)</em>"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Non è la voce di un padre deluso. È la voce di qualcuno che ha paura."
+        },
+        {
+          "tipo": "box",
+          "html": "Per me è la paura del parassita: se il cibo apre gli occhi, lui resta a digiuno."
+        }
+      ]
+    },
+    {
+      "immagine": "07.webp",
+      "titolo": "La decima sfera è una cella",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VI · IL CROLLO"
+        },
+        {
+          "tipo": "titolo",
+          "html": "La decima sfera è una cella"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Un’umanità sveglia non si tiene più in giardino. Il Demiurgo la caccia e aggiunge una sfera che nel progetto non c’era: <strong>Malkuth</strong>, la materia. Sulla via del ritorno, cherubini e una spada di fiamma."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Lucifero ritira la sua corrente e l’Albero cede: dove brillava Daath si apre l’<strong>Abisso</strong>."
+        },
+        {
+          "tipo": "box",
+          "html": "Per me la materia non è la colpa: è opera di Samael. Il parassita ci ha messo solo le sbarre."
+        }
+      ]
+    },
+    {
+      "immagine": "08.webp",
+      "titolo": "Al posto di chi non si piega",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VII · LILITH"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Al posto di chi non si piega"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La stessa corrente ha un volto di donna: <strong>Lilith</strong>. Nel mito medievale non si sottomette ad Adamo: pronuncia il Nome segreto e se ne va."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Nell’Albero è la Figlia, Daath. Quando provano a metterla sotto il Figlio, si ritira nell’Abisso. Al suo posto arrivano i rimpiazzi obbedienti: <strong>Eva</strong> per Adamo, <strong>Malkuth</strong> per l’Albero."
+        },
+        {
+          "tipo": "box",
+          "html": "Ma sotto Malkuth, nella qlipha di Nahemoth, Lilith cova ancora: un ponte nascosto verso l’Abisso."
+        }
+      ]
+    },
+    {
+      "immagine": "09.webp",
+      "titolo": "Riparare o andare fino in fondo",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "VIII · DUE VIE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Riparare o andare fino in fondo"
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Dopo il crollo restano due strade. La <strong>Mano Destra</strong> vuole riparare: tornare all’Eden, obbedienti e bambini, con la scintilla spenta."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "La <strong>Mano Sinistra</strong> non torna. Porta la Caduta fino in fondo: taglia il cordone col Demiurgo, attraversa le <strong>Qliphoth</strong> e scende al centro dell’Abisso."
+        },
+        {
+          "tipo": "box",
+          "html": "Io non voglio diventare Dio. Voglio avvicinarmi a esserlo: uscire dall’umano che sta bene in gabbia."
+        }
+      ]
+    },
+    {
+      "immagine": "10.webp",
+      "titolo": "Costruita in fretta. Per paura.",
+      "blocchi": [
+        {
+          "tipo": "nota",
+          "html": "FINE · LA PRIGIONE"
+        },
+        {
+          "tipo": "titolo",
+          "html": "Costruita in fretta. Per paura."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "Ti hanno detto che questo mondo è un disegno perfetto, e che il guasto sei tu. Questa storia dice l’opposto: è una prigione d’emergenza, tirata su da un dio spaventato da ciò che si era acceso in te."
+        },
+        {
+          "tipo": "paragrafo",
+          "html": "«Sert» esce il 25: presalva dal link in bio."
+        },
+        {
+          "tipo": "domanda",
+          "html": "Nessuno costruisce una prigione per ciò che non teme. Che cosa ha visto in te?"
+        }
+      ]
+    }
+  ]
+}
