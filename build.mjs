@@ -613,17 +613,6 @@ function barraAscolto(pagina) {
 }
 
 function documento({ pagina, titolo, descrizione, immagine, larghezzaImmagine, altezzaImmagine, tipo = "website", attiva = "", corpo, extraTesta = "" }) {
-  if (ANTEPRIMA && pagina === "/") {
-    // Nell'anteprima pubblicata come artifact la pagina iniziale riceve già doctype e <head>.
-    return `<title>${esc(sito.nome)}</title>
-<link rel="stylesheet" href="${indirizzo(risorse.css, pagina)}">
-<script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
-${testata(pagina, attiva)}
-${corpo}
-${piede(pagina)}
-${barraAscolto(pagina)}
-`;
-  }
   const titoloCompleto = titolo ? `${titolo} – ${sito.nome}` : `${sito.nome} – ${sito.artista}`;
   const canonico = sito.url && !ANTEPRIMA ? `<link rel="canonical" href="${esc(assoluto(pagina))}">\n` : "";
   const og = immagine
