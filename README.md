@@ -446,7 +446,7 @@ I caratteri che il gioco chiede a Google vengono sostituiti da soli con quelli d
 I testi della pagina (storia, comandi, descrizione dell'immagine) sono in `contenuti/sito.json`, alla voce `"gioco"`. La copertina della pagina è `src/img/incubo-1280.webp` (con `incubo-640.webp` per i telefoni) e l'anteprima per i link è `src/img/og-gioco.jpg` (1200×630): sono schermate vere del gioco, da rifare quando cambia la grafica.
 Con `"disponibile": false` la pagina torna a mostrare «In arrivo».
 
-Nella home, nella sezione del gioco, gira qualche secondo di partita vera, muta: i file sono in `contenuti/gioco/` (`anteprima-1280.webm` e `.mp4` per i computer, `anteprima-640.webm` e `.mp4` per i telefoni, `poster-640.webp` e `poster-1280.webp` per il primo fotogramma). Il video parte solo quando è sullo schermo, si ferma col bottone in basso a destra e, con il movimento ridotto, resta fermo. Senza quei file al suo posto c'è la copertina del gioco.
+Nella home, nella sezione del gioco, gira qualche secondo di partita vera, muta: i file sono in `contenuti/gioco/` (`anteprima-1280.webm` e `.mp4` per i computer, `anteprima-640.webm` e `.mp4` per i telefoni, `poster-640.webp` e `poster-1280.webp` per il primo fotogramma). Il video sta nella colonna, a destra della linea della via (non a tutta larghezza: coprirebbe la linea); parte solo quando è sullo schermo, si ferma col bottone tondo in basso a sinistra e, con il movimento ridotto, resta fermo. Senza quei file al suo posto c'è la copertina del gioco.
 
 ## Provarlo sul computer
 

@@ -49,10 +49,13 @@
   /* nella home: quanto il testo sta a destra della via, e dove passa la linea rispetto alla colonna */
   --rientro: 1.15rem;
   --via-scarto: -0.3rem;
-  /* movimento: una molla senza rimbalzo (smorzamento 1, risposta 0,35 s, come nelle interfacce
-     di Apple) scritta come curva; dove linear() non c'è, una curva che le somiglia */
+  /* movimento, due curve sole. La molla: per ciò che si sposta o cambia forma (senza rimbalzo:
+     smorzamento 1, risposta 0,35 s, come nelle interfacce di Apple; il 97% del percorso è fatto
+     in 0,3 s); dove linear() non c'è, una curva che le somiglia. La frenata: per ciò che entra,
+     esce o risponde a un tocco, sempre sotto i 0,3 s (parte svelta e rallenta). */
   --molla: cubic-bezier(0.2, 0.8, 0.2, 1);
   --molla-durata: 0.5s;
+  --frenata: cubic-bezier(0.23, 1, 0.32, 1);
   color-scheme: dark;
 }
 
@@ -651,7 +654,30 @@ body::before {
 }
 
 .via-percorso.in-cammino::before {
-  background: linear-gradient(180deg, var(--lime) 0 var(--via-fatto, 0px), rgba(207, 254, 126, 0.22) var(--via-fatto, 0px));
+  background: rgba(207, 254, 126, 0.22);
+}
+
+/* il tratto già percorso: una linea piena che si allunga dall'alto. La muove app.js (via) con
+   una trasformazione su questo solo elemento: prima una variabile sul contenitore faceva
+   ricalcolare gli stili di tutta la home a ogni fotogramma dello scorrimento. Niente
+   will-change: metterebbe tutto il contenuto della home su un livello a parte, e sui computer
+   Windows il testo perderebbe nitidezza; ridisegnare una striscia di 2px non costa. */
+.via-fatta {
+  display: none;
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: var(--via-x);
+  width: 2px;
+  translate: -1px 0;
+  background: var(--lime);
+  transform-origin: 50% 0;
+  transform: scaleY(0);
+}
+
+.via-percorso.in-cammino .via-fatta {
+  display: block;
 }
 
 .via-viandante {
@@ -673,7 +699,7 @@ body::before {
 }
 
 .via-nodo {
-  transition: opacity 0.3s ease;
+  transition: opacity 0.2s ease;
   position: sticky;
   top: 50vh;
   top: 50dvh;
@@ -706,7 +732,7 @@ body::before {
   border-radius: 50%;
   background: var(--lime);
   box-shadow: 0 0 0 4px var(--nero);
-  transition: background-color 0.35s ease, scale 0.35s ease;
+  transition: background-color 0.2s ease, scale 0.2s var(--frenata);
 }
 
 .via-percorso.in-cammino [data-tappa]:not(.accesa)::before {
@@ -897,10 +923,25 @@ body::before {
   border-radius: 14px;
 }
 
-/* gioco nella home: qualche secondo di partita a tutta larghezza */
+/* gioco nella home: qualche secondo di partita, dentro la colonna come il resto della via
+   (a tutta larghezza passava sopra la linea e il nodo ci finiva sopra) */
 
 .gioco-schermo {
   position: relative;
+  overflow: hidden;
+  /* Safari: senza un contesto suo, il video che gira esce dagli angoli tondi */
+  isolation: isolate;
+  border-radius: 12px;
+  background: var(--viola-notte);
+}
+
+.gioco-schermo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px var(--filo);
+  pointer-events: none;
 }
 
 .gioco-schermo video,
@@ -910,14 +951,18 @@ body::before {
   height: auto;
   aspect-ratio: 16 / 9;
   max-height: 78svh;
+  border-radius: inherit;
   object-fit: cover;
   background: var(--viola-notte);
 }
 
+/* il tondo che la ferma: in basso a sinistra, dove stanno i comandi dei video
+   (in basso a destra, scorrendo, finiva sotto il lettore della musica) */
 .clip-pausa {
   position: absolute;
-  right: var(--margine);
-  bottom: 1rem;
+  z-index: 1;
+  left: 0.75rem;
+  bottom: 0.75rem;
   display: grid;
   place-items: center;
   width: 44px;
@@ -1335,8 +1380,14 @@ body::before {
   margin-inline: 0.75rem;
 }
 
+/* un solo pseudo-elemento da 24px fuori dal flusso: per lui «left» non costa niente, e una
+   trasformazione chiederebbe misure in più */
 .visore-comandi .via::after {
   transition: left var(--molla-durata) var(--molla);
+}
+
+.visore-comandi .via.di-colpo::after {
+  transition: none;
 }
 
 .contatore {
@@ -1889,10 +1940,12 @@ body::before {
     right: 0;
     display: none;
     transform-origin: calc(100% - var(--margine) - 3rem) 0;
+    /* chiudendosi: svelto e semplice (chi chiude ha già deciso), e da subito non prende i tocchi */
     transition:
-      opacity 0.22s ease,
-      transform var(--molla-durata) var(--molla),
-      display var(--molla-durata) allow-discrete;
+      opacity 0.16s var(--frenata),
+      transform 0.16s var(--frenata),
+      display 0.16s allow-discrete;
+    pointer-events: none;
     flex-direction: column;
     gap: 0;
     padding: 0.25rem var(--margine) 1rem;
@@ -1906,6 +1959,12 @@ body::before {
 
   .js .testata.aperta .testata-nav {
     display: flex;
+    pointer-events: auto;
+    /* aprendosi: nasce dal bottone, con la molla */
+    transition:
+      opacity 0.2s var(--frenata),
+      transform var(--molla-durata) var(--molla),
+      display 0s allow-discrete;
   }
 
   .js .testata:not(.aperta) .testata-nav {
@@ -1930,12 +1989,13 @@ body::before {
     background: rgba(0, 0, 0, 0.55);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity 0.16s var(--frenata);
   }
 
   html.js.menu-aperto::after {
     opacity: 1;
     pointer-events: auto;
+    transition-duration: 0.25s;
   }
 
   .js .testata-nav a {
@@ -2040,12 +2100,30 @@ body:has(.ascolto) {
 
 /* mentre la nuova uscita è sullo schermo il lettore fermo si fa da parte (app.js, lettoreDaParte) */
 /* aprendosi la barra cresce verso sinistra dal tondo in basso a destra, e chiudendosi ci
-   torna: la larghezza la anima app.js (aggiorna), il raggio qui */
+   torna: bordo sinistro e larghezza li anima app.js (aggiorna), il raggio qui. È fuori dal
+   flusso e ha sei figli: ridisporla a ogni fotogramma non pesa, e scalarla la deformerebbe */
 .ascolto {
   transition:
     opacity 0.25s ease,
     visibility 0.25s,
     border-radius var(--molla-durata) var(--molla);
+}
+
+/* finché si muove (classe messa da app.js) niente esce dai bordi; copertina, titolo e comandi
+   compaiono in dissolvenza quando la barra è quasi aperta, così non si vede il testo che si
+   riassesta mentre lo spazio cresce */
+.ascolto.in-moto {
+  overflow: hidden;
+}
+
+.ascolto.attivo.in-moto :is(.ascolto-copertina, .ascolto-riga, .ascolto-via, .ascolto-prossimo, .ascolto-chiudi) {
+  transition: opacity 0.2s var(--frenata) 0.1s;
+}
+
+@starting-style {
+  .ascolto.attivo.in-moto :is(.ascolto-copertina, .ascolto-riga, .ascolto-via, .ascolto-prossimo, .ascolto-chiudi) {
+    opacity: 0;
+  }
 }
 
 .uscita-in-vista .ascolto:not(.attivo) {
@@ -2172,12 +2250,12 @@ body:has(.ascolto) {
 .ascolto-via::before,
 .ascolto-via > span,
 .ascolto-via::after {
-  transition: height 0.2s ease, scale var(--molla-durata) var(--molla);
+  transition: scale 160ms var(--frenata);
 }
 
 .ascolto-via.trascina::before,
 .ascolto-via.trascina > span {
-  height: 4px;
+  scale: 1 2;
 }
 
 .ascolto-via.trascina::after {
@@ -2274,6 +2352,38 @@ body:has(.ascolto) {
 /* con JS se ne vedono 6; «Tutti i brani» apre gli altri */
 .js .brani.raccolti > li:nth-child(n + 7) {
   display: none;
+}
+
+/* le righe che «Tutti i brani» aggiunge arrivano con una dissolvenza breve, le prime a scalare
+   e le altre insieme: quattordici righe comparse di colpo erano uno scatto. Sparendo no:
+   chi richiude ha già deciso. Si possono toccare subito, anche mentre compaiono. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .brani > li:nth-child(n + 7) {
+    transition: opacity 0.2s var(--frenata) 0.1s, translate 0.2s var(--frenata) 0.1s;
+  }
+
+  .js .brani > li:nth-child(7) {
+    transition-delay: 0s;
+  }
+
+  .js .brani > li:nth-child(8) {
+    transition-delay: 0.04s;
+  }
+
+  .js .brani > li:nth-child(9) {
+    transition-delay: 0.07s;
+  }
+
+  .js .brani > li:nth-child(10) {
+    transition-delay: 0.09s;
+  }
+
+  @starting-style {
+    .js .brani > li:nth-child(n + 7) {
+      opacity: 0;
+      translate: 0 8px;
+    }
+  }
 }
 
 .brani-tutti {
@@ -3694,19 +3804,21 @@ html.lightbox-aperta {
 
 .apribile-invito .icona-apri {
   color: var(--lime);
-  transition: transform 0.25s ease;
+  transition: transform 0.25s var(--frenata);
 }
 
-.apribile[open] .icona-apri {
+/* .si-chiude la mette app.js (apribili) mentre il riquadro si richiude: croce e scritta
+   cambiano al tocco, non quando l'altezza ha finito di muoversi */
+.apribile[open]:not(.si-chiude) .icona-apri {
   transform: rotate(45deg);
 }
 
 .apribile .se-aperto,
-.apribile[open] .se-chiuso {
+.apribile[open]:not(.si-chiude) .se-chiuso {
   display: none;
 }
 
-.apribile[open] .se-aperto {
+.apribile[open]:not(.si-chiude) .se-aperto {
   display: inline;
 }
 
@@ -3714,49 +3826,15 @@ html.lightbox-aperta {
   padding-bottom: 1.75rem;
 }
 
-.apribile[open] .apribile-dentro,
-.apribile[open] .manifesto-punti {
-  animation: si-apre 0.4s ease both;
-}
-
-/* dove il browser sa animare l'altezza fino ad «auto», il contenuto si apre e si richiude
-   con la stessa molla (prima si apriva soltanto, e si chiudeva di colpo) */
-@supports (interpolate-size: allow-keywords) and selector(::details-content) {
-  .apribile {
-    interpolate-size: allow-keywords;
-  }
-
-  .apribile::details-content {
-    block-size: 0;
-    overflow: clip;
-    transition:
-      block-size var(--molla-durata) var(--molla),
-      content-visibility var(--molla-durata) allow-discrete;
-  }
-
-  .apribile[open]::details-content {
-    block-size: auto;
-  }
-
-  .apribile[open] .apribile-dentro,
-  .apribile[open] .manifesto-punti {
-    animation: none;
-  }
-}
-
-@keyframes si-apre {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
+/* Si aprono e si richiudono con lo stesso movimento: app.js (apribili) misura l'altezza e la
+   anima, in tutti i browser (interpolate-size, che lo farebbe il CSS da solo, c'è solo in
+   Chrome: su iPhone si aprivano con una dissolvenza e si chiudevano di colpo). Mentre si
+   muove, il riquadro taglia quello che sporge. */
+.apribile.in-moto {
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .apribile[open] .apribile-dentro,
-  .apribile[open] .manifesto-punti {
-    animation: none;
-  }
-
   .apribile-invito .icona-apri {
     transition: none;
   }
@@ -3896,16 +3974,13 @@ html.lightbox-aperta {
   aspect-ratio: 1;
   margin-bottom: 0.4rem;
   border-radius: 50%;
-  transition: transform 0.25s ease;
 }
 
-.social-voce:focus-visible img {
-  transform: scale(1.04);
-}
-
+/* al passaggio del mouse il sigillo cresce appena (la transizione è con la risposta al tocco,
+   più sotto: stessa proprietà «scale», così non se ne perde una per strada) */
 @media (hover: hover) {
   .social-voce:hover img {
-    transform: scale(1.04);
+    scale: 1.04;
   }
 }
 
@@ -3932,27 +4007,15 @@ html.lightbox-aperta {
   height: auto;
   aspect-ratio: 1;
   margin-bottom: 0.4rem;
-  transition: transform 0.25s ease;
 }
 
 .sigilli-in-3d .social-voce img {
   display: none;
 }
 
-.social-voce:focus-visible .sigillo-3d {
-  transform: scale(1.04);
-}
-
 @media (hover: hover) {
   .social-voce:hover .sigillo-3d {
-    transform: scale(1.04);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .social-voce img,
-  .sigillo-3d {
-    transition: none;
+    scale: 1.04;
   }
 }
 
@@ -4029,8 +4092,8 @@ html:has(dialog[open]) {
 
 /* ------------------------------------------------------------ risposta al tocco */
 /* Come nelle interfacce di Apple: la risposta arriva quando il dito appoggia, non quando
-   si stacca. Al tocco i comandi si stringono un poco, subito (80 ms); al rilascio tornano
-   con la molla. Il grigio che i telefoni mettono da soli sui link non serve più. */
+   si stacca. Al tocco i comandi si stringono un poco, subito (100 ms); al rilascio tornano
+   in 160 ms. Il grigio che i telefoni mettono da soli sui link non serve più. */
 
 html {
   -webkit-tap-highlight-color: transparent;
@@ -4060,7 +4123,7 @@ select {
 .opera-apri img,
 .indice a,
 .apribile summary {
-  transition: scale var(--molla-durata) var(--molla);
+  transition: scale 160ms var(--frenata);
 }
 
 .bottone:active,
@@ -4072,7 +4135,7 @@ select {
 .testata-menu:active,
 .indice a:active {
   scale: 0.96;
-  transition-duration: 80ms;
+  transition-duration: 100ms;
   transition-timing-function: ease-out;
 }
 
@@ -4083,7 +4146,7 @@ select {
 .social-voce:active canvas,
 .opera-apri:active img {
   scale: 0.97;
-  transition-duration: 80ms;
+  transition-duration: 100ms;
   transition-timing-function: ease-out;
 }
 
@@ -4093,7 +4156,7 @@ select {
 
 .brano:active .brano-icona {
   scale: 0.92;
-  transition-duration: 80ms;
+  transition-duration: 100ms;
 }
 
 .testata nav a:active,
@@ -4192,6 +4255,8 @@ select {
   .social-voce:active canvas,
   .opera-apri:active img,
   .brano:active .brano-icona,
+  .social-voce:hover img,
+  .social-voce:hover .sigillo-3d,
   .ascolto-via.trascina::after {
     scale: none;
   }
@@ -4200,16 +4265,13 @@ select {
     transition: opacity 0.2s ease, visibility 0.2s;
   }
 
-  .js .testata-nav {
+  .js .testata-nav,
+  .js .testata.aperta .testata-nav {
     transition: opacity 0.15s ease, display 0.15s allow-discrete;
   }
 
   .js .testata:not(.aperta) .testata-nav,
   .js .testata.aperta .testata-nav {
     transform: none;
-  }
-
-  .apribile::details-content {
-    transition: none;
   }
 }

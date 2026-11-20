@@ -31,12 +31,16 @@
       { "name": "focus", "value": "outline: 3px solid var(--lime); outline-offset: 3px", "purpose": "Focus da tastiera, uguale in tutto il sito." }
     ],
     "motion": [
-      { "name": "via-scorrimento", "value": "position: sticky; top: 50dvh + --via-fatto aggiornato a ogni fotogramma di scorrimento", "purpose": "Il nodo della home scende con lo scorrimento e accende le tappe; non è un'animazione a tempo." },
-      { "name": "tappa", "value": "background-color 0.35s ease, scale 0.35s ease", "purpose": "Il cerchio della tappa si accende quando il nodo lo raggiunge." },
+      { "name": "molla", "value": "--molla (linear(): smorzamento 1, risposta 0.35s) con --molla-durata 0.5s", "purpose": "Ciò che si sposta o cambia forma: menu che si apre, lettore che si allarga, nodo del visore. L'immagine in grande usa una molla vera in app.js." },
+      { "name": "frenata", "value": "--frenata: cubic-bezier(0.23, 1, 0.32, 1), sempre sotto 0.3s", "purpose": "Ciò che entra, esce o risponde a un tocco." },
+      { "name": "tocco", "value": "scale 0.96 (comandi) o 0.97 (immagini): 100ms ease-out giù, 160ms var(--frenata) su", "purpose": "Risposta quando il dito appoggia; il passaggio del mouse cambia solo colori e contorni." },
+      { "name": "via-scorrimento", "value": "position: sticky; top: 50dvh + transform: scaleY() su .via-fatta", "purpose": "Il nodo della home scende con lo scorrimento e accende le tappe; non è un'animazione a tempo e scorrendo non si misura niente." },
+      { "name": "tappa", "value": "background-color 0.2s ease, scale 0.2s var(--frenata)", "purpose": "Il cerchio della tappa si accende quando il nodo lo raggiunge." },
       { "name": "anello-sigillo", "value": "animation: ruota linear both; animation-timeline: scroll(root block)", "purpose": "L'anello del sigillo ruota solo mentre si scorre; disattivato con riduci movimento." },
-      { "name": "clip-gioco", "value": "video muted loop playsinline, play solo con IntersectionObserver (soglia 0.25)", "purpose": "La partita vera gira solo quando è sullo schermo; con riduci movimento resta sul primo fotogramma; tondo per fermarla." },
-      { "name": "apribile", "value": "si-apre 0.4s ease (opacity 0, translateY(-6px))", "purpose": "Apertura di Ringraziamenti e Manifesto; disattivata con riduci movimento." },
-      { "name": "cambio-pagina", "value": "@view-transition navigation: auto; 0.2s; linea lime 2px che corre in cima (viaggio 0.9s)", "purpose": "Navigazione morbida con la musica che continua; con riduci movimento la linea è ferma e piena." }
+      { "name": "clip-gioco", "value": "video muted loop playsinline, play solo con IntersectionObserver (soglia 0.25)", "purpose": "La partita vera gira solo quando è sullo schermo; con riduci movimento resta sul primo fotogramma; tondo in basso a sinistra per fermarla." },
+      { "name": "apribile", "value": "height animata da app.js, 0.2–0.32s var(--frenata), in apertura e in chiusura", "purpose": "Ringraziamenti e Manifesto; subito con la tastiera e con riduci movimento." },
+      { "name": "menu", "value": "apre: transform var(--molla-durata) var(--molla) + opacity 0.2s; chiude: 0.16s var(--frenata)", "purpose": "La tendina nasce dal bottone; chi chiude ha già deciso." },
+      { "name": "cambio-pagina", "value": "@view-transition navigation: auto; 0.2s; linea lime 2px che corre in cima (viaggio 0.9s) dopo 0.3s di attesa", "purpose": "Navigazione morbida con la musica che continua; con riduci movimento la linea è ferma e piena." }
     ],
     "breakpoints": [
       { "name": "lettore-compatto", "value": "max-width: 640px" },

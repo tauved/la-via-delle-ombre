@@ -90,6 +90,77 @@ for (const [larghezza, altezza, telefono] of [
   await ctx.close();
 }
 {
+  // sul telefono: l'anteprima del gioco sta a destra della via, i riquadri si aprono e si richiudono,
+  // il lettore si apre dal suo tondo senza spostarsi, e cambiando pagina resta com'era
+  const ctx = await contesto(390, 844, true);
+  const pg = await ctx.newPage();
+  await pg.goto(`${BASE}/`, { waitUntil: "load" });
+  await pg.addStyleTag({ content: "html{scroll-behavior:auto!important}" });
+  const gioco = await pg.evaluate(() => {
+    const schermo = document.querySelector(".gioco-schermo");
+    const linea = document.querySelector(".via-viandante");
+    if (!schermo || !linea) return null;
+    const s = schermo.getBoundingClientRect();
+    return { sinistra: s.left, destra: s.right, linea: linea.getBoundingClientRect().left, schermo: window.innerWidth };
+  });
+  if (gioco && (gioco.sinistra < gioco.linea + 12 || gioco.destra > gioco.schermo)) {
+    errore("home sul telefono", `l'anteprima del gioco passa sopra la linea della via o esce dallo schermo (${Math.round(gioco.sinistra)}–${Math.round(gioco.destra)}, linea a ${Math.round(gioco.linea)})`);
+  }
+  // il tratto di via già fatto arriva al nodo
+  await pg.evaluate(() => window.scrollTo(0, 2000));
+  await pg.waitForTimeout(300);
+  const via = await pg.evaluate(() => {
+    const fatta = document.querySelector("[data-via-fatta]");
+    const nodo = document.querySelector(".via-nodo");
+    if (!fatta || !nodo) return null;
+    const n = nodo.getBoundingClientRect();
+    return { fine: fatta.getBoundingClientRect().bottom, nodo: n.top + n.height / 2 };
+  });
+  if (via && Math.abs(via.fine - via.nodo) > 3) errore("home sul telefono", `il tratto di via percorso finisce a ${Math.round(via.fine)}px, il nodo è a ${Math.round(via.nodo)}px`);
+  // ringraziamenti: toccando il titolo si aprono, ritoccandolo si richiudono, senza restare a metà
+  if (await pg.$("#ringraziamenti summary")) {
+    await pg.evaluate(() => document.querySelector("#ringraziamenti").scrollIntoView({ block: "center" }));
+    const stato = () =>
+      pg.evaluate(() => {
+        const d = document.querySelector("#ringraziamenti");
+        return { aperto: d.open, alto: Math.round(d.getBoundingClientRect().height), classi: d.className };
+      });
+    const prima = await stato();
+    await pg.tap("#ringraziamenti summary");
+    await pg.waitForTimeout(700);
+    const aperto = await stato();
+    if (!aperto.aperto || aperto.alto < prima.alto + 50 || /in-moto|si-chiude/.test(aperto.classi)) errore("home sul telefono", `i ringraziamenti non si aprono bene (${JSON.stringify(aperto)})`);
+    await pg.tap("#ringraziamenti summary");
+    await pg.waitForTimeout(700);
+    const chiuso = await stato();
+    if (chiuso.aperto || chiuso.alto !== prima.alto || /in-moto|si-chiude/.test(chiuso.classi)) errore("home sul telefono", `i ringraziamenti non si richiudono bene (${JSON.stringify(chiuso)})`);
+  }
+  // lettore: dal tondo in basso a destra alla barra, col bordo destro fermo
+  await pg.evaluate(() => document.querySelector("#musica").scrollIntoView());
+  await pg.waitForTimeout(400);
+  const bordo = () => pg.evaluate(() => Math.round(document.querySelector("[data-lettore]").getBoundingClientRect().right));
+  const destra = await bordo();
+  await pg.tap("[data-lettore-suona]");
+  await pg.waitForTimeout(120);
+  const durante = await bordo();
+  await pg.waitForTimeout(900);
+  const barra = await pg.evaluate(() => {
+    const l = document.querySelector("[data-lettore]");
+    return { classi: l.className, destra: Math.round(l.getBoundingClientRect().right), larga: Math.round(l.getBoundingClientRect().width) };
+  });
+  if (durante !== destra || barra.destra !== destra) errore("home sul telefono", `il lettore aprendosi sposta il bordo destro (${destra} → ${durante} → ${barra.destra})`);
+  if (!/attivo/.test(barra.classi) || /in-moto/.test(barra.classi) || barra.larga < 300) errore("home sul telefono", `il lettore non resta aperto e fermo (${JSON.stringify(barra)})`);
+  // in pausa e cambiando pagina la barra è già aperta al primo disegno, col brano di prima
+  const titolo = await pg.textContent("[data-lettore-titolo]");
+  await pg.tap("[data-lettore-suona]");
+  await pg.waitForTimeout(300);
+  await pg.goto(`${BASE}/artwork/`, { waitUntil: "commit" });
+  await pg.waitForSelector("#lettore-pronto", { state: "attached" });
+  const subito = await pg.evaluate(() => ({ classi: document.querySelector("[data-lettore]").className, titolo: document.querySelector("[data-lettore-titolo]").textContent }));
+  if (!/attivo/.test(subito.classi) || subito.titolo !== titolo) errore("cambio pagina col lettore aperto", `la barra non torna com'era (${JSON.stringify(subito)}, attesa «${titolo}»)`);
+  await ctx.close();
+}
+{
   const ctx = await contesto(1280, 800);
   const pg = await ctx.newPage();
   await pg.goto(`${BASE}/`, { waitUntil: "load" });

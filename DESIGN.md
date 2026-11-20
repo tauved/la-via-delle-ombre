@@ -205,7 +205,7 @@ Una palette fissa a tre voci su nero, presa dai caroselli: il lime parla, il vio
 
 Una colonna centrale di larghezza --colonna (76rem) con margini --margine; sul telefono tutto è una colonna sola. La testata è fissa in alto (--alt-testata, 4rem) su nero al 78% con sfocatura di 12px; sotto i 69.9375em le voci diventano un menu a tendina.
 
-**La home** si apre con il ritratto a tutta altezza (telefono: dietro il testo, con il buio che sale dal basso; da 56.25em: a destra al 56% della larghezza, testo a sinistra largo al massimo 36rem). Sotto comincia la via: una linea verticale lime da 2px a --via-x (bordo sinistro della colonna più --via-scarto), con il testo rientrato di --rientro (1.15rem, 3rem da 56.25em). Ogni sezione è una tappa: titolo con il cerchio sulla linea, contenuto, poi --sezione di vuoto prima della tappa successiva. Le copertine delle pillole scorrono di lato in un binario a scatto; la clip del gioco va a tutta larghezza (16:9, al massimo 78svh).
+**La home** si apre con il ritratto a tutta altezza (telefono: dietro il testo, con il buio che sale dal basso; da 56.25em: a destra al 56% della larghezza, testo a sinistra largo al massimo 36rem). Sotto comincia la via: una linea verticale lime da 2px a --via-x (bordo sinistro della colonna più --via-scarto), con il testo rientrato di --rientro (1.15rem, 3rem da 56.25em). Ogni sezione è una tappa: titolo con il cerchio sulla linea, contenuto, poi --sezione di vuoto prima della tappa successiva. Le copertine delle pillole scorrono di lato in un binario a scatto; la clip del gioco sta nella colonna, a destra della via come tutto il resto (16:9, angoli 12px con il filo, al massimo 78svh). Niente passa sopra la linea.
 
 **Una pillola** sul computer (da 1000px) è una griglia a due colonne: a sinistra il visore fisso (sticky) largo al massimo 36rem, a destra testata e testo tavola per tavola; sul telefono le due parti si impilano.
 
@@ -267,7 +267,7 @@ Ringraziamenti e Manifesto chiusi tra due fili: titolo a sinistra, a destra «To
 Il logo di TAUH dentro due cerchi lime con l'anello «NON SERVIAM · LUX IN TENEBRIS · LUCIFER» in Cinzel 700. Chiude la via nel piede (clamp(9.5rem, 34vw, 12.5rem)); sul computer apre anche l'apertura. L'anello ruota solo mentre si scorre la pagina.
 
 ### Il lettore fisso
-In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94% con sfocatura, tondo viola 46px con il triangolo lime e «Ascolta TAUH» (sul telefono solo il tondo). Finché l'uscita dell'apertura è sullo schermo, il lettore fermo si fa da parte (dissolvenza di 0.25s), così il pre-save resta l'unico bottone pieno. In ascolto diventa una barra di 26rem con angoli 20px: copertina 44px, titolo Cinzel lime, tempo, via di avanzamento con un nodo da 14px, tondo lime per la pausa, prossimo e chiudi. La musica continua cambiando pagina.
+In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94% con sfocatura, tondo viola 46px con il triangolo lime e «Ascolta TAUH» (sul telefono solo il tondo). Finché l'uscita dell'apertura è sullo schermo, il lettore fermo si fa da parte (dissolvenza di 0.25s), così il pre-save resta l'unico bottone pieno. In ascolto diventa una barra di 26rem con angoli 20px: copertina 44px, titolo Cinzel lime, tempo, via di avanzamento con un nodo da 14px, tondo lime per la pausa, prossimo e chiudi. Si apre crescendo dal suo tondo verso sinistra (il bordo destro resta fermo) e ci torna chiudendosi; il contenuto compare in dissolvenza a barra quasi aperta. La musica continua cambiando pagina, e una barra aperta in pausa si ritrova uguale nella pagina dopo.
 
 ### Il visore delle pillole
 Le tavole 4:5 in una pista a scatto con angoli 12px su viola notte; sotto: freccia, via con nodo, contatore a pillola (viola al 25%, cifre lime tabellari), freccia; poi tre bottoni a filo da 44px (Schermo intero, Condividi, Su Instagram). Sul computer resta fisso accanto al testo.
@@ -279,10 +279,17 @@ L'indice è una fila di pillole a filo (lime al 40%, 44px, --t-piccolo bianco) c
 Testata: logo a sinistra, voci Montserrat 600 --t-piccolo in bianco, lime al passaggio; la pagina attuale è lime con un punto da 6px sotto. Sotto i 69.9375em un bottone «Menu» a pillola con contorno apre l'elenco a tendina su nero al 97%, voci separate da fili.
 
 ### Movimento
-- La via e il nodo seguono lo scorrimento (sticky più una variabile aggiornata a ogni fotogramma), non un'animazione a tempo.
+- **Due curve sole.** La molla (`--molla` con `--molla-durata`: smorzamento 1, risposta 0,35 s, il 97% del percorso in 0,3 s) per ciò che si sposta o cambia forma: il menu che si apre, il lettore che si allarga, il nodo del visore, l'immagine in grande sotto il dito (lì è una molla vera, in app.js). La frenata (`--frenata`, cubic-bezier(0.23, 1, 0.32, 1)) per ciò che entra, esce o risponde a un tocco, sempre sotto i 0,3 s. `ease` solo per colori e opacità, `linear` solo per ciò che segue lo scorrimento.
+- **Risposta al tocco.** Quando il dito appoggia: scale 0.96 per i comandi e 0.97 per le immagini, giù in 100 ms e su in 160 ms. Il passaggio del mouse cambia colori e contorni, e vale solo dove c'è un mouse (`@media (hover: hover)`).
+- **Chi apre ha il tempo, chi chiude fa presto.** Il menu nasce dal bottone con la molla e si chiude in 0,16 s; le righe in più dei brani arrivano a scalare (0, 40, 70, 90 ms e poi insieme) e spariscono subito.
+- **La tastiera non aspetta.** Con le frecce le tavole e gli artwork cambiano di colpo, con Invio i riquadri si aprono subito: lo scorrimento resta al dito e ai bottoni sullo schermo.
+- **Solo transform e opacity.** Due eccezioni volute: l'altezza dei riquadri apribili (Ringraziamenti, Manifesto: da 0,2 a 0,32 s secondo la strada, misurata e animata da app.js in tutti i browser) e bordo sinistro e larghezza del lettore (è fuori dal flusso e ha sei figli).
+- La via e il nodo seguono lo scorrimento (sticky più una trasformazione sul tratto percorso, `.via-fatta`), non un'animazione a tempo. Scorrendo non si misura niente e non si cambia nessuna variabile sul contenitore: le posizioni delle tappe si leggono solo quando la pagina cambia altezza.
+- Tutto ciò che si muove si può riprendere a metà: riparte da dove si trova (immagine in grande, menu, lettore, riquadri).
 - L'anello del sigillo ruota legato allo scorrimento (animation-timeline: scroll), solo senza «riduci movimento».
-- La clip del gioco è muta, gira solo quando è sullo schermo e ha un tondo per fermarla; con «riduci movimento» resta sul primo fotogramma.
-- Navigazione morbida (view transition 0.2s) e scorrimento dolce solo senza «riduci movimento»; tra una pagina e l'altra una linea lime corre in cima (ferma e piena con «riduci movimento»).
+- La clip del gioco è muta, gira solo quando è sullo schermo e ha un tondo in basso a sinistra per fermarla; con «riduci movimento» resta sul primo fotogramma.
+- Navigazione morbida (view transition 0.2s) e scorrimento dolce solo senza «riduci movimento»; tra una pagina e l'altra una linea lime corre in cima solo se l'attesa supera 0,3 s (ferma e piena con «riduci movimento»).
+- Con «riduci movimento» restano i cambi di colore e le dissolvenze brevi; con «riduci trasparenza» e «aumenta contrasto» testata e lettore diventano pieni.
 
 ## Do's and Don'ts
 

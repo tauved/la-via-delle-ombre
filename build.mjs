@@ -609,17 +609,18 @@ function barraAscolto(pagina) {
   <button class="ascolto-prossimo" type="button" data-lettore-prossimo aria-label="Brano successivo"${raccolte.brani.length < 2 ? " hidden" : ""}>${icona.prossimo}</button>
   <button class="ascolto-chiudi" type="button" data-lettore-chiudi aria-label="Ferma la musica e chiudi il lettore">${icona.chiudi}</button>
 </div>
-<script type="application/json" id="brani-dati">${JSON.stringify(elenco).replace(/</g, "\\u003c")}</script>`;
+<script type="application/json" id="brani-dati">${JSON.stringify(elenco).replace(/</g, "\\u003c")}</script>
+${scriptLettore()}`;
 }
 
-function documento({ pagina, titolo, descrizione, immagine, larghezzaImmagine, altezzaImmagine, tipo = "website", attiva = "", corpo, extraTesta = "" }) {
+function documento({ pagina, titolo, descrizione, immagine, larghezzaImmagine, altezzaImmagine, tipo = "website", attiva = "", corpo, extraTesta = "", classe = "" }) {
   const titoloCompleto = titolo ? `${titolo} – ${sito.nome}` : `${sito.nome} – ${sito.artista}`;
   const canonico = sito.url && !ANTEPRIMA ? `<link rel="canonical" href="${esc(assoluto(pagina))}">\n` : "";
   const og = immagine
     ? `<meta property="og:image" content="${esc(assoluto(immagine))}">\n${larghezzaImmagine ? `<meta property="og:image:width" content="${larghezzaImmagine}">\n<meta property="og:image:height" content="${altezzaImmagine}">\n` : ""}`
     : "";
   return `<!doctype html>
-<html lang="it">
+<html lang="it"${classe ? ` class="${classe}"` : ""}>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -638,7 +639,7 @@ ${sito.url && !ANTEPRIMA ? `<meta property="og:url" content="${esc(assoluto(pagi
 <link rel="preload" href="${indirizzo("/assets/font/cinzel-var.woff2", pagina)}" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${indirizzo("/assets/font/montserrat-var.woff2", pagina)}" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${indirizzo(risorse.css, pagina)}">
-<script>document.documentElement.classList.add("js")</script>
+${scriptAvvio()}
 ${scriptStriscia()}<script type="module" src="${indirizzo(risorse.js, pagina)}"></script>
 ${extraTesta}</head>
 <body>
@@ -691,6 +692,26 @@ function datiStriscia() {
   };
   return strisciaCalcolata;
 }
+
+// ---------------------------------------------------------------- il lettore tra una pagina e l'altra
+// Se la musica suona, i link cambiano solo il contenuto e la barra resta dov'è (app.js). Ma con la
+// barra aperta e la musica in pausa la pagina si ricarica per intero: l'HTML arriva con la barra
+// chiusa e app.js la riapriva un attimo dopo, quindi a ogni pagina la si vedeva chiudersi e
+// riaprirsi. Due script piccoli la fanno trovare già com'era:
+// - scriptAvvio, nella <head>: oltre alla classe «js», se in questa scheda il lettore era aperto
+//   chiede al browser di aspettare lo script qui sotto prima di disegnare la pagina (link
+//   rel="expect"; i browser che non lo conoscono lo ignorano);
+// - scriptLettore, subito dopo la barra: le rimette titolo, copertina e tempo dalla memoria della
+//   scheda (la stessa che scrive app.js, «tauh-lettore»). app.js poi la ritrova già aperta.
+const scriptAvvio = () =>
+  `<script>document.documentElement.classList.add("js")${
+    raccolte.brani.length
+      ? `;try{if(JSON.parse(sessionStorage.getItem("tauh-lettore")||"null").a){var l=document.createElement("link");l.rel="expect";l.href="#lettore-pronto";l.setAttribute("blocking","render");document.head.appendChild(l)}}catch(e){}`
+      : ""
+  }</script>`;
+
+const scriptLettore = () =>
+  `<script id="lettore-pronto">try{(function(){var s=JSON.parse(sessionStorage.getItem("tauh-lettore")||"null");if(!s||!s.a)return;var b=document.querySelector("[data-lettore]"),d=JSON.parse(document.getElementById("brani-dati").textContent)[s.i];if(!b||!d||d.bloccata)return;var t=Math.max(0,+s.t||0),m=Math.floor(t),q=function(x){return b.querySelector("[data-lettore-"+x+"]")};b.classList.add("attivo");q("titolo").textContent=d.titolo;q("tempo").textContent=Math.floor(m/60)+":"+("0"+m%60).slice(-2);q("via").style.setProperty("--avanzamento",(d.durata?Math.min(100,t/d.durata*100):0).toFixed(2)+"%");if(d.mini||d.copertina)q("copertina").src=d.mini||d.copertina})()}catch(e){}</script>`;
 
 const scriptStriscia = () => {
   const d = datiStriscia();
@@ -847,6 +868,7 @@ function paginaHome(caroselli) {
     : "";
 
   // ------------------------------------------------ il gioco: qualche secondo di partita vera, muta
+  // (sta nella colonna, a destra della via come tutto il resto: a tutta larghezza copriva la linea)
   const clip = media.giocoClip;
   const schermoGioco = clip
     ? `<div class="gioco-schermo">
@@ -855,7 +877,7 @@ function paginaHome(caroselli) {
       </video>
       <button class="clip-pausa" type="button" data-clip-pausa aria-pressed="false" hidden><span class="se-fermo">${icona.gioca}</span><span class="se-suona">${icona.pausa}</span><span class="nascosto" data-clip-etichetta>Ferma l'anteprima del gioco</span></button>
     </div>`
-    : `<div class="gioco-schermo">${immagineGioco(pagina, "100vw", true)}</div>`;
+    : `<div class="gioco-schermo">${immagineGioco(pagina, "(min-width: 76rem) 73rem, 92vw", true)}</div>`;
 
   // ------------------------------------------------ elenco dei brani
   const voceBrano = (b) => {
@@ -945,17 +967,20 @@ function paginaHome(caroselli) {
   </section>
 
   <div class="via-percorso" data-via>
+  <span class="via-fatta" data-via-fatta aria-hidden="true"></span>
   <span class="via-viandante" aria-hidden="true"><span class="via-nodo"></span></span>
 
   <section class="sezione tappa gioco-tappa" id="gioco" aria-labelledby="titolo-gioco">
     ${testaSezione("gioco", esc(gioco.titolo || "Il gioco"), "")}
-    ${schermoGioco}
-    <div class="colonna gioco-testo">
-      ${gioco.disponibile ? "" : '<p class="gioco-presto">In arrivo</p>'}
-      <p>${esc(gioco.testo || "")}</p>
-      ${gioco.disponibile
-        ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">${icona.gioca}Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
-        : `<a class="bottone filo" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`}
+    <div class="colonna gioco-corpo">
+      ${schermoGioco}
+      <div class="gioco-testo">
+        ${gioco.disponibile ? "" : '<p class="gioco-presto">In arrivo</p>'}
+        <p>${esc(gioco.testo || "")}</p>
+        ${gioco.disponibile
+          ? `<a class="bottone primario" href="${indirizzo("/gioco/", pagina)}">${icona.gioca}Gioca a ${esc(gioco.titolo || "il gioco")}</a>`
+          : `<a class="bottone filo" href="${indirizzo("/gioco/", pagina)}">Scopri il gioco</a>`}
+      </div>
     </div>
   </section>
 
@@ -1157,6 +1182,9 @@ function paginaHome(caroselli) {
     attiva: "home",
     corpo,
     extraTesta: `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n`,
+    // la pagina si apre con l'uscita sullo schermo: il tondo del lettore non compare per un attimo
+    // prima di farsi da parte (poi la classe la tiene aggiornata app.js, lettoreDaParte)
+    classe: uscita ? "uscita-in-vista" : "",
   });
 }
 

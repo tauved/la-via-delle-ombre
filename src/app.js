@@ -30,6 +30,31 @@ const sostituisciIndirizzo = (url) => {
 // adesso e dalla velocità del dito, quindi si può riprendere e invertire in ogni momento.
 // Smorzamento 1 = si ferma senza rimbalzo; risposta = quanto ci mette, in secondi.
 
+// Tutte le molle in corsa avanzano nello stesso fotogramma; chi ne muove più d'una insieme
+// (posizione, scala e velo dell'immagine in grande) chiede con aFineGiro un solo ridisegno,
+// a giro finito, invece di ridisegnare a ogni molla.
+const molleInCorsa = new Set();
+const dopoIlGiro = new Set();
+let giroMolle = 0;
+let nelGiro = false;
+
+function giraMolle(ora) {
+  giroMolle = 0;
+  nelGiro = true;
+  for (const avanza of [...molleInCorsa]) avanza(ora);
+  nelGiro = false;
+  const daFare = [...dopoIlGiro];
+  dopoIlGiro.clear();
+  for (const f of daFare) f();
+  if (molleInCorsa.size && !giroMolle) giroMolle = requestAnimationFrame(giraMolle);
+}
+
+// f una volta sola alla fine del fotogramma in corso; subito, se nessuna molla sta girando
+const aFineGiro = (f) => {
+  if (nelGiro) dopoIlGiro.add(f);
+  else f();
+};
+
 function molla({ da, a, velocita = 0, smorzamento = 1, risposta = 0.35, passo, fine, soglia = 0.5 }) {
   const w = (2 * Math.PI) / risposta;
   const k = w * w;
@@ -37,8 +62,13 @@ function molla({ da, a, velocita = 0, smorzamento = 1, risposta = 0.35, passo, f
   let x = da;
   let v = velocita;
   let prima = performance.now();
-  let giro = 0;
-  const avanza = (ora) => {
+  let corre = true;
+  const smetti = () => {
+    corre = false;
+    molleInCorsa.delete(avanza);
+  };
+  function avanza(ora) {
+    if (!corre) return; // fermata da un'altra molla in questo stesso giro
     const dt = Math.min(0.064, Math.max(0, (ora - prima) / 1000));
     prima = ora;
     // passi piccoli: stabile anche quando un fotogramma arriva in ritardo
@@ -51,20 +81,17 @@ function molla({ da, a, velocita = 0, smorzamento = 1, risposta = 0.35, passo, f
     if (Math.abs(x - a) < soglia && Math.abs(v) < soglia * 10) {
       x = a;
       v = 0;
+      smetti();
       passo(x);
-      giro = 0;
       fine?.();
       return;
     }
     passo(x);
-    giro = requestAnimationFrame(avanza);
-  };
-  giro = requestAnimationFrame(avanza);
+  }
+  molleInCorsa.add(avanza);
+  if (!giroMolle) giroMolle = requestAnimationFrame(giraMolle);
   return {
-    ferma() {
-      cancelAnimationFrame(giro);
-      giro = 0;
-    },
+    ferma: smetti,
     get valore() {
       return x;
     },
@@ -72,7 +99,7 @@ function molla({ da, a, velocita = 0, smorzamento = 1, risposta = 0.35, passo, f
       return v;
     },
     get corre() {
-      return giro !== 0;
+      return corre;
     },
   };
 }
@@ -195,6 +222,8 @@ const lettore = (() => {
   let errori = 0;
   let trascinando = false;
   let ultimoSalvataggio = 0;
+  let pronto = false; // dopo il primo disegno: al caricamento la barra compare già com'era, senza muoversi
+  let movimento = null; // l'animazione della barra che si apre o si chiude
   const ripieghi = new Map();
   const ascoltatori = new Set();
 
@@ -270,19 +299,42 @@ const lettore = (() => {
   function aggiorna() {
     const b = brani[indice];
     const suona = !audio.paused;
-    // la barra si allarga dal suo tondo (e ci torna) con la molla del sito
+    // La barra si allarga dal suo tondo (e ci torna) con la molla del sito. Parte da dove si trova
+    // adesso, anche a metà di un movimento, e il bordo destro resta fermo: sul telefono, dove da
+    // aperta tocca i due bordi, prima saltava a sinistra e cresceva dalla parte sbagliata.
     const cambia = barra.classList.contains("attivo") !== attivo;
-    const prima = cambia ? barra.getBoundingClientRect().width : 0;
+    const prima = cambia && pronto && !riduci.matches && barra.animate ? barra.getBoundingClientRect() : null;
+    if (cambia) {
+      movimento?.cancel();
+      movimento = null;
+      // la classe del movimento va messa prima di aprire: è lei che fa comparire in dissolvenza
+      // copertina, titolo e comandi (stile.css), e deve già esserci quando nascono
+      barra.classList.toggle("in-moto", Boolean(prima?.width));
+    }
     barra.classList.toggle("attivo", attivo);
-    if (cambia && prima && !riduci.matches && barra.animate) {
-      const dopo = barra.getBoundingClientRect().width;
+    if (prima?.width) {
+      const dopo = barra.getBoundingClientRect();
       const curva = getComputedStyle(document.documentElement).getPropertyValue("--molla").trim() || "ease-out";
+      const fotogrammi = { left: [`${prima.left}px`, `${dopo.left}px`], width: [`${prima.width}px`, `${dopo.width}px`] };
+      let questo = null;
       try {
-        barra.animate({ width: [`${prima}px`, `${dopo}px`] }, { duration: 500, easing: curva });
+        questo = barra.animate(fotogrammi, { duration: 500, easing: curva });
       } catch {
-        /* curva non capita dal browser: niente animazione */
+        /* curva non capita dal browser: niente movimento */
+      }
+      if (questo) {
+        movimento = questo;
+        const finito = () => {
+          if (movimento !== questo) return;
+          movimento = null;
+          barra.classList.remove("in-moto");
+        };
+        questo.addEventListener("finish", finito);
+        questo.addEventListener("cancel", finito);
       }
     }
+    if (cambia && !movimento) barra.classList.remove("in-moto");
+    pronto = true;
     barra.classList.toggle("in-ascolto", suona);
     document.documentElement.classList.toggle("musica-accesa", suona);
     titolo.textContent = b.titolo;
@@ -635,8 +687,10 @@ function binari(signal) {
       indietro.disabled = fila.scrollLeft < 4;
       avanti.disabled = fila.scrollLeft + fila.clientWidth > fila.scrollWidth - 4;
     };
-    indietro.addEventListener("click", () => fila.scrollBy({ left: -passo(), behavior: "smooth" }), { signal });
-    avanti.addEventListener("click", () => fila.scrollBy({ left: passo(), behavior: "smooth" }), { signal });
+    // (lo scorrimento chiesto da qui non segue da solo l'impostazione «riduci movimento»)
+    const scorri = (di) => fila.scrollBy({ left: di, behavior: riduci.matches ? "auto" : "smooth" });
+    indietro.addEventListener("click", () => scorri(-passo()), { signal });
+    avanti.addEventListener("click", () => scorri(passo()), { signal });
     fila.addEventListener("scroll", aggiorna, { passive: true, signal });
     window.addEventListener("resize", aggiorna, { signal });
     aggiorna();
@@ -659,18 +713,26 @@ function visore(signal) {
   const largo = window.matchMedia("(min-width: 1000px)");
   let attuale = -1;
 
-  const mostra = (i) => {
+  // quando la tavola cambia di colpo (tastiera, schermo ridimensionato) anche il nodo sulla linea
+  // va al suo posto senza scivolare
+  let nodoFermo = 0;
+  const mostra = (i, liscio = true) => {
     if (i === attuale) return;
     const primaVolta = attuale === -1;
     attuale = i;
     contatore.textContent = `${i + 1}/${totale}`;
+    if (!liscio) {
+      avanzamento.classList.add("di-colpo");
+      cancelAnimationFrame(nodoFermo);
+      nodoFermo = requestAnimationFrame(() => (nodoFermo = requestAnimationFrame(() => avanzamento.classList.remove("di-colpo"))));
+    }
     avanzamento.style.setProperty("--pos", totale > 1 ? `${(i / (totale - 1)) * 100}%` : "0%");
     indietro.disabled = i === 0;
     avanti.disabled = i === totale - 1;
     tavole.forEach((t, k) => t.setAttribute("aria-hidden", k === i ? "false" : "true"));
     testi.forEach((t, k) => t.classList.toggle("attuale", k === i));
     if (!primaVolta && largo.matches && testi[i] && !document.fullscreenElement) {
-      testi[i].scrollIntoView({ block: "nearest", behavior: riduci.matches ? "auto" : "smooth" });
+      testi[i].scrollIntoView({ block: "nearest", behavior: riduci.matches || !liscio ? "auto" : "smooth" });
     }
     sostituisciIndirizzo(i === 0 ? location.pathname + location.search : `#tavola-${i + 1}`);
   };
@@ -696,7 +758,7 @@ function visore(signal) {
       scadenza = setTimeout(arrivata, 1500);
     }
     pista.scrollTo({ left: tavole[n].offsetLeft, behavior: anima ? "smooth" : "auto" });
-    mostra(n);
+    mostra(n, anima);
   };
 
   let inAttesa = false;
@@ -728,12 +790,14 @@ function visore(signal) {
   indietro.addEventListener("click", () => vai(attuale - 1), { signal });
   avanti.addEventListener("click", () => vai(attuale + 1), { signal });
 
+  // Con la tastiera la tavola cambia subito, senza scorrere: sono tasti che si premono in fila,
+  // e ogni scorrimento sarebbe un'attesa. Col dito e con le frecce sullo schermo scorre.
   const tasti = (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    if (e.key === "ArrowRight") vai(attuale + 1);
-    else if (e.key === "ArrowLeft") vai(attuale - 1);
-    else if (e.key === "Home") vai(0);
-    else if (e.key === "End") vai(totale - 1);
+    if (e.key === "ArrowRight") vai(attuale + 1, false);
+    else if (e.key === "ArrowLeft") vai(attuale - 1, false);
+    else if (e.key === "Home") vai(0, false);
+    else if (e.key === "End") vai(totale - 1, false);
     else return;
     e.preventDefault();
   };
@@ -809,6 +873,7 @@ function visore(signal) {
   }
 
   window.addEventListener("resize", () => vai(attuale, false), { signal });
+  signal.addEventListener("abort", () => cancelAnimationFrame(nodoFermo), { once: true });
 
   const iniziale = /^#tavola-(\d+)$/.exec(location.hash);
   if (iniziale) requestAnimationFrame(() => vai(Number(iniziale[1]) - 1, false));
@@ -931,6 +996,7 @@ function galleria(signal) {
 
   let indice = 0;
   let aperta = false;
+  let presa = null; // il dito che tiene l'immagine: { id, x0, y0, asse, partenzaX, partenzaY }
   // valori di presentazione: quello che si vede adesso (le molle partono sempre da qui)
   const vista = { x: 0, y: 0, s: 1, sx: 0, sy: 0, velo: 0 };
   const molle = {};
@@ -942,7 +1008,13 @@ function galleria(signal) {
   };
   let bersaglioX = 0;
 
-  const larghezza = () => pista.clientWidth + SPAZIO;
+  // quanto dista un'immagine dall'altra: si misura aprendo e quando cambia lo schermo, non a ogni
+  // fotogramma (leggere una misura in mezzo ai ridisegni costringe il browser a rifare i conti)
+  let passoLastre = 0;
+  const misura = () => {
+    passoLastre = pista.clientWidth + SPAZIO;
+  };
+  const larghezza = () => passoLastre;
   const esiste = (i) => i >= 0 && i < voci.length;
   const sorgente = (i) => (esiste(i) ? voci[i].dataset.grande : "");
 
@@ -1010,7 +1082,7 @@ function galleria(signal) {
       risposta: 0.38,
       passo: (x) => {
         vista.x = x;
-        disegna();
+        aFineGiro(disegna);
       },
       fine: arrivoX,
     });
@@ -1036,6 +1108,20 @@ function galleria(signal) {
       cambia(bersaglioX < 0 ? 1 : -1);
     }
     muoviX(esiste(indice + d) ? -d * larghezza() : 0, velocita);
+  };
+
+  // Con le frecce della tastiera il cambio è immediato, come nelle Foto del Mac: è un gesto che
+  // si ripete in fretta, e un movimento lo farebbe solo aspettare. Lo scorrimento resta al dito
+  // e ai bottoni.
+  const salta = (d) => {
+    if (!aperta) return;
+    ferma("x");
+    // se un'immagine stava già arrivando, prima diventa lei l'attuale
+    if (bersaglioX !== 0) cambia(bersaglioX < 0 ? 1 : -1);
+    if (esiste(indice + d)) cambia(d);
+    vista.x = 0;
+    bersaglioX = 0;
+    disegna();
   };
 
   // ---------------- apertura e chiusura dalla miniatura
@@ -1086,7 +1172,7 @@ function galleria(signal) {
         ...extra,
         passo: (x) => {
           vista[chiave] = x;
-          disegna();
+          aFineGiro(disegna);
         },
         fine: finito,
       });
@@ -1114,6 +1200,7 @@ function galleria(signal) {
     finestra.showModal();
     radice.classList.add("lightbox-aperta");
     aperta = true;
+    misura();
     chiudi.focus();
     Object.assign(vista, { x: 0, y: 0, s: 1, sx: 0, sy: 0, velo: 0 });
     bersaglioX = 0;
@@ -1131,6 +1218,7 @@ function galleria(signal) {
 
   const finisci = () => {
     ferma("x", "sx", "sy", "s", "velo");
+    presa = null;
     aperta = false;
     finestra.classList.remove("dissolve");
     if (finestra.open) finestra.close();
@@ -1166,8 +1254,8 @@ function galleria(signal) {
   finestra.addEventListener(
     "keydown",
     (e) => {
-      if (e.key === "ArrowRight" && !unica) vai(1);
-      else if (e.key === "ArrowLeft" && !unica) vai(-1);
+      if (e.key === "ArrowRight" && !unica) salta(1);
+      else if (e.key === "ArrowLeft" && !unica) salta(-1);
       else return;
       e.preventDefault();
     },
@@ -1178,12 +1266,17 @@ function galleria(signal) {
 
   // ---------------- il dito
   const traccia = tracciaVelocita();
-  let presa = null; // { id, x0, y0, asse, partenzaX, partenzaY }
   pista.addEventListener(
     "pointerdown",
     (e) => {
       if (!aperta || (e.pointerType === "mouse" && e.button !== 0)) return;
-      pista.setPointerCapture(e.pointerId);
+      // un dito solo: un secondo dito appoggiato non ruba l'immagine al primo (prima la faceva saltare)
+      if (presa) return;
+      try {
+        pista.setPointerCapture(e.pointerId);
+      } catch {
+        /* senza la presa del puntatore il trascinamento funziona lo stesso, finché il dito resta sull'immagine */
+      }
       // si prende l'immagine dov'è adesso, anche se si sta muovendo
       const correvaX = molle.x?.corre;
       const correvaY = molle.sy?.corre && vista.s > 0.6 && vista.velo < 1;
@@ -1255,7 +1348,15 @@ function galleria(signal) {
   };
   pista.addEventListener("pointerup", lascia, { signal });
   pista.addEventListener("pointercancel", lascia, { signal });
-  window.addEventListener("resize", () => aperta && disegna(), { signal });
+  window.addEventListener(
+    "resize",
+    () => {
+      if (!aperta) return;
+      misura();
+      disegna();
+    },
+    { signal },
+  );
 
   signal.addEventListener("abort", () => aperta && finisci(), { once: true });
 }
@@ -1707,37 +1808,155 @@ function sigilli3d(signal) {
 // ---------------------------------------------------------------- la via della home
 // Una linea lime scende lungo la home; il nodo viola la percorre (CSS, position: sticky) e
 // accende i titoli delle sezioni (data-tappa) quando ci passa. La parte di linea già fatta
-// è piena, il resto è spento (--via-fatto).
+// è piena (.via-fatta, allungata con una trasformazione), il resto è spento.
+//
+// Scorrendo non si misura niente: le posizioni delle tappe si leggono una volta e di nuovo solo
+// quando la pagina cambia altezza (un riquadro che si apre, i brani in più, le immagini che
+// arrivano). Prima, a ogni fotogramma, una variabile sul contenitore faceva ricalcolare gli stili
+// di tutta la home e ogni tappa veniva rimisurata.
 
 function via(signal) {
   const percorso = $("[data-via]");
   if (!percorso) return;
+  const fatta = $("[data-via-fatta]", percorso);
   const tappe = $$("[data-tappa]", percorso);
+  let cima = 0; // dove comincia la via, dall'inizio della pagina
+  let alta = 0;
+  let cime = []; // per ogni tappa: l'alto del titolo…
+  let centri = []; // …e il centro del suo cerchio (a 0,62em dall'alto del titolo)
   let attesa = 0;
+
   const aggiorna = () => {
     attesa = 0;
-    const r = percorso.getBoundingClientRect();
-    const meta = window.innerHeight * 0.5;
-    percorso.style.setProperty("--via-fatto", `${Math.round(Math.max(0, Math.min(r.height, meta - r.top)))}px`);
+    // prima si legge, poi si scrive: così il browser non rifà i conti a metà
+    const meta = window.scrollY + window.innerHeight * 0.5;
+    const fatto = Math.max(0, Math.min(alta, meta - cima));
+    if (fatta) fatta.style.transform = `scaleY(${alta ? (fatto / alta).toFixed(5) : 0})`;
     // il nodo compare solo quando la via è cominciata (prima sarebbe un mezzo cerchio sotto l'apertura)
-    percorso.classList.toggle("partita", r.top < meta);
-    for (const t of tappe) {
-      const box = t.getBoundingClientRect();
-      // il cerchio della tappa sta a 0,62em dall'alto del titolo
-      const centro = box.top + parseFloat(getComputedStyle(t).fontSize) * 0.62;
-      t.classList.toggle("accesa", box.top < meta);
+    percorso.classList.toggle("partita", cima < meta);
+    tappe.forEach((t, k) => {
+      t.classList.toggle("accesa", cime[k] < meta);
       // quando il nodo (24 px) tocca il cerchio della tappa (16 px), il cerchio si spegne: niente due nodi uno sull'altro
-      t.classList.toggle("sotto-il-nodo", Math.abs(centro - meta) < 30);
+      t.classList.toggle("sotto-il-nodo", Math.abs(centri[k] - meta) < 30);
+    });
+  };
+  const misura = () => {
+    const y = window.scrollY;
+    const r = percorso.getBoundingClientRect();
+    cima = r.top + y;
+    alta = r.height;
+    cime = [];
+    centri = [];
+    for (const t of tappe) {
+      const alto = t.getBoundingClientRect().top + y;
+      cime.push(alto);
+      centri.push(alto + parseFloat(getComputedStyle(t).fontSize) * 0.62);
     }
+    aggiorna();
   };
   const chiedi = () => {
     if (!attesa) attesa = requestAnimationFrame(aggiorna);
   };
   window.addEventListener("scroll", chiedi, { passive: true, signal });
-  window.addEventListener("resize", chiedi, { signal });
-  signal.addEventListener("abort", () => cancelAnimationFrame(attesa), { once: true });
+  window.addEventListener("resize", misura, { signal });
+  // quando la via cambia altezza, le tappe più in basso si sono spostate
+  let guarda = null;
+  if ("ResizeObserver" in window) {
+    guarda = new ResizeObserver(misura);
+    guarda.observe(percorso);
+  } else {
+    window.addEventListener("load", misura, { signal });
+  }
+  signal.addEventListener(
+    "abort",
+    () => {
+      cancelAnimationFrame(attesa);
+      guarda?.disconnect();
+    },
+    { once: true },
+  );
   percorso.classList.add("in-cammino");
-  aggiorna();
+  misura();
+}
+
+// ---------------------------------------------------------------- riquadri che si aprono
+// Ringraziamenti e Manifesto (details.apribile): toccando il titolo l'altezza si apre e si richiude
+// con lo stesso movimento, in tutti i browser. È il solo punto del sito dove si anima un'altezza:
+// non c'è una trasformazione che faccia scendere anche quello che sta sotto. Per questo dura poco
+// (da 0,2 a 0,32 s, secondo quanta strada c'è da fare). Si può ritoccare a metà: riparte da dov'è.
+// Con «riduci movimento», o senza JS, si aprono e chiudono subito come sempre.
+
+function apribili(signal) {
+  for (const d of $$("details.apribile")) {
+    const sommario = $("summary", d);
+    if (!sommario || !d.animate) continue;
+    let movimento = null;
+    let versoAperto = d.open;
+    const fermo = () => {
+      movimento = null;
+      d.classList.remove("in-moto", "si-chiude");
+    };
+    sommario.addEventListener(
+      "click",
+      (e) => {
+        // Con «riduci movimento» e con la tastiera (Invio o Spazio: il clic arriva senza un dito,
+        // detail 0) si apre e si chiude subito, come fa il browser da solo.
+        if (riduci.matches || e.detail === 0) {
+          if (movimento) {
+            const apri = !versoAperto;
+            movimento.cancel();
+            fermo();
+            // a metà di un movimento «open» è ancora vero: lo stato lo decido io, non il browser
+            e.preventDefault();
+            d.open = apri;
+          }
+          return;
+        }
+        e.preventDefault();
+        const apri = movimento ? !versoAperto : !d.open;
+        versoAperto = apri;
+        // da dove si parte: l'altezza che si vede adesso, anche a metà di un movimento
+        const da = d.getBoundingClientRect().height;
+        movimento?.cancel();
+        // dove si arriva: le due altezze vere, chiuso e aperto
+        d.classList.remove("in-moto", "si-chiude");
+        d.open = false;
+        const chiusa = d.getBoundingClientRect().height;
+        d.open = true;
+        const aperta = d.getBoundingClientRect().height;
+        const a = apri ? aperta : chiusa;
+        const strada = Math.abs(a - da);
+        if (strada < 1) {
+          d.open = apri;
+          fermo();
+          return;
+        }
+        d.classList.add("in-moto");
+        d.classList.toggle("si-chiude", !apri);
+        const questo = d.animate(
+          { height: [`${da}px`, `${a}px`] },
+          { duration: Math.min(320, Math.max(200, strada / 2)), easing: "cubic-bezier(0.23, 1, 0.32, 1)", fill: "forwards" },
+        );
+        movimento = questo;
+        questo.addEventListener("finish", () => {
+          if (movimento !== questo) return;
+          // prima lo stato vero, poi via l'animazione: nessun fotogramma con l'altezza sbagliata
+          if (!apri) d.open = false;
+          questo.cancel();
+          fermo();
+        });
+      },
+      { signal },
+    );
+    signal.addEventListener(
+      "abort",
+      () => {
+        movimento?.cancel();
+        fermo();
+      },
+      { once: true },
+    );
+  }
 }
 
 // ---------------------------------------------------------------- lettore e nuova uscita
@@ -1863,7 +2082,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, videoSbloccabili, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
+  for (const parte of [menu, incorporati, videoSbloccabili, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, apribili, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {
@@ -1906,7 +2125,8 @@ avviaPagina();
     const tieni = new Set([barra, $("#brani-dati")]);
     for (const nodo of [...document.body.childNodes]) if (!tieni.has(nodo)) nodo.remove();
     for (const nodo of [...nuovo.body.childNodes]) {
-      if (nodo.nodeType === 1 && (nodo.matches("[data-lettore]") || nodo.id === "brani-dati")) continue;
+      // la barra e i suoi dati restano quelli di prima; lo script che la ripristina al caricamento qui non serve
+      if (nodo.nodeType === 1 && (nodo.matches("[data-lettore]") || nodo.id === "brani-dati" || nodo.id === "lettore-pronto")) continue;
       document.body.insertBefore(document.importNode(nodo, true), barra);
     }
     percorsoAttuale = url.pathname;
@@ -1926,7 +2146,8 @@ avviaPagina();
     inCorso?.abort();
     const questo = new AbortController();
     inCorso = questo;
-    const segnale = setTimeout(() => document.documentElement.classList.add("in-viaggio"), 150);
+    // la linea in cima compare solo se la pagina si fa aspettare: un lampo di 50 ms sembra un difetto
+    const segnale = setTimeout(() => document.documentElement.classList.add("in-viaggio"), 300);
     let nuovo;
     let finale;
     try {
