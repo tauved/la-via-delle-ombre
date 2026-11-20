@@ -12,6 +12,11 @@ colors:
   bianco: "#ffffff"
   testo: "rgba(255, 255, 255, 0.88)"
   filo: "rgba(207, 254, 126, 0.16)"
+  superficie: "#110b20"
+  superficie-2: "#1a1230"
+  superficie-3: "#251a42"
+  bordo: "rgba(255, 255, 255, 0.07)"
+  bordo-forte: "rgba(255, 255, 255, 0.13)"
 typography:
   grande:
     fontFamily: "Cinzel, Georgia, 'Times New Roman', serif"
@@ -51,6 +56,9 @@ rounded:
   box: "14px"
   contenitore: "18px"
   riquadro: "20px"
+  scheda: "24px"
+  dentro: "16px"
+  campo: "14px"
   pillola: "999px"
   tondo: "50%"
 spacing:
@@ -68,8 +76,8 @@ components:
     textColor: "{colors.bianco}"
     typography: "{typography.corpo}"
     rounded: "{rounded.pillola}"
-    padding: "0.7em 1.35em"
-    height: "48px"
+    padding: "0.62em 1.2em"
+    height: "44px"
   bottone-hover:
     backgroundColor: "{colors.viola-acceso}"
   bottone-primario:
@@ -77,16 +85,43 @@ components:
     textColor: "{colors.nero}"
     typography: "{typography.corpo}"
     rounded: "{rounded.pillola}"
-    padding: "0.7em 1.35em"
-    height: "48px"
+    padding: "0.62em 1.2em"
+    height: "44px"
   bottone-primario-hover:
     backgroundColor: "{colors.lime-chiaro}"
   bottone-filo:
-    backgroundColor: "transparent"
-    textColor: "{colors.lime}"
+    backgroundColor: "{colors.superficie-2}"
+    textColor: "{colors.bianco}"
     rounded: "{rounded.pillola}"
-    padding: "0.7em 1.35em"
+    padding: "0.62em 1.2em"
+    height: "44px"
+  bottone-filo-hover:
+    backgroundColor: "{colors.superficie-3}"
+  scheda:
+    backgroundColor: "{colors.superficie}"
+    rounded: "{rounded.scheda}"
+    padding: "8px"
+  scheda-hover:
+    backgroundColor: "{colors.superficie-2}"
+  campo:
+    backgroundColor: "{colors.superficie-2}"
+    textColor: "{colors.bianco}"
+    rounded: "{rounded.campo}"
     height: "48px"
+  barra-segmenti:
+    backgroundColor: "rgba(17, 11, 32, 0.78)"
+    textColor: "{colors.bianco}"
+    rounded: "{rounded.pillola}"
+    padding: "4px"
+  segmento-attuale:
+    backgroundColor: "{colors.superficie-3}"
+    textColor: "{colors.lime}"
+  etichetta:
+    backgroundColor: "rgba(207, 254, 126, 0.14)"
+    textColor: "{colors.lime}"
+    typography: "{typography.meta}"
+    rounded: "{rounded.pillola}"
+    padding: "0.1rem 0.6rem"
   bottone-stretto:
     typography: "{typography.piccolo}"
     rounded: "{rounded.pillola}"
@@ -110,11 +145,11 @@ components:
   brano:
     backgroundColor: "transparent"
     textColor: "{colors.bianco}"
-    rounded: "0"
-    padding: "0.5rem 0.4rem 0.5rem 0.25rem"
-    height: "4.25rem"
+    rounded: "18px"
+    padding: "0.45rem 0.55rem 0.45rem 0.45rem"
+    height: "4rem"
   brano-attuale:
-    backgroundColor: "rgba(103, 76, 192, 0.26)"
+    backgroundColor: "{colors.superficie-3}"
   lettore-fisso:
     backgroundColor: "rgba(17, 11, 32, 0.94)"
     textColor: "{colors.bianco}"
@@ -145,7 +180,7 @@ components:
 
 Il sito è il prolungamento dei caroselli di TAUH: fondo nero pieno, una linea lime che si percorre, un nodo viola che dice dove sei. Tutto il resto (titoli Cinzel in lime, testi Montserrat, il riquadro viola in corsivo, il sigillo con l'anello) viene da quei caroselli e non da un'estetica nuova. La pagina non è una pila di riquadri uguali ma un cammino a tappe: nella home una sola linea scende lungo tutte le sezioni e il nodo, fermo a metà schermo, accende il cerchio di ogni titolo quando ci passa.
 
-La densità è bassa e verticale: una colonna di 76rem, molto nero tra una tappa e l'altra, separazioni fatte con fili sottili (lime al 16%) invece che con contenitori. La materia visiva è solo quella vera di TAUH: il ritratto con la maschera, le tavole delle pillole, le copertine, le magliette, i sigilli, la partita vera del gioco. La luce è rara e si guadagna: l'unico alone del sito è quello lime del titolo grande dell'apertura.
+La densità è bassa e verticale: una colonna di 76rem, molto nero tra una tappa e l'altra. Dal 20 novembre 2026 i componenti hanno la grammatica di HeroUI: le raccolte (pillole, porte, brani, magliette, social, sostegno, apribili, libri) stanno su schede di viola notte con angoli di 24px e un filo bianco appena visibile, i comandi sono pieni e morbidi invece che a filo lime; i testi delle tappe restano sul nero. La materia visiva è solo quella vera di TAUH: il ritratto con la maschera, le tavole delle pillole, le copertine, le magliette, i sigilli, la partita vera del gioco. La luce è rara e si guadagna: l'unico alone del sito è quello lime del titolo grande dell'apertura.
 
 Il carattere è oscuro ma chiaro, come la voce di TAUH: contrasto alto, un solo colore che chiama l'azione per tappa, niente ornamento che non sia già un segno di TAUH.
 
@@ -153,8 +188,9 @@ Il carattere è oscuro ma chiaro, come la voce di TAUH: contrasto alto, un solo 
 - Fondo nero pieno (#000) su ogni pagina; il colore entra come linea, testo o bottone, mai come atmosfera.
 - La via: linea lime da 2px con il nodo viola (anello viola 3px, punto lime al centro), nella home verticale, nelle pillole orizzontale come avanzamento.
 - Cinzel per titoli e nomi (lime), Montserrat per il testo; sei grandezze in tutto.
-- Bottoni a pillola; un solo bottone lime pieno per sezione, gli altri a filo.
-- Profondità quasi assente: fili, contorni interni e veli scuri sulle foto, non ombre.
+- Bottoni a pillola; un solo bottone lime pieno per sezione, gli altri pieni e morbidi su viola notte.
+- Profondità a strati: tre superfici di viola notte (a riposo, al passaggio, premuta o attuale) chiuse da un filo bianco al 7%; ombre solo sotto ciò che galleggia.
+- Nomi piccoli (schede, brani, porte, social, tavole) in Montserrat 600 bianco; Cinzel lime ai titoli di pagina e di tappa.
 
 ## Colors
 
@@ -167,14 +203,15 @@ Una palette fissa a tre voci su nero, presa dai caroselli: il lime parla, il vio
 ### Secondary
 - **Viola del nodo** (viola): l'anello del nodo e del sigillo-tappa, il riquadro in corsivo (Telegram) e il box delle tavole, il tondo del lettore fermo, il bottone di base. Le sue trasparenze (rgba(103, 76, 192, 0.14 / 0.16 / 0.25 / 0.26)) fanno da evidenziatore: tavola attuale, riga di brano al passaggio e in ascolto, contatore.
 - **Viola acceso** (viola-acceso): il passaggio del mouse sul viola e i numeri del Manifesto.
-- **Viola notte** (viola-notte): fondo delle immagini che stanno caricando, del campo di ricerca e delle schede secondarie (pillole vicine, ebook, tools); è l'unica superficie che non è nero puro.
+- **Viola notte** (viola-notte = superficie): la prima delle tre superfici: schede, liste, fondo delle immagini che caricano. **Superficie 2** (#1a1230): passaggio del mouse, bottoni morbidi, campi, tondi di comando. **Superficie 3** (#251a42): pressione, voce attuale (brano in ascolto, pagina attuale nella barra a segmenti).
 
 ### Neutral
 - **Nero pieno** (nero): il fondo di tutto, il testo sopra il lime, il velo che sale dal basso sul ritratto.
 - **Grigio cenere** (grigio): testi secondari, date, metadati, il «Tocca per aprirli».
 - **Bianco** (bianco): voci di menu, nomi nelle righe, testo dentro il viola.
 - **Testo** (testo, bianco all'88%): il corpo di lettura.
-- **Filo** (filo, lime al 16%): bordi della testata, separatori delle righe (brani, Biblioteca, comandi, Manifesto), la via spenta delle tavole.
+- **Filo** (filo, lime al 16%): la via spenta delle tavole, i separatori dei comandi e del Manifesto.
+- **Bordo** (bordo, bianco al 7%; bordo-forte al 13%): chiude schede, bottoni morbidi, campi e tondi sul nero; separa le righe dei libri.
 
 ### Named Rules
 **La Regola del Fondo Pieno.** Il fondo è nero #000 ovunque. Niente sfumature radiali come atmosfera, niente fondali colorati: le uniche sfumature sono lineari e servono a far leggere il testo sopra una foto (il buio che sale sul ritratto, sulla scena del gioco e della soglia). Il disegno del nodo (punto lime a bordo netto dentro l'anello viola) usa un radial-gradient a stop netti: è il segno dei caroselli, non un'atmosfera, e resta.
@@ -192,8 +229,8 @@ Una palette fissa a tre voci su nero, presa dai caroselli: il lime parla, il vio
 - **Grande** (Cinzel 700, --t-grande, 1.06; 0.98 nell'apertura): il titolo della home, gli h1 delle pagine archivio (Pillole, Biblioteca, Artwork, Tools, Ebook), la scena del gioco e della soglia, il titolo del Manifesto. Solo qui, nell'apertura, il titolo porta l'alone lime.
 - **Titolo** (Cinzel 600, --t-titolo, 1.1): i titoli delle tappe della home (con il cerchio della via), il titolo dell'uscita, il titolo del riquadro Telegram, l'h1 di una pillola (sta nella colonna del testo, quindi misura da titolo).
 - **Sotto** (Cinzel 600, --t-sotto, 1.25–1.3): motto, sottotitoli, h3 (lettore, tavole, apribili, merch, comandi), nomi delle porte e dei social, titoli dei libri e degli artwork. In Montserrat corsivo 500 è il testo del riquadro Telegram; in Montserrat 500 è l'attacco della storia del gioco.
-- **Corpo** (Montserrat 400, --t-corpo, 1.65, paragrafi fino a 62ch): lettura; in Montserrat 600 è il testo dei bottoni; in Cinzel 600 è il nome di una scheda, di un brano, del brano in ascolto, delle pillole vicine, dei ringraziati.
-- **Piccolo** (Montserrat 600/400, --t-piccolo): voci della testata, bottoni stretti, indice della Biblioteca, contatore delle tavole, autore di un libro, testi di servizio grigi.
+- **Corpo** (Montserrat 400, --t-corpo, 1.65, paragrafi fino a 62ch): lettura. In Montserrat 600 bianco è il nome di una porta, di un social, di una tavola nel testo, i titoli piccoli dentro le schede (lettore di Spotify, apribili, in arrivo, magliette, artwork).
+- **Piccolo** (Montserrat 600/400, --t-piccolo): voci della testata, testo dei bottoni, nome di una pillola, di un brano e del brano in ascolto, indice della Biblioteca, contatore delle tavole, autore di un libro, testi di servizio grigi.
 - **Meta** (Montserrat 400/600, --t-meta): numero e durata dei brani, tempo del lettore, numeri delle tavole, edizione di un libro, formato e peso dei file.
 
 ### Named Rules
@@ -203,7 +240,7 @@ Una palette fissa a tre voci su nero, presa dai caroselli: il lime parla, il vio
 
 ## Layout
 
-Una colonna centrale di larghezza --colonna (76rem) con margini --margine; sul telefono tutto è una colonna sola. La testata è fissa in alto (--alt-testata, 4rem) su nero al 78% con sfocatura di 12px; sotto i 69.9375em le voci diventano un menu a tendina.
+Una colonna centrale di larghezza --colonna (76rem) con margini --margine; sul telefono tutto è una colonna sola. La testata è fissa in alto (--alt-testata, 4rem) su nero al 72% con sfocatura di 16px; da 70em le voci stanno in una barra a segmenti, sotto i 69.9375em diventano un menu a tendina che si apre come una scheda dal bottone.
 
 **La home** si apre con il ritratto a tutta altezza (telefono: dietro il testo, con il buio che sale dal basso; da 56.25em: a destra al 56% della larghezza, testo a sinistra largo al massimo 36rem). Sotto comincia la via: una linea verticale lime da 2px a --via-x (bordo sinistro della colonna più --via-scarto), con il testo rientrato di --rientro (1.15rem, 3rem da 56.25em). Ogni sezione è una tappa: titolo con il cerchio sulla linea, contenuto, poi --sezione di vuoto prima della tappa successiva. Le copertine delle pillole scorrono di lato in un binario a scatto; la clip del gioco sta nella colonna, a destra della via come tutto il resto (16:9, angoli 12px con il filo, al massimo 78svh). Niente passa sopra la linea.
 
@@ -215,12 +252,12 @@ Il ritmo verticale è a gradini clamp(): circa 1–1.5rem dentro un blocco, 2.25
 
 ## Elevation & Depth
 
-Il sito è piatto. La profondità viene dal nero e da tre mezzi: i fili (bordi da 1px lime al 16%), i contorni interni (box-shadow inset 1–1.5px in lime o viola, che disegnano bottoni a filo, frecce e schede senza alzarle) e i veli scuri sulle foto. Le ombre vere sono poche e solo scure, per staccare dal fondo ciò che galleggia sopra il contenuto: il lettore fisso e la finestra degli artwork.
+Il sito è quasi piatto. La profondità viene da tre superfici di viola notte una sopra l'altra (a riposo, al passaggio, premuta), chiuse sul nero da un filo bianco interno, e dai veli scuri sulle foto. Le ombre vere sono poche e solo scure, per staccare dal fondo ciò che galleggia sopra il contenuto: il lettore fisso, il menu a tendina e la finestra degli artwork.
 
 ### Shadow Vocabulary
-- **Contorno a filo** (`box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55)`; al passaggio `var(--lime)`): bottone a filo, frecce, tondi di comando, voci dell'indice (0.4).
-- **Contorno viola** (`box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.5)`): schede su viola notte (pillole vicine, ebook, tools).
-- **Galleggiante** (`box-shadow: inset 0 0 0 1px rgba(103, 76, 192, 0.75), 0 12px 32px rgba(0, 0, 0, 0.65)`): solo il lettore fisso in basso.
+- **Filo bianco** (`box-shadow: inset 0 0 0 1px var(--bordo)`; al passaggio `var(--bordo-forte)`): schede, bottoni morbidi, frecce e tondi, campi, voci dell'indice.
+- **Galleggiante** (`box-shadow: inset 0 0 0 1px var(--bordo-forte), 0 12px 32px rgba(0, 0, 0, 0.65)`): il lettore fisso in basso; il menu a tendina ha la stessa ricetta con 0 18px 48px.
+- **Vetro scuro** (viola notte al 60% con `backdrop-filter: blur(18px) saturate(140%)`): solo la scheda dell'uscita, perché sul telefono sta sopra il ritratto e deve restare leggibile; con «riduci trasparenza» è piena.
 - **Alone del titolo** (`text-shadow: 0 0 28px rgba(207, 254, 126, 0.28), 0 2px 14px rgba(0, 0, 0, 0.9)`): solo il titolo grande dell'apertura.
 
 ### Named Rules
@@ -228,17 +265,18 @@ Il sito è piatto. La profondità viene dal nero e da tre mezzi: i fili (bordi d
 
 ## Shapes
 
-Due famiglie di forme: la pillola e il tondo per tutto ciò che si tocca (bottoni, campi, indice, contatore, lettore fermo, frecce, nodo, tappe), angoli morbidi per ciò che si guarda. Le immagini piccole hanno 6–8px (miniature dei brani, copertina dell'uscita), le tavole e le copertine delle schede 10–12px, il box delle tavole e le schede secondarie 14px, i contenitori grandi 18px, il riquadro Telegram e il lettore aperto 20px. Il sigillo e i sigilli dei social sono cerchi. Le righe (brani, libri, comandi, Manifesto) non hanno angoli: sono separate da un filo. Le proporzioni delle immagini sono fisse: 4:5 per tavole e copertine delle pillole, 1:1 per copertine e artwork, 16:9 per il gioco.
+Due famiglie di forme: la pillola e il tondo per ciò che si tocca (bottoni, indice, contatore, lettore fermo, frecce, nodo, tappe, etichette), angoli morbidi per ciò che contiene o si guarda. Le schede hanno 24px (--r-scheda) con 8px di margine interno, e ciò che sta dentro (copertine, tavole, foto delle magliette, artwork) 16px (--r-dentro), così le curve sono concentriche; le righe dei brani 18px, i campi 14px (--r-campo), la copertina dell'uscita e le miniature dei brani 12px, il riquadro Telegram 24px, il lettore aperto 20px. Il sigillo e i sigilli dei social sono cerchi. Le righe (brani, libri, comandi, Manifesto) non hanno angoli: sono separate da un filo. Le proporzioni delle immagini sono fisse: 4:5 per tavole e copertine delle pillole, 1:1 per copertine e artwork, 16:9 per il gioco.
 
 ## Components
 
 ### Bottoni
 Pillole piene e decise, sempre con un'icona SVG a sinistra quando l'azione è suonare, scaricare o uscire dal sito.
-- **Forma:** pillola (999px), altezza minima 48px, Montserrat 600 --t-corpo, spazio interno 0.7em 1.35em.
+- **Forma:** pillola (999px), altezza minima 44px, Montserrat 600 --t-piccolo, spazio interno 0.62em 1.2em.
 - **Base (viola):** viola su bianco; al passaggio viola acceso.
 - **Primario (lime):** lime con testo nero; al passaggio lime chiaro. Uno solo per sezione.
-- **Filo:** trasparente, testo lime, contorno interno lime al 55%; al passaggio contorno pieno e testo lime chiaro.
+- **Morbido** (nel codice resta la classe `filo`): pieno di superficie 2 con il filo bianco, testo bianco, icona lime; al passaggio superficie 3 e filo al 13%.
 - **Stretto:** variante di uno dei tre per le righe e le barre (44px, --t-piccolo, 0.5em 1.05em).
+- **Tondi di comando** (frecce, pausa della clip, play dei brani): 44px (40px nei brani), pieni di superficie 2 con il filo bianco.
 - **Focus:** contorno lime 3px staccato di 3px, uguale in tutto il sito.
 
 ### La via, il nodo e le tappe
@@ -249,19 +287,19 @@ La firma del sito.
 - **Nelle pillole:** la stessa via orizzontale tra le frecce del visore, con il nodo che scorre all'avanzare delle tavole; nel testo, una via verticale sottile (filo) unisce i nodi delle tavole, quello della tavola visibile è acceso.
 
 ### L'uscita nell'apertura
-Copertina 1:1 (5.25rem, 7rem sul computer, angoli 8px), titolo Cinzel --t-titolo, stato in bianco 600 e data in grigio, una riga di spiegazione grigia e un solo bottone lime pieno. Separata dal motto da un filo lime al 30%. Sul telefono è l'unica azione della prima schermata; sugli schermi bassi perde la spiegazione.
+Una scheda di vetro scuro (angoli 24px, 0.85rem di margine): copertina 1:1 (5.5rem, 7rem sul computer, angoli 12px, in alto), titolo Cinzel --t-titolo, lo stato («Nuovo singolo», «Ultima uscita») come etichetta lime su lime al 14%, la data in grigio, una riga di spiegazione grigia e un solo bottone lime pieno. Sul telefono è l'unica azione della prima schermata; sugli schermi bassi perde la spiegazione.
 
 ### Righe dei brani
-Una scaletta: righe alte almeno 4.25rem separate da un filo, miniatura 52px (angoli 6px), titolo Cinzel lime --t-corpo, nota grigia --t-meta in cifre tabellari, tondo da 40px a destra con contorno lime. Al passaggio la riga si colora di viola al 16% e il tondo si riempie di lime; quella in ascolto resta viola al 26%. I brani chiusi hanno la miniatura al 60% e il lucchetto, e non reagiscono al passaggio se non portano da nessuna parte. Se ne vedono sei; gli altri si aprono con un bottone a filo.
+Una scaletta su una scheda (6px di margine): righe alte almeno 4rem con angoli 18px e 2px di spazio tra l'una e l'altra, miniatura 48px (angoli 12px), titolo Montserrat 600 bianco --t-piccolo, nota grigia --t-meta in cifre tabellari, tondo da 40px a destra pieno di superficie 2 con il triangolo lime. Al passaggio la riga prende superficie 2 e il tondo si riempie di lime; quella in ascolto resta su superficie 3. I brani chiusi hanno la miniatura al 60% e il lucchetto, e non reagiscono al passaggio se non portano da nessuna parte. Se ne vedono sei; gli altri si aprono con un bottone a filo.
 
 ### Le porte
-Ingressi alle pagine da scaricare: immagine (1:1 sul telefono accanto al testo, 4:3 sopra il testo da 48em) con angoli 10px e filo, nome Cinzel lime --t-sotto, una riga grigia. Al passaggio l'immagine prende un contorno lime da 2px.
+Ingressi alle pagine da scaricare, su schede: immagine (1:1 sul telefono accanto al testo, 4:3 sopra il testo da 48em) con angoli 16px, nome Montserrat 600 bianco --t-corpo, una riga grigia. Al passaggio la scheda prende superficie 2.
 
 ### Il riquadro viola in corsivo
 Il box dei caroselli, riservato al canale Telegram: viola pieno, angoli 20px, spazio interno clamp(1.5rem, 5vw, 3rem), titolo Cinzel bianco --t-titolo, testo Montserrat corsivo 500 --t-sotto, un bottone lime pieno. Dentro le tavole lo stesso box vive in piccolo (angoli 14px, corsivo 500), accanto alla domanda su lime con testo nero.
 
 ### Apribile
-Ringraziamenti e Manifesto chiusi tra due fili: titolo a sinistra, a destra «Tocca per aprirli» in grigio --t-piccolo con il più lime che ruota di 45° all'apertura; il contenuto entra con una dissolvenza di 0.4s.
+Ringraziamenti e Manifesto chiusi su una scheda: titolo a sinistra (Ringraziamenti in Montserrat 600 bianco, Manifesto in Cinzel lime), a destra «Tocca per aprirli» in grigio --t-piccolo e il più lime in un tondo di superficie 2, che ruota di 45° all'apertura; sul telefono la scritta resta solo per i lettori di schermo. Il contenuto si apre misurato da app.js.
 
 ### Il sigillo
 Il logo di TAUH dentro due cerchi lime con l'anello «NON SERVIAM · LUX IN TENEBRIS · LUCIFER» in Cinzel 700. Chiude la via nel piede (clamp(9.5rem, 34vw, 12.5rem)); sul computer apre anche l'apertura. L'anello ruota solo mentre si scorre la pagina.
@@ -273,10 +311,10 @@ In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94%
 Le tavole 4:5 in una pista a scatto con angoli 12px su viola notte; sotto: freccia, via con nodo, contatore a pillola (viola al 25%, cifre lime tabellari), freccia; poi tre bottoni a filo da 44px (Schermo intero, Condividi, Su Instagram). Sul computer resta fisso accanto al testo.
 
 ### Indice e righe della Biblioteca
-L'indice è una fila di pillole a filo (lime al 40%, 44px, --t-piccolo bianco) con il numero delle letture in grigio. Ogni scaffale si apre con un filo lime pieno da 2px; ogni libro è una riga: titolo Montserrat 600 --t-sotto bianco, autore lime --t-piccolo, edizione grigia --t-meta, descrizione, poi i bottoni stretti.
+L'indice è una fila di pillole piene (superficie 2 con il filo bianco, 44px, --t-piccolo bianco) con il numero delle letture in grigio. Ogni scaffale ha il suo titolo e la sua scheda; ogni libro è una riga separata dalla successiva da un filo bianco al 7%: titolo Montserrat 600 --t-sotto bianco, autore lime --t-piccolo, edizione grigia --t-meta, descrizione, poi i bottoni stretti.
 
 ### Navigazione
-Testata: logo a sinistra, voci Montserrat 600 --t-piccolo in bianco, lime al passaggio; la pagina attuale è lime con un punto da 6px sotto. Sotto i 69.9375em un bottone «Menu» a pillola con contorno apre l'elenco a tendina su nero al 97%, voci separate da fili.
+Testata: logo a sinistra; da 70em le voci (Montserrat 600 --t-piccolo, bianco all'80%) stanno in una barra a segmenti: una pillola di viola notte al 78% con il filo bianco e 4px di margine, ogni voce è un segmento a pillola che al passaggio prende superficie 2; la pagina attuale è un segmento di superficie 3 con il testo lime. Sotto i 69.9375em un bottone «Menu» pieno (superficie 2) apre una scheda a tendina larga al massimo 21rem, allineata a destra, con le voci a righe arrotondate (14px) e la pagina attuale su superficie 3.
 
 ### Movimento
 - **Due curve sole.** La molla (`--molla` con `--molla-durata`: smorzamento 1, risposta 0,35 s, il 97% del percorso in 0,3 s) per ciò che si sposta o cambia forma: il menu che si apre, il lettore che si allarga, il nodo del visore, l'immagine in grande sotto il dito (lì è una molla vera, in app.js). La frenata (`--frenata`, cubic-bezier(0.23, 1, 0.32, 1)) per ciò che entra, esce o risponde a un tocco, sempre sotto i 0,3 s. `ease` solo per colori e opacità, `linear` solo per ciò che segue lo scorrimento.
@@ -298,7 +336,8 @@ Testata: logo a sinistra, voci Montserrat 600 --t-piccolo in bianco, lime al pas
 - **Do** metti un solo bottone lime pieno per sezione; le altre azioni a filo o viola.
 - **Do** scegli la grandezza del testo tra le sei variabili (--t-meta … --t-grande) in base al ruolo.
 - **Do** usa la via (linea lime 2px, nodo viola e lime) per dire dove si è: tappe, tavole, avanzamento del brano.
-- **Do** separa le righe con il filo (lime al 16%) invece di chiuderle in riquadri.
+- **Do** metti le raccolte (pillole, brani, porte, magliette, social, libri, sostegno, apribili) su schede di viola notte con il filo bianco; i testi delle tappe restano sul nero.
+- **Do** usa i tre gradini di superficie per lo stato: a riposo superficie, al passaggio superficie 2, premuto o attuale superficie 3.
 - **Do** usa solo materiale vero di TAUH: ritratto, tavole, copertine, magliette, sigilli, partita del gioco.
 - **Do** lascia i testi di TAUH come li ha scritti: si correggono solo refusi e punteggiatura.
 - **Do** lega il movimento allo scorrimento o a un gesto, e fermalo con «riduci movimento».
@@ -312,4 +351,5 @@ Testata: logo a sinistra, voci Montserrat 600 --t-piccolo in bianco, lime al pas
 - **Don't** usare immagini generate, foto di repertorio o loghi dei social: al loro posto i sigilli di TAUH.
 - **Don't** riformulare i testi di TAUH.
 - **Don't** usare il riquadro viola in corsivo per altro che il Telegram (e, in piccolo, per il box delle tavole).
-- **Don't** tornare alla pila di riquadri arrotondati tutti uguali (titolo lime, paragrafo grigio, bottone lime).
+- **Don't** tornare alla pila di riquadri arrotondati tutti uguali (titolo lime, paragrafo grigio, bottone lime): le schede servono alle raccolte, non a ogni tappa.
+- **Don't** disegnare i comandi con un contorno lime: il lime resta alla via, ai titoli, al bottone pieno, alle etichette e al fuoco.

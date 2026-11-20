@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T12:00:00Z",
+  "generatedAt": "2026-11-21T00:00:00Z",
   "title": "Design System: La via delle ombre",
   "extensions": {
     "colorMeta": {
@@ -13,7 +13,11 @@
       "grigio": { "role": "neutral", "displayName": "Grigio cenere", "canonical": "oklch(76.7% 0 0)", "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c4c4c4", "#eeeeee"] },
       "bianco": { "role": "neutral", "displayName": "Bianco", "canonical": "oklch(100% 0 0)", "tonalRamp": ["#0b0b0b", "#242424", "#404040", "#5d5d5d", "#7d7d7d", "#9e9e9e", "#c4c4c4", "#eeeeee"] },
       "testo": { "role": "neutral", "displayName": "Testo (bianco all'88%)", "canonical": "rgba(255, 255, 255, 0.88)" },
-      "filo": { "role": "neutral", "displayName": "Filo (lime al 16%)", "canonical": "rgba(207, 254, 126, 0.16)" }
+      "filo": { "role": "neutral", "displayName": "Filo (lime al 16%)", "canonical": "rgba(207, 254, 126, 0.16)" },
+      "superficie": { "role": "neutral", "displayName": "Superficie (viola notte)", "canonical": "#110b20" },
+      "superficie-2": { "role": "neutral", "displayName": "Superficie 2 (passaggio, bottoni morbidi, campi)", "canonical": "#1a1230" },
+      "superficie-3": { "role": "neutral", "displayName": "Superficie 3 (premuto, voce attuale)", "canonical": "#251a42" },
+      "bordo": { "role": "neutral", "displayName": "Bordo (bianco al 7%, 13% al passaggio)", "canonical": "rgba(255, 255, 255, 0.07)" }
     },
     "typographyMeta": {
       "grande": { "displayName": "Grande (--t-grande)", "purpose": "Titolo della home, h1 delle pagine archivio, scena del gioco e della soglia, titolo del Manifesto. Alone lime solo nell'apertura." },
@@ -24,9 +28,9 @@
       "meta": { "displayName": "Meta (--t-meta)", "purpose": "Durate, tempo del lettore, numeri delle tavole, edizioni, formato e peso dei file." }
     },
     "shadows": [
-      { "name": "contorno-filo", "value": "inset 0 0 0 1.5px rgba(207, 254, 126, 0.55)", "purpose": "Bottone a filo, frecce, tondi di comando; al passaggio inset 0 0 0 1.5px var(--lime)." },
-      { "name": "contorno-viola", "value": "inset 0 0 0 1px rgba(103, 76, 192, 0.5)", "purpose": "Schede su viola notte: pillole vicine, ebook, tools." },
-      { "name": "galleggiante", "value": "inset 0 0 0 1px rgba(103, 76, 192, 0.75), 0 12px 32px rgba(0, 0, 0, 0.65)", "purpose": "Solo il lettore fisso in basso." },
+      { "name": "filo-bianco", "value": "inset 0 0 0 1px rgba(255, 255, 255, 0.07)", "purpose": "Schede, bottoni morbidi, frecce e tondi, campi, voci dell'indice; al passaggio inset 0 0 0 1px rgba(255, 255, 255, 0.13)." },
+      { "name": "galleggiante", "value": "inset 0 0 0 1px rgba(255, 255, 255, 0.13), 0 12px 32px rgba(0, 0, 0, 0.65)", "purpose": "Il lettore fisso in basso; il menu a tendina usa 0 18px 48px rgba(0, 0, 0, 0.6)." },
+      { "name": "vetro-scuro", "value": "background: rgba(17, 11, 32, 0.6); backdrop-filter: blur(18px) saturate(140%)", "purpose": "Solo la scheda dell'uscita sopra il ritratto; piena con «riduci trasparenza»." },
       { "name": "alone-titolo", "value": "text-shadow: 0 0 28px rgba(207, 254, 126, 0.28), 0 2px 14px rgba(0, 0, 0, 0.9)", "purpose": "Solo il titolo grande dell'apertura; l'unico alone del sito." },
       { "name": "focus", "value": "outline: 3px solid var(--lime); outline-offset: 3px", "purpose": "Focus da tastiera, uguale in tutto il sito." }
     ],
@@ -63,12 +67,12 @@
       "css": ".ds-bottone { display: inline-flex; align-items: center; justify-content: center; gap: 0.55em; min-height: 48px; padding: 0.7em 1.35em; border: 0; border-radius: 999px; background: var(--viola, #674cc0); color: var(--bianco, #fff); font: 600 var(--t-corpo, 1.0625rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; cursor: pointer; } .ds-bottone.ds-primario { background: var(--lime, #cffe7e); color: var(--nero, #000); } .ds-bottone.ds-primario:hover { background: var(--lime-chiaro, #e0ffab); } .ds-bottone:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
     },
     {
-      "name": "Bottone a filo",
+      "name": "Bottone morbido",
       "kind": "button",
       "refersTo": "bottone-filo",
-      "description": "Le azioni secondarie: trasparente, testo lime, contorno interno.",
-      "html": "<a class=\"ds-bottone-filo\" href=\"#\">Sfoglia le pillole</a>",
-      "css": ".ds-bottone-filo { display: inline-flex; align-items: center; gap: 0.55em; min-height: 48px; padding: 0.7em 1.35em; border-radius: 999px; background: transparent; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55); font: 600 var(--t-corpo, 1.0625rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-filo:hover { box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); color: var(--lime-chiaro, #e0ffab); } .ds-bottone-filo:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+      "description": "Le azioni secondarie: pillola piena di superficie 2 con il filo bianco, testo bianco e icona lime (nel codice la classe resta «filo»).",
+      "html": "<a class=\"ds-bottone-morbido\" href=\"#\">Sfoglia le pillole</a>",
+      "css": ".ds-bottone-morbido { display: inline-flex; align-items: center; gap: 0.55em; min-height: 44px; padding: 0.62em 1.2em; border-radius: 999px; background: #1a1230; color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07); font: 600 var(--t-piccolo, 0.9375rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-morbido:hover { background: #251a42; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.13); } .ds-bottone-morbido:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
     },
     {
       "name": "Bottone stretto",
@@ -76,7 +80,7 @@
       "refersTo": "bottone-stretto",
       "description": "Variante da 44px per righe e barre (Biblioteca, artwork, visore).",
       "html": "<a class=\"ds-bottone-stretto\" href=\"#\">Dove trovarlo</a>",
-      "css": ".ds-bottone-stretto { display: inline-flex; align-items: center; gap: 0.55em; min-height: 44px; padding: 0.5em 1.05em; border-radius: 999px; background: transparent; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55); font: 600 var(--t-piccolo, 0.9375rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-stretto:hover { box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); } .ds-bottone-stretto:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
+      "css": ".ds-bottone-stretto { display: inline-flex; align-items: center; gap: 0.55em; min-height: 44px; padding: 0.5em 1.05em; border-radius: 999px; background: #1a1230; color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07); font: 600 var(--t-piccolo, 0.9375rem)/1.2 var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-bottone-stretto:hover { background: #251a42; } .ds-bottone-stretto:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
     },
     {
       "name": "La via con il nodo",
@@ -98,7 +102,7 @@
       "name": "Riga di brano",
       "kind": "custom",
       "refersTo": "brano",
-      "description": "Una riga della scaletta: miniatura, titolo Cinzel lime, nota grigia, tondo di ascolto.",
+      "description": "Una riga della scaletta, dentro una scheda: miniatura 48px, titolo Montserrat 600 bianco, nota grigia, tondo pieno con il triangolo lime; in ascolto superficie 3.",
       "html": "<button class=\"ds-brano\" type=\"button\"><span class=\"ds-brano-copertina\"></span><span class=\"ds-brano-testo\"><span class=\"ds-brano-titolo\">Titolo del brano</span><span class=\"ds-brano-nota\">3:12</span></span><span class=\"ds-brano-icona\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M4 2.5v11l9-5.5z\" fill=\"currentColor\"/></svg></span></button>",
       "css": ".ds-brano { display: flex; align-items: center; gap: 0.9rem; width: 100%; min-height: 4.25rem; padding: 0.5rem 0.4rem 0.5rem 0.25rem; border: 0; border-block: 1px solid var(--filo, rgba(207,254,126,0.16)); background: transparent; color: var(--bianco, #fff); text-align: left; cursor: pointer; } .ds-brano:hover { background: rgba(103, 76, 192, 0.16); } .ds-brano-copertina { flex-shrink: 0; width: 52px; height: 52px; border-radius: 6px; background: var(--viola-notte, #110b20); } .ds-brano-testo { display: grid; flex: 1; } .ds-brano-titolo { font: 600 var(--t-corpo, 1.0625rem)/1.25 var(--titoli, Cinzel, serif); color: var(--lime, #cffe7e); } .ds-brano-nota { color: var(--grigio, #b3b3b3); font-size: var(--t-meta, 0.8125rem); font-variant-numeric: tabular-nums; } .ds-brano-icona { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45); } .ds-brano:hover .ds-brano-icona { background: var(--lime, #cffe7e); color: var(--nero, #000); box-shadow: none; } .ds-brano:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; }"
     },
@@ -106,9 +110,9 @@
       "name": "Voce dell'indice",
       "kind": "chip",
       "refersTo": "indice-voce",
-      "description": "Pillola a filo dell'indice della Biblioteca, con il numero delle letture in grigio.",
+      "description": "Pillola piena dell'indice della Biblioteca (superficie 2 con il filo bianco), con il numero delle letture in grigio.",
       "html": "<a class=\"ds-indice\" href=\"#\">Filosofia<span class=\"ds-indice-n\">7</span></a>",
-      "css": ".ds-indice { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.4rem 0.95rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.4); color: var(--bianco, #fff); font: 600 var(--t-piccolo, 0.9375rem) var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-indice:hover { color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); } .ds-indice:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; } .ds-indice-n { color: var(--grigio, #b3b3b3); font-weight: 500; font-variant-numeric: tabular-nums; }"
+      "css": ".ds-indice { display: inline-flex; align-items: center; gap: 0.5rem; min-height: 44px; padding: 0.4rem 0.95rem; border-radius: 999px; background: #1a1230; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07); color: var(--bianco, #fff); font: 600 var(--t-piccolo, 0.9375rem) var(--corpo, Montserrat, sans-serif); text-decoration: none; } .ds-indice:hover { color: var(--lime, #cffe7e); box-shadow: inset 0 0 0 1.5px var(--lime, #cffe7e); } .ds-indice:focus-visible { outline: 3px solid var(--lime, #cffe7e); outline-offset: 3px; } .ds-indice-n { color: var(--grigio, #b3b3b3); font-weight: 500; font-variant-numeric: tabular-nums; }"
     },
     {
       "name": "Lettore fisso",
@@ -126,8 +130,9 @@
       "Fondo nero pieno (#000) su ogni pagina; il colore entra come linea, testo o bottone, mai come atmosfera.",
       "La via: linea lime da 2px con il nodo viola (anello viola 3px, punto lime al centro), nella home verticale, nelle pillole orizzontale come avanzamento.",
       "Cinzel per titoli e nomi (lime), Montserrat per il testo; sei grandezze in tutto.",
-      "Bottoni a pillola; un solo bottone lime pieno per sezione, gli altri a filo.",
-      "Profondità quasi assente: fili, contorni interni e veli scuri sulle foto, non ombre."
+      "Bottoni a pillola; un solo bottone lime pieno per sezione, gli altri pieni e morbidi su viola notte.",
+      "Profondità a strati: tre superfici di viola notte (a riposo, al passaggio, premuta o attuale) chiuse da un filo bianco al 7%; ombre solo sotto ciò che galleggia.",
+      "Nomi piccoli (schede, brani, porte, social, tavole) in Montserrat 600 bianco; Cinzel lime ai titoli di pagina e di tappa."
     ],
     "rules": [
       { "name": "La Regola del Fondo Pieno", "body": "Il fondo è nero #000 ovunque. Niente sfumature radiali come atmosfera, niente fondali colorati: le uniche sfumature sono lineari e servono a far leggere il testo sopra una foto (il buio che sale sul ritratto, sulla scena del gioco e della soglia). Il disegno del nodo (punto lime a bordo netto dentro l'anello viola) usa un radial-gradient a stop netti: è il segno dei caroselli, non un'atmosfera, e resta.", "section": "colors" },
@@ -141,7 +146,8 @@
       "Do metti un solo bottone lime pieno per sezione; le altre azioni a filo o viola.",
       "Do scegli la grandezza del testo tra le sei variabili (--t-meta … --t-grande) in base al ruolo.",
       "Do usa la via (linea lime 2px, nodo viola e lime) per dire dove si è: tappe, tavole, avanzamento del brano.",
-      "Do separa le righe con il filo (lime al 16%) invece di chiuderle in riquadri.",
+      "Do metti le raccolte (pillole, brani, porte, magliette, social, libri, sostegno, apribili) su schede di viola notte con il filo bianco; i testi delle tappe restano sul nero.",
+      "Do usa i tre gradini di superficie per lo stato: a riposo superficie, al passaggio superficie 2, premuto o attuale superficie 3.",
       "Do usa solo materiale vero di TAUH: ritratto, tavole, copertine, magliette, sigilli, partita del gioco.",
       "Do lascia i testi di TAUH come li ha scritti: si correggono solo refusi e punteggiatura.",
       "Do lega il movimento allo scorrimento o a un gesto, e fermalo con «riduci movimento»."
@@ -155,7 +161,8 @@
       "Don't usare immagini generate, foto di repertorio o loghi dei social: al loro posto i sigilli di TAUH.",
       "Don't riformulare i testi di TAUH.",
       "Don't usare il riquadro viola in corsivo per altro che il Telegram (e, in piccolo, per il box delle tavole).",
-      "Don't tornare alla pila di riquadri arrotondati tutti uguali (titolo lime, paragrafo grigio, bottone lime)."
+      "Don't tornare alla pila di riquadri arrotondati tutti uguali (titolo lime, paragrafo grigio, bottone lime): le schede servono alle raccolte, non a ogni tappa.",
+      "Don't disegnare i comandi con un contorno lime: il lime resta alla via, ai titoli, al bottone pieno, alle etichette e al fuoco."
     ]
   }
 }

@@ -4090,6 +4090,674 @@ html:has(dialog[open]) {
   overflow: hidden;
 }
 
+/* ------------------------------------------------------------ superfici piene (novembre 2026) */
+/* Il passo dopo il giro «Apple»: i componenti prendono la grammatica di HeroUI. Dove c'era un
+   contorno lime su nero (bottoni a filo, frecce, tondi, campi, indice) ora c'è una superficie
+   piena di viola notte, che si schiarisce al passaggio e alla pressione; le raccolte (pillole,
+   porte, brani, social, sostegno, apribili) stanno su schede con angoli morbidi e un filo bianco
+   appena visibile; i nomi piccoli sono in Montserrat bianco. Restano come sono la via e il nodo,
+   i titoli grandi in Cinzel lime, il bottone lime pieno (uno per tappa) e il riquadro viola del
+   Telegram. */
+
+:root {
+  /* tre gradini di superficie, tutti dal viola notte: a riposo, al passaggio, premuto o attuale */
+  --superficie: #110b20;
+  --superficie-2: #1a1230;
+  --superficie-3: #251a42;
+  /* il filo bianco che chiude le superfici sul nero, e la sua versione al passaggio */
+  --bordo: rgba(255, 255, 255, 0.07);
+  --bordo-forte: rgba(255, 255, 255, 0.13);
+  --separatore: rgba(255, 255, 255, 0.07);
+  /* angoli: scheda, ciò che sta dentro una scheda con 8px di margine, campi */
+  --r-scheda: 24px;
+  --r-dentro: 16px;
+  --r-campo: 14px;
+}
+
+/* --- nomi piccoli: Montserrat bianco. Cinzel resta ai titoli di pagina e di tappa. */
+.scheda-titolo,
+.vicino strong,
+.brano-titolo,
+.ascolto-titolo,
+.porta-testo strong,
+.prossima-titolo,
+.social-nome,
+.sblocco-titolo,
+.lightbox-titolo,
+.grazie-chi,
+.grazie-sostenitori h4,
+.lettore h3,
+.prossime-blocco h3,
+.apribile summary h3,
+.maglia h3,
+.opera-titolo,
+.video-info h3,
+.testo-tavola h3,
+.testo-tavole > h2 {
+  font-family: var(--corpo);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: var(--bianco);
+}
+
+/* --- testata: sul computer le voci stanno in una barra a segmenti; sul telefono il menu è una
+   scheda che si apre dal bottone */
+@media (min-width: 70em) {
+  .testata nav {
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: rgba(17, 11, 32, 0.78);
+    box-shadow: inset 0 0 0 1px var(--bordo);
+  }
+
+  .testata nav a {
+    padding: 0.5rem 0.62rem;
+    border-radius: 999px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.2;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+
+  .testata nav a[aria-current="page"] {
+    background: var(--superficie-3);
+    color: var(--lime);
+  }
+
+  .testata nav a[aria-current="page"]::after {
+    content: none;
+  }
+}
+
+@media (min-width: 70em) and (hover: hover) {
+  .testata nav a:hover {
+    background: var(--superficie-2);
+    color: var(--bianco);
+  }
+
+  .testata nav a[aria-current="page"]:hover {
+    background: var(--superficie-3);
+    color: var(--lime-chiaro);
+  }
+}
+
+@media (max-width: 69.9375em) {
+  .js .testata-menu {
+    background: var(--superficie-2);
+    box-shadow: inset 0 0 0 1px var(--bordo);
+  }
+
+  .js .testata.aperta .testata-menu {
+    box-shadow: none;
+  }
+
+  .js .testata-nav {
+    top: calc(100% + 0.4rem);
+    left: auto;
+    right: var(--margine);
+    width: min(21rem, calc(100vw - 2 * var(--margine)));
+    max-height: calc(100dvh - var(--alt-testata) - 1.25rem);
+    padding: 0.4rem;
+    gap: 2px;
+    border: 0;
+    border-radius: var(--r-scheda);
+    background: rgba(17, 11, 32, 0.97);
+    box-shadow: inset 0 0 0 1px var(--bordo-forte), 0 18px 48px rgba(0, 0, 0, 0.6);
+    transform-origin: calc(100% - 3rem) 0;
+  }
+
+  .js .testata-nav a {
+    padding: 0.8rem 0.95rem;
+    border-bottom: 0;
+    border-radius: 14px;
+  }
+
+  .js .testata-nav a[aria-current="page"] {
+    background: var(--superficie-3);
+  }
+
+  .js .testata-nav a[aria-current="page"]::after {
+    right: 1rem;
+  }
+}
+
+@media (max-width: 69.9375em) and (hover: hover) {
+  .js .testata-nav a:hover {
+    background: var(--superficie-2);
+    color: var(--bianco);
+  }
+}
+
+/* --- bottoni: più compatti; quello «a filo» diventa una pillola piena e morbida */
+.bottone {
+  min-height: 44px;
+  padding: 0.62em 1.2em;
+  font-size: var(--t-piccolo);
+}
+
+.bottone.filo {
+  background: var(--superficie-2);
+  color: var(--bianco);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.bottone.filo svg {
+  color: var(--lime);
+}
+
+@media (hover: hover) {
+  .bottone.filo:hover {
+    background: var(--superficie-3);
+    color: var(--bianco);
+    box-shadow: inset 0 0 0 1px var(--bordo-forte);
+  }
+}
+
+/* --- tondi di comando: pieni, l'icona chiara */
+.freccia {
+  width: 44px;
+  height: 44px;
+  background: var(--superficie-2);
+  color: var(--bianco);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+@media (hover: hover) {
+  .freccia:hover {
+    background: var(--superficie-3);
+    box-shadow: inset 0 0 0 1px var(--bordo-forte);
+  }
+}
+
+.clip-pausa {
+  background: rgba(17, 11, 32, 0.72);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: inset 0 0 0 1px var(--bordo-forte);
+}
+
+@media (hover: hover) {
+  .clip-pausa:hover {
+    background: color-mix(in srgb, var(--superficie-3) 88%, transparent);
+    box-shadow: inset 0 0 0 1px var(--bordo-forte);
+  }
+}
+
+/* --- l'uscita nell'apertura: una scheda di vetro scuro sopra il ritratto, con l'etichetta */
+.uscita {
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  padding: 0.85rem;
+  border-top: 0;
+  border-radius: var(--r-scheda);
+  background: rgba(17, 11, 32, 0.6);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: inset 0 0 0 1px var(--bordo-forte);
+}
+
+.uscita-copertina,
+.uscita-disco {
+  align-self: start;
+  border-radius: 12px;
+}
+
+.uscita-data {
+  gap: 0.3rem;
+}
+
+.uscita-stato {
+  justify-self: start;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(207, 254, 126, 0.14);
+  color: var(--lime);
+  font-size: var(--t-meta);
+  line-height: 1.5;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .uscita {
+    background: var(--superficie);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* --- schede delle pillole (home, archivio) e pillole vicine */
+.scheda {
+  padding: 8px 8px 0.95rem;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+  transition: background-color 0.15s ease;
+}
+
+.scheda img {
+  border-radius: var(--r-dentro);
+  outline: 0;
+}
+
+@media (hover: hover) {
+  .scheda:hover {
+    background: var(--superficie-2);
+  }
+
+  .scheda:hover img {
+    outline: 0;
+  }
+
+  .scheda:hover .scheda-titolo {
+    color: var(--bianco);
+  }
+}
+
+.scheda:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
+}
+
+.scheda:focus-visible img {
+  outline: 0;
+}
+
+.scheda-titolo,
+.scheda-meta {
+  padding-inline: 0.45rem;
+}
+
+.scheda-titolo {
+  margin-top: 0.8rem;
+  font-size: var(--t-piccolo);
+  line-height: 1.3;
+}
+
+.vicino {
+  padding: 8px 1rem 8px 8px;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+  transition: background-color 0.15s ease;
+}
+
+.vicino img {
+  border-radius: var(--r-dentro);
+}
+
+@media (hover: hover) {
+  .vicino:hover {
+    background: var(--superficie-2);
+    box-shadow: inset 0 0 0 1px var(--bordo);
+  }
+}
+
+/* --- porte (Artwork, Biblioteca, Tools), magliette e artwork: schede con l'immagine dentro */
+.porta,
+.maglia,
+.opera {
+  padding: 8px;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.porta {
+  transition: background-color 0.15s ease;
+}
+
+.porta img,
+.maglia-foto img,
+.opera-apri {
+  border-radius: var(--r-dentro);
+  outline: 0;
+}
+
+@media (hover: hover) {
+  .porta:hover {
+    background: var(--superficie-2);
+  }
+
+  .porta:hover img,
+  .opera-apri:hover {
+    outline: 0;
+  }
+}
+
+.porta-testo strong {
+  font-size: var(--t-corpo);
+  line-height: 1.25;
+}
+
+.maglia {
+  padding-bottom: 1rem;
+}
+
+.maglia h3,
+.maglia p,
+.opera-testo {
+  padding-inline: 0.45rem;
+}
+
+.maglia h3 {
+  font-size: var(--t-corpo);
+}
+
+.opera {
+  padding-bottom: 1rem;
+}
+
+.opera-titolo {
+  font-size: var(--t-corpo);
+}
+
+/* --- musica: la scaletta sta su una scheda, le righe si accendono piene */
+.brani {
+  gap: 2px;
+  padding: 6px;
+  border-top: 0;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.brani > li {
+  border-bottom: 0;
+}
+
+.brano {
+  min-height: 4rem;
+  padding: 0.45rem 0.55rem 0.45rem 0.45rem;
+  border-radius: 18px;
+}
+
+@media (hover: hover) {
+  .brano:hover {
+    background: var(--superficie-2);
+  }
+}
+
+.brano.attuale,
+.brano[aria-pressed="true"] {
+  background: var(--superficie-3);
+}
+
+.brano-copertina {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.brano-titolo {
+  font-size: var(--t-piccolo);
+  line-height: 1.3;
+}
+
+.brano-icona {
+  background: var(--superficie-2);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+@media (hover: hover) {
+  .brano-in-arrivo:hover,
+  .brano-col-gioco:hover {
+    background: transparent;
+  }
+
+  .brano-in-arrivo:hover .brano-icona,
+  .brano-col-gioco:hover .brano-icona {
+    background: var(--superficie-2);
+    color: var(--lime);
+    box-shadow: inset 0 0 0 1px var(--bordo);
+  }
+}
+
+.lettore {
+  margin-top: 1rem;
+  padding: 1.25rem 1.25rem 1.35rem;
+  border-top: 0;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.lettore h3 {
+  font-size: var(--t-corpo);
+}
+
+/* il lettore fisso: stesso vetro scuro, filo bianco invece del contorno viola */
+.ascolto {
+  box-shadow: inset 0 0 0 1px var(--bordo-forte), 0 12px 32px rgba(0, 0, 0, 0.65);
+}
+
+.ascolto-titolo {
+  font-size: var(--t-piccolo);
+}
+
+/* --- in arrivo: piccole schede con il lucchetto in un tondo */
+.prossime-blocco h3 {
+  font-size: var(--t-corpo);
+}
+
+.prossima {
+  padding: 0.6rem 1.1rem 0.65rem 0.6rem;
+  border-radius: 18px;
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.prossima-icona {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--superficie-2);
+}
+
+.prossima-titolo {
+  font-size: var(--t-piccolo);
+}
+
+.prossima.aperta {
+  padding-left: 1.1rem;
+}
+
+/* --- campi: pieni, senza contorno; il fuoco è l'anello lime del sito */
+.cerca input,
+.sblocco input {
+  border: 0;
+  border-radius: var(--r-campo);
+  background: var(--superficie-2);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.cerca input {
+  min-height: 48px;
+}
+
+.cerca input:focus,
+.sblocco input:focus {
+  outline: 2px solid var(--lime);
+  outline-offset: 2px;
+  box-shadow: inset 0 0 0 1px var(--bordo-forte);
+}
+
+/* --- sostienimi: tutto su una scheda */
+.sostieni {
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.sblocco {
+  border-top-color: var(--separatore);
+}
+
+.sblocco-titolo {
+  font-size: var(--t-corpo);
+}
+
+/* --- apribili (Ringraziamenti, Manifesto): una scheda con il più in un tondo */
+.apribile {
+  padding-inline: clamp(1rem, 3vw, 1.6rem);
+  border-block: 0;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.apribile summary {
+  align-items: center;
+  padding-block: 1.05rem;
+}
+
+.apribile summary h3 {
+  font-size: var(--t-corpo);
+}
+
+@media (hover: hover) {
+  .apribile summary:hover h3 {
+    color: var(--bianco);
+  }
+}
+
+/* sul telefono titolo e invito non stanno su una riga: resta il tondo col più (il titolo
+   dice già cosa si apre) */
+@media (max-width: 30em) {
+  .apribile summary {
+    flex-wrap: nowrap;
+  }
+
+  .apribile-invito > span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+.apribile-invito .icona-apri {
+  box-sizing: content-box;
+  padding: 7px;
+  border-radius: 50%;
+  background: var(--superficie-2);
+}
+
+/* --- social: ogni sigillo su una scheda */
+.social-voce {
+  gap: 0.2rem;
+  padding: 1.25rem 0.75rem 1.2rem;
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+  transition: background-color 0.15s ease;
+}
+
+.social-voce img,
+.social-voce canvas {
+  width: min(100%, 7.5rem);
+}
+
+.social-nome {
+  font-size: var(--t-corpo);
+}
+
+@media (hover: hover) {
+  .social-voce:hover {
+    background: var(--superficie-2);
+  }
+
+  .social-voce:hover .social-nome {
+    color: var(--bianco);
+  }
+}
+
+/* --- riquadro del Telegram: stesso viola, angoli delle schede */
+.riquadro {
+  border-radius: var(--r-scheda);
+}
+
+/* --- biblioteca: l'indice a chip, gli scaffali su schede con le righe separate da un filo */
+.indice a {
+  background: var(--superficie-2);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+@media (hover: hover) {
+  .indice a:hover {
+    background: var(--superficie-3);
+    color: var(--bianco);
+    box-shadow: inset 0 0 0 1px var(--bordo-forte);
+  }
+}
+
+.scaffale-testa {
+  border-top: 0;
+}
+
+.libri {
+  padding-inline: clamp(1rem, 3vw, 1.6rem);
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.libro {
+  border-bottom-color: var(--separatore);
+}
+
+.libro-titolo {
+  font-family: var(--corpo);
+}
+
+.libro:last-child {
+  border-bottom: 0;
+}
+
+@media (min-width: 900px) {
+  .libro:nth-last-child(2):nth-child(odd) {
+    border-bottom: 0;
+  }
+}
+
+/* --- pillola: il testo tavola per tavola */
+.testo-tavole > h2 {
+  font-size: var(--t-sotto);
+}
+
+.testo-tavola {
+  border-radius: 20px;
+}
+
+.testo-tavola.attuale {
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
+.testo-tavola h3 {
+  font-size: var(--t-corpo);
+}
+
+@media (hover: hover) {
+  .testo-tavola h3 button:hover {
+    color: var(--lime-chiaro);
+  }
+}
+
+.testo-tavola .box,
+.testo-tavola .domanda {
+  border-radius: var(--r-dentro);
+}
+
+/* --- ebook e tools: le schede secondarie prendono le stesse superfici */
+.ebook,
+.tool {
+  border-radius: var(--r-scheda);
+  background: var(--superficie);
+  box-shadow: inset 0 0 0 1px var(--bordo);
+}
+
 /* ------------------------------------------------------------ risposta al tocco */
 /* Come nelle interfacce di Apple: la risposta arriva quando il dito appoggia, non quando
    si stacca. Al tocco i comandi si stringono un poco, subito (100 ms); al rilascio tornano
@@ -4123,7 +4791,11 @@ select {
 .opera-apri img,
 .indice a,
 .apribile summary {
-  transition: scale 160ms var(--frenata);
+  transition:
+    scale 160ms var(--frenata),
+    background-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .bottone:active,
