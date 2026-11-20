@@ -1374,15 +1374,18 @@ function paginaArtwork() {
       .join("\n    ")}
   </ul>
   <dialog class="lightbox" data-lightbox aria-label="Artwork in grande">
-    <figure class="lightbox-quadro">
-      <img data-lightbox-img alt="">
-      <figcaption data-lightbox-titolo></figcaption>
-    </figure>
-    <div class="lightbox-comandi">
-      <button class="freccia" type="button" data-lightbox-indietro aria-label="Immagine precedente">${icona.sinistra}</button>
-      <a class="bottone primario stretto" data-lightbox-scarica href="#" download>${icona.scarica}Scarica</a>
-      <button class="freccia" type="button" data-lightbox-avanti aria-label="Immagine successiva">${icona.destra}</button>
-      <button class="freccia" type="button" data-lightbox-chiudi aria-label="Chiudi">${icona.chiudi}</button>
+    <div class="lightbox-velo" data-lightbox-velo></div>
+    <div class="lightbox-pista" data-lightbox-pista>
+      <img class="lightbox-img" data-lightbox-img alt="" draggable="false">
+    </div>
+    <button class="freccia lightbox-chiudi" type="button" data-lightbox-chiudi aria-label="Chiudi">${icona.chiudi}</button>
+    <div class="lightbox-piede" data-lightbox-piede>
+      <p class="lightbox-titolo" data-lightbox-titolo aria-live="polite"></p>
+      <div class="lightbox-comandi">
+        <button class="freccia" type="button" data-lightbox-indietro aria-label="Immagine precedente">${icona.sinistra}</button>
+        <a class="bottone primario stretto" data-lightbox-scarica href="#" download>${icona.scarica}Scarica</a>
+        <button class="freccia" type="button" data-lightbox-avanti aria-label="Immagine successiva">${icona.destra}</button>
+      </div>
     </div>
   </dialog>
 </main>`;

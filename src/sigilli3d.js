@@ -315,11 +315,24 @@ export async function avvia(lista, signal) {
   // texel della texture per pixel di schermo, per bordi netti ma senza scalini
   const aa = () => LATO_TEX / (lato * (1 / (DISTANZA * Math.tan(FOV / 2))));
 
+  // inclinazione con una molla senza rimbalzo (risposta 0,35 s): segue il dito con un po' di
+  // peso, riparte dalla velocità che ha se il dito cambia direzione, e non dipende dai fotogrammi
+  const W = (2 * Math.PI) / 0.35;
+  const molla = (i, asse, bersaglio, dt) => {
+    const v = `v${asse}`;
+    const d = i[asse] - bersaglio;
+    const v0 = i[v] || 0;
+    const e = Math.exp(-W * dt);
+    i[asse] = bersaglio + (d + (v0 + W * d) * dt) * e;
+    i[v] = (v0 - (v0 + W * d) * W * dt) * e;
+  };
   const disegna = (s, t) => {
     const fermo = riduci.matches;
     const i = s.inclina;
-    i.x += (i.tx - i.x) * 0.12;
-    i.y += (i.ty - i.y) * 0.12;
+    const dt = Math.min(0.05, Math.max(0, t - (s.ultimo ?? t)));
+    s.ultimo = t;
+    molla(i, "x", i.tx, dt);
+    molla(i, "y", i.ty, dt);
     const giro = fermo ? 0.32 : 0.42 * Math.sin(t * 0.55 + s.fase);
     const beccheggio = fermo ? -0.14 : -0.1 + 0.07 * Math.sin(t * 0.4 + s.fase * 0.7);
     const peso = i.attivo ? 1 : 0;

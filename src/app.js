@@ -24,6 +24,89 @@ const sostituisciIndirizzo = (url) => {
   }
 };
 
+// ---------------------------------------------------------------- movimento fisico
+// Dai talk di Apple sulle interfacce fluide (WWDC 2018, «Designing Fluid Interfaces»):
+// le cose che si toccano si muovono con una molla, che parte dal punto in cui si trovano
+// adesso e dalla velocità del dito, quindi si può riprendere e invertire in ogni momento.
+// Smorzamento 1 = si ferma senza rimbalzo; risposta = quanto ci mette, in secondi.
+
+function molla({ da, a, velocita = 0, smorzamento = 1, risposta = 0.35, passo, fine, soglia = 0.5 }) {
+  const w = (2 * Math.PI) / risposta;
+  const k = w * w;
+  const c = 2 * smorzamento * w;
+  let x = da;
+  let v = velocita;
+  let prima = performance.now();
+  let giro = 0;
+  const avanza = (ora) => {
+    const dt = Math.min(0.064, Math.max(0, (ora - prima) / 1000));
+    prima = ora;
+    // passi piccoli: stabile anche quando un fotogramma arriva in ritardo
+    const n = Math.max(1, Math.ceil(dt / 0.004));
+    const h = dt / n;
+    for (let i = 0; i < n; i += 1) {
+      v += (-k * (x - a) - c * v) * h;
+      x += v * h;
+    }
+    if (Math.abs(x - a) < soglia && Math.abs(v) < soglia * 10) {
+      x = a;
+      v = 0;
+      passo(x);
+      giro = 0;
+      fine?.();
+      return;
+    }
+    passo(x);
+    giro = requestAnimationFrame(avanza);
+  };
+  giro = requestAnimationFrame(avanza);
+  return {
+    ferma() {
+      cancelAnimationFrame(giro);
+      giro = 0;
+    },
+    get valore() {
+      return x;
+    },
+    get velocita() {
+      return v;
+    },
+    get corre() {
+      return giro !== 0;
+    },
+  };
+}
+
+// Dove andrebbe a fermarsi un lancio, come lo scorrimento di iOS (px/s → px).
+const proietta = (velocita, rallentamento = 0.998) => ((velocita / 1000) * rallentamento) / (1 - rallentamento);
+
+// Oltre il bordo si va avanti sempre meno, invece di fermarsi di colpo.
+const elastico = (oltre, misura, costante = 0.55) => (oltre * misura * costante) / (misura + costante * Math.abs(oltre));
+
+// Velocità del dito dagli ultimi movimenti (px/s), non solo dall'ultimo punto.
+function tracciaVelocita() {
+  let punti = [];
+  return {
+    azzera() {
+      punti = [];
+    },
+    aggiungi(x, y) {
+      const t = performance.now();
+      punti.push({ x, y, t });
+      while (punti.length > 2 && t - punti[0].t > 100) punti.shift();
+    },
+    velocita() {
+      if (punti.length < 2) return { x: 0, y: 0 };
+      const a = punti[0];
+      const b = punti[punti.length - 1];
+      // se il dito si è fermato prima di staccarsi, non c'è lancio
+      if (performance.now() - b.t > 80) return { x: 0, y: 0 };
+      const dt = Math.max(0.008, (b.t - a.t) / 1000);
+      return { x: (b.x - a.x) / dt, y: (b.y - a.y) / dt };
+    },
+  };
+}
+
 // ---------------------------------------------------------------- brani col lucchetto
 // Un brano con "bloccata_fino_al" in musica.json si ascolta solo dopo aver finito il
 // primo livello del gioco: la pagina del gioco lo segna nel browser con questa chiave
@@ -187,7 +270,19 @@ const lettore = (() => {
   function aggiorna() {
     const b = brani[indice];
     const suona = !audio.paused;
+    // la barra si allarga dal suo tondo (e ci torna) con la molla del sito
+    const cambia = barra.classList.contains("attivo") !== attivo;
+    const prima = cambia ? barra.getBoundingClientRect().width : 0;
     barra.classList.toggle("attivo", attivo);
+    if (cambia && prima && !riduci.matches && barra.animate) {
+      const dopo = barra.getBoundingClientRect().width;
+      const curva = getComputedStyle(document.documentElement).getPropertyValue("--molla").trim() || "ease-out";
+      try {
+        barra.animate({ width: [`${prima}px`, `${dopo}px`] }, { duration: 500, easing: curva });
+      } catch {
+        /* curva non capita dal browser: niente animazione */
+      }
+    }
     barra.classList.toggle("in-ascolto", suona);
     document.documentElement.classList.toggle("musica-accesa", suona);
     titolo.textContent = b.titolo;
@@ -354,6 +449,8 @@ const lettore = (() => {
     return r.width ? Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) : 0;
   };
   via.addEventListener("pointerdown", (e) => {
+    // la barra si ingrossa sotto il dito, come nella Musica dell'iPhone
+    via.classList.add("trascina");
     if (e.button !== 0) return;
     trascinando = true;
     via.setPointerCapture?.(e.pointerId);
@@ -364,11 +461,13 @@ const lettore = (() => {
     if (trascinando) disegnaVia(frazione(e) * durata());
   });
   via.addEventListener("pointerup", (e) => {
+    via.classList.remove("trascina");
     if (!trascinando) return;
     trascinando = false;
     vaiA(frazione(e) * durata());
   });
   via.addEventListener("pointercancel", () => {
+    via.classList.remove("trascina");
     trascinando = false;
     disegnaVia(posizione());
   });
@@ -456,6 +555,7 @@ function menu(signal) {
   const etichetta = $(".testata-menu-testo", bottone);
   const apri = (si) => {
     testata.classList.toggle("aperta", si);
+    document.documentElement.classList.toggle("menu-aperto", si);
     bottone.setAttribute("aria-expanded", String(si));
     if (etichetta) etichetta.textContent = si ? "Chiudi" : "Menu";
   };
@@ -471,9 +571,11 @@ function menu(signal) {
     },
     { signal },
   );
-  document.addEventListener("click", (e) => aperto() && !testata.contains(e.target) && apri(false), { signal });
+  // un tocco fuori dal menu, o sul velo scuro sotto di lui (è parte della testata), lo chiude
+  document.addEventListener("click", (e) => aperto() && (!testata.contains(e.target) || e.target === testata) && apri(false), { signal });
   // lo stesso punto del CSS (@media max-width: 69.9375em)
   window.matchMedia("(min-width: 70em)").addEventListener("change", (e) => e.matches && apri(false), { signal });
+  signal.addEventListener("abort", () => document.documentElement.classList.remove("menu-aperto"), { once: true });
 }
 
 // ---------------------------------------------------------------- player esterni
@@ -798,97 +900,364 @@ function gioco(signal) {
 }
 
 // ---------------------------------------------------------------- artwork in grande
+// Come le Foto dell'iPhone: l'immagine si apre crescendo dalla sua miniatura e ci torna
+// quando si chiude; col dito si trascina 1:1 di lato (la successiva arriva attaccata) e
+// verso il basso per chiudere; al rilascio conta la velocità del lancio, e una molla porta
+// l'immagine dove stava andando. Ai bordi (prima e ultima) l'immagine resiste invece di
+// fermarsi. Ogni movimento si può riprendere col dito a metà.
 
 function galleria(signal) {
   const finestra = $("[data-lightbox]");
   const voci = $$("[data-opera]");
   if (!finestra || !voci.length || typeof finestra.showModal !== "function") return;
-  const img = $("[data-lightbox-img]", finestra);
-  const quadro = img.closest("figure") || img;
+  const pista = $("[data-lightbox-pista]", finestra);
+  const velo = $("[data-lightbox-velo]", finestra);
+  const piede = $("[data-lightbox-piede]", finestra);
   const didascalia = $("[data-lightbox-titolo]", finestra);
   const scarica = $("[data-lightbox-scarica]", finestra);
   const indietro = $("[data-lightbox-indietro]", finestra);
   const avanti = $("[data-lightbox-avanti]", finestra);
   const chiudi = $("[data-lightbox-chiudi]", finestra);
   const unica = voci.length < 2;
-  let attuale = 0;
+  const SPAZIO = 24; // tra un'immagine e l'altra mentre scorrono
+  const radice = document.documentElement;
 
-  indietro.hidden = unica;
-  avanti.hidden = unica;
+  // tre lastre: precedente, attuale, successiva; cambiando immagine si spostano, non si ricaricano
+  const prima = $("[data-lightbox-img]", finestra);
+  const lastre = [prima.cloneNode(), prima, prima.cloneNode()];
+  pista.prepend(lastre[0]);
+  pista.append(lastre[2]);
+  for (const l of lastre) l.removeAttribute("data-lightbox-img");
 
-  const mostra = (i) => {
-    attuale = (i + voci.length) % voci.length;
-    const v = voci[attuale].dataset;
-    img.src = v.grande;
-    img.alt = v.titolo;
+  let indice = 0;
+  let aperta = false;
+  // valori di presentazione: quello che si vede adesso (le molle partono sempre da qui)
+  const vista = { x: 0, y: 0, s: 1, sx: 0, sy: 0, velo: 0 };
+  const molle = {};
+  const ferma = (...chiavi) => {
+    for (const c of chiavi) {
+      molle[c]?.ferma();
+      molle[c] = null;
+    }
+  };
+  let bersaglioX = 0;
+
+  const larghezza = () => pista.clientWidth + SPAZIO;
+  const esiste = (i) => i >= 0 && i < voci.length;
+  const sorgente = (i) => (esiste(i) ? voci[i].dataset.grande : "");
+
+  const disegna = () => {
+    const L = larghezza();
+    const [p, c, n] = lastre;
+    // trascinando in basso l'immagine si rimpicciolisce e le altre spariscono
+    c.style.transform = `translate3d(${vista.x + vista.sx}px, ${vista.y + vista.sy}px, 0) scale(${vista.s})`;
+    p.style.transform = `translate3d(${vista.x - L}px, 0, 0)`;
+    n.style.transform = `translate3d(${vista.x + L}px, 0, 0)`;
+    const laterali = vista.y === 0 && vista.sy === 0 && vista.s === 1 ? 1 : 0;
+    p.style.opacity = n.style.opacity = String(laterali);
+    velo.style.opacity = String(vista.velo);
+    piede.style.opacity = chiudi.style.opacity = String(Math.max(0, Math.min(1, (vista.velo - 0.5) * 2)));
+  };
+
+  const scrivi = () => {
+    const v = voci[indice].dataset;
+    lastre.forEach((l, k) => {
+      l.alt = k === 1 ? v.titolo : "";
+      l.setAttribute("aria-hidden", k === 1 ? "false" : "true");
+    });
     didascalia.textContent = v.titolo;
     scarica.href = v.file;
     scarica.setAttribute("download", v.nome);
-    for (const k of [attuale - 1, attuale + 1]) {
-      const vicina = new Image();
-      vicina.src = voci[(k + voci.length) % voci.length].dataset.grande;
+    indietro.disabled = !esiste(indice - 1);
+    avanti.disabled = !esiste(indice + 1);
+  };
+
+  const carica = (lastra, i) => {
+    const src = sorgente(i);
+    if (src && lastra.getAttribute("src") !== src) lastra.src = src;
+    else if (!src) lastra.removeAttribute("src");
+  };
+
+  // passa all'immagine accanto senza salti: la lastra che arriva prende il posto di quella al centro
+  const cambia = (d) => {
+    indice += d;
+    if (d > 0) {
+      lastre.push(lastre.shift());
+      carica(lastre[2], indice + 1);
+    } else {
+      lastre.unshift(lastre.pop());
+      carica(lastre[0], indice - 1);
+    }
+    vista.x += d * larghezza();
+    bersaglioX += d * larghezza();
+    scrivi();
+  };
+
+  const muoviX = (a, velocita = 0) => {
+    const da = vista.x;
+    ferma("x");
+    bersaglioX = a;
+    if (riduci.matches) {
+      vista.x = a;
+      disegna();
+      arrivoX();
+      return;
+    }
+    molle.x = molla({
+      da,
+      a,
+      velocita,
+      risposta: 0.38,
+      passo: (x) => {
+        vista.x = x;
+        disegna();
+      },
+      fine: arrivoX,
+    });
+  };
+  // arrivata di lato: l'immagine accanto diventa quella al centro
+  const arrivoX = () => {
+    molle.x = null;
+    const L = larghezza();
+    if (Math.abs(bersaglioX) >= L / 2) {
+      cambia(bersaglioX < 0 ? 1 : -1);
+      vista.x = 0;
+      bersaglioX = 0;
+      disegna();
     }
   };
 
-  voci.forEach((v, i) =>
-    v.addEventListener(
-      "click",
-      () => {
-        mostra(i);
-        finestra.showModal();
-        chiudi.focus();
-      },
-      { signal },
-    ),
+  const vai = (d) => {
+    if (!aperta) return;
+    const velocita = molle.x?.velocita || 0;
+    // se sta già andando da quella parte, l'immagine di arrivo diventa subito l'attuale
+    if (bersaglioX !== 0) {
+      ferma("x");
+      cambia(bersaglioX < 0 ? 1 : -1);
+    }
+    muoviX(esiste(indice + d) ? -d * larghezza() : 0, velocita);
+  };
+
+  // ---------------- apertura e chiusura dalla miniatura
+  const miniatura = (i) => $("img", voci[i]) || voci[i];
+  // il rettangolo dell'immagine com'è disegnata nella pista (object-fit: contain)
+  const rettangoloPieno = (riferimento) => {
+    const box = pista.getBoundingClientRect();
+    const w0 = riferimento.naturalWidth || box.width;
+    const h0 = riferimento.naturalHeight || box.height;
+    const s = Math.min(box.width / w0, box.height / h0);
+    const w = w0 * s;
+    const h = h0 * s;
+    return { x: box.left + (box.width - w) / 2, y: box.top + (box.height - h) / 2, w, h };
+  };
+  // trasformazione che porta l'immagine piena sopra la miniatura
+  const versoMiniatura = (i) => {
+    const m = miniatura(i);
+    const r = m.getBoundingClientRect();
+    const dentro = r.width > 0 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth;
+    if (!dentro) return null;
+    const p = rettangoloPieno(m);
+    const s = r.width / p.w;
+    return { sx: r.left + r.width / 2 - (p.x + p.w / 2), sy: r.top + r.height / 2 - (p.y + p.h / 2), s };
+  };
+
+  // muove posizione, scala e velo insieme, ognuno con la sua molla (X e Y separate)
+  const vola = ({ sx, sy, s, velo: v }, velocita = {}, fine) => {
+    ferma("sx", "sy", "s", "velo");
+    if (riduci.matches) {
+      Object.assign(vista, { sx: 0, sy: 0, s: 1, velo: v });
+      lastre[1].style.opacity = v > 0 ? "1" : "0";
+      disegna();
+      setTimeout(() => fine?.(), 160);
+      return;
+    }
+    let restano = 4;
+    const finito = () => {
+      restano -= 1;
+      if (restano === 0) fine?.();
+    };
+    const parti = (chiave, a, vel = 0, extra = {}) => {
+      molle[chiave] = molla({
+        da: vista[chiave],
+        a,
+        velocita: vel,
+        risposta: 0.42,
+        soglia: chiave === "s" || chiave === "velo" ? 0.002 : 0.5,
+        ...extra,
+        passo: (x) => {
+          vista[chiave] = x;
+          disegna();
+        },
+        fine: finito,
+      });
+    };
+    parti("sx", sx, velocita.x || 0);
+    parti("sy", sy, velocita.y || 0);
+    parti("s", s);
+    parti("velo", v);
+  };
+
+  const apri = (i) => {
+    indice = i;
+    const m = miniatura(i);
+    // subito la miniatura già scaricata, poi l'immagine grande quando è pronta
+    const centro = lastre[1];
+    centro.src = m.currentSrc || m.src || sorgente(i);
+    const grande = new Image();
+    grande.src = sorgente(i);
+    grande.decode?.().then(() => {
+      if (aperta && indice === i) centro.src = grande.src;
+    }).catch(() => {});
+    carica(lastre[0], i - 1);
+    carica(lastre[2], i + 1);
+    scrivi();
+    finestra.showModal();
+    radice.classList.add("lightbox-aperta");
+    aperta = true;
+    chiudi.focus();
+    Object.assign(vista, { x: 0, y: 0, s: 1, sx: 0, sy: 0, velo: 0 });
+    bersaglioX = 0;
+    const da = versoMiniatura(i);
+    if (da) Object.assign(vista, da);
+    else Object.assign(vista, { s: 0.92 });
+    centro.style.opacity = "1";
+    if (riduci.matches) {
+      Object.assign(vista, { sx: 0, sy: 0, s: 1, velo: 0 });
+      finestra.classList.add("dissolve");
+    }
+    disegna();
+    requestAnimationFrame(() => vola({ sx: 0, sy: 0, s: 1, velo: 1 }));
+  };
+
+  const finisci = () => {
+    ferma("x", "sx", "sy", "s", "velo");
+    aperta = false;
+    finestra.classList.remove("dissolve");
+    if (finestra.open) finestra.close();
+    radice.classList.remove("lightbox-aperta");
+  };
+
+  const richiudi = (velocita = {}) => {
+    if (!aperta) return;
+    ferma("x");
+    // se stava passando all'immagine accanto, si chiude su quella
+    if (Math.abs(vista.x) > larghezza() / 2) cambia(vista.x < 0 ? 1 : -1);
+    vista.sx += vista.x;
+    vista.x = 0;
+    bersaglioX = 0;
+    const verso = versoMiniatura(indice);
+    if (verso) vola({ ...verso, velo: 0 }, velocita, finisci);
+    else vola({ sx: vista.sx, sy: vista.sy + Math.sign(vista.sy || 1) * innerHeight * 0.6, s: 0.8, velo: 0 }, velocita, finisci);
+  };
+
+  voci.forEach((v, i) => v.addEventListener("click", () => apri(i), { signal }));
+  indietro.addEventListener("click", () => vai(-1), { signal });
+  avanti.addEventListener("click", () => vai(1), { signal });
+  chiudi.addEventListener("click", () => richiudi(), { signal });
+  // Esc chiude con lo stesso movimento del bottone
+  finestra.addEventListener(
+    "cancel",
+    (e) => {
+      e.preventDefault();
+      richiudi();
+    },
+    { signal },
   );
-  indietro.addEventListener("click", () => mostra(attuale - 1), { signal });
-  avanti.addEventListener("click", () => mostra(attuale + 1), { signal });
-  chiudi.addEventListener("click", () => finestra.close(), { signal });
   finestra.addEventListener(
     "keydown",
     (e) => {
-      if (e.key === "ArrowRight" && !unica) mostra(attuale + 1);
-      else if (e.key === "ArrowLeft" && !unica) mostra(attuale - 1);
+      if (e.key === "ArrowRight" && !unica) vai(1);
+      else if (e.key === "ArrowLeft" && !unica) vai(-1);
       else return;
       e.preventDefault();
     },
     { signal },
   );
-  // un tocco fuori dal riquadro chiude
-  finestra.addEventListener(
-    "click",
-    (e) => {
-      if (e.target !== finestra) return;
-      const r = finestra.getBoundingClientRect();
-      if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) finestra.close();
-    },
-    { signal },
-  );
-  // sul telefono si scorre col dito
-  let x0 = null;
-  let y0 = 0;
-  quadro.addEventListener(
+  // un tocco sul fondo, fuori dall'immagine, chiude
+  velo.addEventListener("click", () => richiudi(), { signal });
+
+  // ---------------- il dito
+  const traccia = tracciaVelocita();
+  let presa = null; // { id, x0, y0, asse, partenzaX, partenzaY }
+  pista.addEventListener(
     "pointerdown",
     (e) => {
-      if (e.pointerType === "mouse") return;
-      x0 = e.clientX;
-      y0 = e.clientY;
+      if (!aperta || (e.pointerType === "mouse" && e.button !== 0)) return;
+      pista.setPointerCapture(e.pointerId);
+      // si prende l'immagine dov'è adesso, anche se si sta muovendo
+      const correvaX = molle.x?.corre;
+      const correvaY = molle.sy?.corre && vista.s > 0.6 && vista.velo < 1;
+      ferma("x", "sx", "sy", "s", "velo");
+      traccia.azzera();
+      traccia.aggiungi(e.clientX, e.clientY);
+      presa = {
+        id: e.pointerId,
+        x0: e.clientX,
+        y0: e.clientY,
+        asse: correvaX ? "x" : correvaY ? "y" : null,
+        partenzaX: vista.x,
+        partenzaY: vista.sy,
+      };
     },
     { signal },
   );
-  quadro.addEventListener(
-    "pointerup",
+  pista.addEventListener(
+    "pointermove",
     (e) => {
-      if (x0 === null) return;
-      const dx = e.clientX - x0;
-      const dy = e.clientY - y0;
-      x0 = null;
-      if (!unica && Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) mostra(attuale + (dx < 0 ? 1 : -1));
+      if (!presa || e.pointerId !== presa.id) return;
+      traccia.aggiungi(e.clientX, e.clientY);
+      const dx = e.clientX - presa.x0;
+      const dy = e.clientY - presa.y0;
+      // 10 px prima di decidere la direzione, poi il movimento segue il dito 1:1
+      if (!presa.asse) {
+        if (Math.hypot(dx, dy) < 10) return;
+        presa.asse = Math.abs(dx) > Math.abs(dy) && !unica ? "x" : "y";
+      }
+      if (presa.asse === "x") {
+        let x = presa.partenzaX + dx;
+        const L = larghezza();
+        // prima e ultima immagine: resistenza elastica
+        if (!esiste(indice - 1) && x > 0) x = elastico(x, L);
+        if (!esiste(indice + 1) && x < 0) x = -elastico(-x, L);
+        vista.x = x;
+      } else {
+        const y = presa.partenzaY + dy;
+        vista.sy = y;
+        vista.sx = dx * 0.4;
+        vista.s = Math.max(0.6, 1 - Math.abs(y) / 1400);
+        vista.velo = Math.max(0.15, 1 - Math.abs(y) / 420);
+      }
+      disegna();
     },
     { signal },
   );
-  quadro.addEventListener("pointercancel", () => (x0 = null), { signal });
-  signal.addEventListener("abort", () => finestra.open && finestra.close(), { once: true });
+  const lascia = (e) => {
+    if (!presa || e.pointerId !== presa.id) return;
+    const { asse } = presa;
+    presa = null;
+    const v = traccia.velocita();
+    if (asse === "x") {
+      const L = larghezza();
+      const arrivo = vista.x + proietta(v.x);
+      let d = 0;
+      if (arrivo < -L / 2 && esiste(indice + 1)) d = 1;
+      else if (arrivo > L / 2 && esiste(indice - 1)) d = -1;
+      muoviX(-d * L, v.x);
+    } else if (asse === "y") {
+      const arrivo = vista.sy + proietta(v.y);
+      if (Math.abs(arrivo) > 160) richiudi(v);
+      else vola({ sx: 0, sy: 0, s: 1, velo: 1 }, v);
+    } else {
+      // un tocco fuori dall'immagine (nelle bande vuote) chiude
+      const r = rettangoloPieno(lastre[1]);
+      if (e.clientX < r.x || e.clientX > r.x + r.w || e.clientY < r.y || e.clientY > r.y + r.h) richiudi();
+    }
+  };
+  pista.addEventListener("pointerup", lascia, { signal });
+  pista.addEventListener("pointercancel", lascia, { signal });
+  window.addEventListener("resize", () => aperta && disegna(), { signal });
+
+  signal.addEventListener("abort", () => aperta && finisci(), { once: true });
 }
 
 // ---------------------------------------------------------------- nuova uscita: conto alla rovescia
@@ -1484,6 +1853,10 @@ function clip(signal) {
 }
 
 // ---------------------------------------------------------------- avvio delle parti
+
+// Safari su iPhone accende gli stati :active (la risposta al tocco, appena il dito appoggia)
+// solo se la pagina ascolta i tocchi: basta un ascoltatore vuoto e passivo.
+document.addEventListener("touchstart", () => {}, { passive: true });
 
 let spegniPagina = null;
 

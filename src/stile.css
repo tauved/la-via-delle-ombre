@@ -49,7 +49,17 @@
   /* nella home: quanto il testo sta a destra della via, e dove passa la linea rispetto alla colonna */
   --rientro: 1.15rem;
   --via-scarto: -0.3rem;
+  /* movimento: una molla senza rimbalzo (smorzamento 1, risposta 0,35 s, come nelle interfacce
+     di Apple) scritta come curva; dove linear() non c'è, una curva che le somiglia */
+  --molla: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --molla-durata: 0.5s;
   color-scheme: dark;
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --molla: linear(0, 0.0547, 0.1726, 0.309, 0.4408, 0.5577, 0.656, 0.7361, 0.7997, 0.8493, 0.8874, 0.9164, 0.9383, 0.9547, 0.9668, 0.9758, 0.9824, 0.9872, 0.9908, 0.9934, 0.9952, 0.9966, 0.9975, 0.9982, 1);
+  }
 }
 
 @media (min-width: 56.25em) {
@@ -103,8 +113,10 @@ a {
   text-underline-offset: 0.2em;
 }
 
-a:hover {
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  a:hover {
+    color: var(--lime-chiaro);
+  }
 }
 
 :focus-visible {
@@ -127,17 +139,24 @@ h3 {
   text-wrap: balance;
 }
 
+/* la spaziatura cambia con la grandezza: i titoli grandi un filo più stretti, i nomi piccoli
+   in Cinzel un filo più larghi, il testo piccolo appena aperto */
 h1 {
   font-weight: 700;
   font-size: var(--t-grande);
-  line-height: 1.06;
-  letter-spacing: 0.01em;
+  line-height: 1.04;
+  letter-spacing: -0.005em;
 }
 
 h2 {
   font-weight: 600;
   font-size: var(--t-titolo);
   line-height: 1.1;
+  letter-spacing: 0;
+}
+
+h3 {
+  letter-spacing: 0.015em;
 }
 
 p {
@@ -172,8 +191,10 @@ p {
   top: 0.75rem;
 }
 
-.salta:hover {
-  color: var(--nero);
+@media (hover: hover) {
+  .salta:hover {
+    color: var(--nero);
+  }
 }
 
 /* ------------------------------------------------------------ testata */
@@ -197,10 +218,39 @@ body::before {
   justify-content: space-between;
   gap: 1rem;
   padding-inline: var(--margine);
-  background: rgba(0, 0, 0, 0.78);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  backdrop-filter: blur(16px) saturate(140%);
   border-bottom: 1px solid var(--filo);
+}
+
+/* dove la pagina passa sotto la testata, invece di una riga netta una sfumatura che compare
+   solo quando si è scesi (quando in cima non c'è niente sotto, niente bordo) */
+@supports (animation-timeline: scroll()) {
+  .testata {
+    border-bottom-color: transparent;
+  }
+
+  .testata::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 18px;
+    background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0));
+    pointer-events: none;
+    opacity: 0;
+    animation: bordo-testata linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 64px;
+  }
+
+  @keyframes bordo-testata {
+    to {
+      opacity: 1;
+    }
+  }
 }
 
 .testata-logo {
@@ -229,8 +279,10 @@ body::before {
   padding-block: 0.5rem;
 }
 
-.testata nav a:hover {
-  color: var(--lime);
+@media (hover: hover) {
+  .testata nav a:hover {
+    color: var(--lime);
+  }
 }
 
 .testata nav a[aria-current="page"] {
@@ -301,9 +353,11 @@ body::before {
   cursor: pointer;
 }
 
-.bottone:hover {
-  background: var(--viola-acceso);
-  color: var(--bianco);
+@media (hover: hover) {
+  .bottone:hover {
+    background: var(--viola-acceso);
+    color: var(--bianco);
+  }
 }
 
 .bottone.primario {
@@ -311,9 +365,11 @@ body::before {
   color: var(--nero);
 }
 
-.bottone.primario:hover {
-  background: var(--lime-chiaro);
-  color: var(--nero);
+@media (hover: hover) {
+  .bottone.primario:hover {
+    background: var(--lime-chiaro);
+    color: var(--nero);
+  }
 }
 
 .bottone.filo {
@@ -322,9 +378,11 @@ body::before {
   box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55);
 }
 
-.bottone.filo:hover {
-  box-shadow: inset 0 0 0 1.5px var(--lime);
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  .bottone.filo:hover {
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+    color: var(--lime-chiaro);
+  }
 }
 
 .bottone svg {
@@ -682,9 +740,11 @@ body::before {
   cursor: pointer;
 }
 
-.freccia:hover {
-  box-shadow: inset 0 0 0 1.5px var(--lime);
-  background: rgba(207, 254, 126, 0.08);
+@media (hover: hover) {
+  .freccia:hover {
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+    background: rgba(207, 254, 126, 0.08);
+  }
 }
 
 .freccia:disabled {
@@ -742,9 +802,11 @@ body::before {
   outline-offset: -1px;
 }
 
-.scheda:hover img {
-  outline: 2px solid var(--lime);
-  outline-offset: -2px;
+@media (hover: hover) {
+  .scheda:hover img {
+    outline: 2px solid var(--lime);
+    outline-offset: -2px;
+  }
 }
 
 .scheda:focus-visible {
@@ -763,8 +825,10 @@ body::before {
   color: var(--bianco);
 }
 
-.scheda:hover .scheda-titolo {
-  color: var(--lime);
+@media (hover: hover) {
+  .scheda:hover .scheda-titolo {
+    color: var(--lime);
+  }
 }
 
 .scheda-meta {
@@ -867,8 +931,10 @@ body::before {
   cursor: pointer;
 }
 
-.clip-pausa:hover {
-  box-shadow: inset 0 0 0 1.5px var(--lime);
+@media (hover: hover) {
+  .clip-pausa:hover {
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+  }
 }
 
 .clip-pausa.in-ascolto .se-suona {
@@ -1002,8 +1068,10 @@ body::before {
   text-decoration: none;
 }
 
-.piede nav a:hover {
-  color: var(--lime);
+@media (hover: hover) {
+  .piede nav a:hover {
+    color: var(--lime);
+  }
 }
 
 .firma {
@@ -1156,8 +1224,10 @@ body::before {
   cursor: pointer;
 }
 
-.striscia-chiudi:hover {
-  color: var(--bianco);
+@media (hover: hover) {
+  .striscia-chiudi:hover {
+    color: var(--bianco);
+  }
 }
 
 .striscia-chiudi svg {
@@ -1189,8 +1259,10 @@ body::before {
   text-decoration: none;
 }
 
-.indietro:hover {
-  color: var(--lime);
+@media (hover: hover) {
+  .indietro:hover {
+    color: var(--lime);
+  }
 }
 
 .carosello-testa {
@@ -1264,7 +1336,7 @@ body::before {
 }
 
 .visore-comandi .via::after {
-  transition: left 0.35s ease;
+  transition: left var(--molla-durata) var(--molla);
 }
 
 .contatore {
@@ -1388,8 +1460,10 @@ body::before {
   cursor: pointer;
 }
 
-.testo-tavola h3 button:hover {
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  .testo-tavola h3 button:hover {
+    color: var(--lime-chiaro);
+  }
 }
 
 .numero {
@@ -1501,9 +1575,11 @@ body::before {
   text-decoration: none;
 }
 
-.vicino:hover {
-  box-shadow: inset 0 0 0 1.5px var(--lime);
-  color: var(--bianco);
+@media (hover: hover) {
+  .vicino:hover {
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+    color: var(--bianco);
+  }
 }
 
 .vicino img {
@@ -1630,9 +1706,11 @@ body::before {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.55);
 }
 
-.avvia:hover .avvia-bottone {
-  background: var(--lime-chiaro);
-  color: var(--nero);
+@media (hover: hover) {
+  .avvia:hover .avvia-bottone {
+    background: var(--lime-chiaro);
+    color: var(--nero);
+  }
 }
 
 .avvia:focus-visible {
@@ -1805,10 +1883,16 @@ body::before {
 
   .js .testata-nav {
     position: absolute;
+    z-index: 1;
     top: 100%;
     left: 0;
     right: 0;
     display: none;
+    transform-origin: calc(100% - var(--margine) - 3rem) 0;
+    transition:
+      opacity 0.22s ease,
+      transform var(--molla-durata) var(--molla),
+      display var(--molla-durata) allow-discrete;
     flex-direction: column;
     gap: 0;
     padding: 0.25rem var(--margine) 1rem;
@@ -1822,6 +1906,36 @@ body::before {
 
   .js .testata.aperta .testata-nav {
     display: flex;
+  }
+
+  .js .testata:not(.aperta) .testata-nav {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.97);
+  }
+
+  @starting-style {
+    .js .testata.aperta .testata-nav {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.97);
+    }
+  }
+
+  /* il velo scuro sotto il menu aperto: la pagina resta lì, ma passa in secondo piano
+     (sta sulla radice della pagina, perché dentro la testata col vetro smerigliato non coprirebbe lo schermo) */
+  html.js::after {
+    content: "";
+    position: fixed;
+    z-index: 19;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  html.js.menu-aperto::after {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .js .testata-nav a {
@@ -1913,8 +2027,10 @@ body:has(.ascolto) {
   cursor: pointer;
 }
 
-.ascolto-suona:hover {
-  background: var(--lime-chiaro);
+@media (hover: hover) {
+  .ascolto-suona:hover {
+    background: var(--lime-chiaro);
+  }
 }
 
 .ascolto:not(.attivo) .ascolto-suona {
@@ -1923,8 +2039,13 @@ body:has(.ascolto) {
 }
 
 /* mentre la nuova uscita è sullo schermo il lettore fermo si fa da parte (app.js, lettoreDaParte) */
+/* aprendosi la barra cresce verso sinistra dal tondo in basso a destra, e chiudendosi ci
+   torna: la larghezza la anima app.js (aggiorna), il raggio qui */
 .ascolto {
-  transition: opacity 0.25s ease, visibility 0.25s;
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s,
+    border-radius var(--molla-durata) var(--molla);
 }
 
 .uscita-in-vista .ascolto:not(.attivo) {
@@ -1932,8 +2053,10 @@ body:has(.ascolto) {
   visibility: hidden;
 }
 
-.ascolto:not(.attivo) .ascolto-suona:hover {
-  background: var(--viola-acceso);
+@media (hover: hover) {
+  .ascolto:not(.attivo) .ascolto-suona:hover {
+    background: var(--viola-acceso);
+  }
 }
 
 .ascolto-copertina,
@@ -2046,6 +2169,21 @@ body:has(.ascolto) {
   outline-offset: 2px;
 }
 
+.ascolto-via::before,
+.ascolto-via > span,
+.ascolto-via::after {
+  transition: height 0.2s ease, scale var(--molla-durata) var(--molla);
+}
+
+.ascolto-via.trascina::before,
+.ascolto-via.trascina > span {
+  height: 4px;
+}
+
+.ascolto-via.trascina::after {
+  scale: 1.35;
+}
+
 .ascolto-prossimo,
 .ascolto-chiudi {
   display: grid;
@@ -2071,13 +2209,17 @@ body:has(.ascolto) {
   height: 18px;
 }
 
-.ascolto-prossimo:hover,
-.ascolto-chiudi:hover {
-  box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55);
+@media (hover: hover) {
+  .ascolto-prossimo:hover,
+  .ascolto-chiudi:hover {
+    box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.55);
+  }
 }
 
-.ascolto-chiudi:hover {
-  color: var(--bianco);
+@media (hover: hover) {
+  .ascolto-chiudi:hover {
+    color: var(--bianco);
+  }
 }
 
 .ascolto-prossimo[hidden],
@@ -2154,8 +2296,10 @@ body:has(.ascolto) {
   cursor: pointer;
 }
 
-.brano:hover {
-  background: rgba(103, 76, 192, 0.16);
+@media (hover: hover) {
+  .brano:hover {
+    background: rgba(103, 76, 192, 0.16);
+  }
 }
 
 .brano.attuale,
@@ -2201,11 +2345,18 @@ body:has(.ascolto) {
   box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45);
 }
 
-.brano:hover .brano-icona,
 .brano[aria-pressed="true"] .brano-icona {
   background: var(--lime);
   color: var(--nero);
   box-shadow: none;
+}
+
+@media (hover: hover) {
+  .brano:hover .brano-icona {
+    background: var(--lime);
+    color: var(--nero);
+    box-shadow: none;
+  }
 }
 
 .brano[hidden] {
@@ -2213,18 +2364,26 @@ body:has(.ascolto) {
 }
 
 /* brano col lucchetto: finché non si sblocca, porta al gioco */
-.brano-chiuso,
-.brano-chiuso:hover {
+.brano-chiuso {
   color: var(--bianco);
   text-decoration: none;
+}
+
+@media (hover: hover) {
+  .brano-chiuso:hover {
+    color: var(--bianco);
+    text-decoration: none;
+  }
 }
 
 .brano-chiuso .brano-copertina {
   opacity: 0.6;
 }
 
-.brano-chiuso:hover .brano-copertina {
-  opacity: 0.85;
+@media (hover: hover) {
+  .brano-chiuso:hover .brano-copertina {
+    opacity: 0.85;
+  }
 }
 
 /* «In arrivo», e il brano del gioco con le due strade (i link sono nella nota):
@@ -2234,21 +2393,27 @@ body:has(.ascolto) {
   cursor: default;
 }
 
-.brano-in-arrivo:hover,
-.brano-col-gioco:hover {
-  background: transparent;
+@media (hover: hover) {
+  .brano-in-arrivo:hover,
+  .brano-col-gioco:hover {
+    background: transparent;
+  }
 }
 
-.brano-in-arrivo:hover .brano-copertina,
-.brano-col-gioco:hover .brano-copertina {
-  opacity: 0.6;
+@media (hover: hover) {
+  .brano-in-arrivo:hover .brano-copertina,
+  .brano-col-gioco:hover .brano-copertina {
+    opacity: 0.6;
+  }
 }
 
-.brano-in-arrivo:hover .brano-icona,
-.brano-col-gioco:hover .brano-icona {
-  background: none;
-  color: var(--lime);
-  box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45);
+@media (hover: hover) {
+  .brano-in-arrivo:hover .brano-icona,
+  .brano-col-gioco:hover .brano-icona {
+    background: none;
+    color: var(--lime);
+    box-shadow: inset 0 0 0 1.5px rgba(207, 254, 126, 0.45);
+  }
 }
 
 .brano-col-gioco .brano-nota a {
@@ -2259,8 +2424,10 @@ body:has(.ascolto) {
   text-underline-offset: 3px;
 }
 
-.brano-col-gioco .brano-nota a:hover {
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  .brano-col-gioco .brano-nota a:hover {
+    color: var(--lime-chiaro);
+  }
 }
 
 .brani-aiuto {
@@ -2343,13 +2510,17 @@ body:has(.ascolto) {
   outline-offset: -1px;
 }
 
-.porta:hover {
-  color: var(--bianco);
+@media (hover: hover) {
+  .porta:hover {
+    color: var(--bianco);
+  }
 }
 
-.porta:hover img {
-  outline: 2px solid var(--lime);
-  outline-offset: -2px;
+@media (hover: hover) {
+  .porta:hover img {
+    outline: 2px solid var(--lime);
+    outline-offset: -2px;
+  }
 }
 
 .porta:focus-visible {
@@ -2427,9 +2598,11 @@ body:has(.ascolto) {
   cursor: zoom-in;
 }
 
-.opera-apri:hover {
-  outline: 2px solid var(--lime);
-  outline-offset: -2px;
+@media (hover: hover) {
+  .opera-apri:hover {
+    outline: 2px solid var(--lime);
+    outline-offset: -2px;
+  }
 }
 
 .opera-apri:focus-visible {
@@ -2475,49 +2648,91 @@ body:has(.ascolto) {
   font-size: var(--t-meta);
 }
 
+/* artwork in grande: a tutto schermo sul nero, l'immagine al centro, titolo e comandi in basso
+   a portata di pollice, la chiusura in alto. Il movimento lo fa app.js (galleria). */
 .lightbox {
-  width: min(100vw - 1.5rem, 60rem);
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   max-width: none;
-  max-height: calc(100svh - 1.5rem);
-  padding: 1rem;
+  max-height: none;
+  margin: 0;
+  padding: 0;
   border: 0;
-  border-radius: 18px;
-  background: #07040d;
+  background: transparent;
   color: var(--bianco);
-  box-shadow: 0 0 0 1px rgba(103, 76, 192, 0.6), 0 30px 80px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
 }
 
 .lightbox[open] {
-  display: grid;
-  gap: 0.9rem;
+  display: block;
 }
 
 .lightbox::backdrop {
-  background: rgba(0, 0, 0, 0.86);
+  background: transparent;
 }
 
-.lightbox-quadro {
-  display: grid;
-  gap: 0.6rem;
-  justify-items: center;
-  margin: 0;
+html.lightbox-aperta {
+  overflow: hidden;
 }
 
-.lightbox-quadro {
-  touch-action: pan-y pinch-zoom;
+.lightbox-velo {
+  position: absolute;
+  inset: 0;
+  background: var(--nero);
+  opacity: 0;
 }
 
-.lightbox-quadro img {
-  display: block;
+.lightbox-pista {
+  position: absolute;
+  inset: calc(env(safe-area-inset-top, 0px) + 4.25rem) 0 calc(env(safe-area-inset-bottom, 0px) + 8.75rem);
+  touch-action: none;
+  cursor: grab;
+}
+
+.lightbox-pista:active {
+  cursor: grabbing;
+}
+
+.lightbox-img {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: min(calc(100svh - 11rem), calc(100vw - 3.5rem), 56rem);
+  height: 100%;
   object-fit: contain;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  will-change: transform;
 }
 
-.lightbox-quadro figcaption {
+.lightbox-chiudi {
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 0.75rem);
+  right: max(var(--margine), env(safe-area-inset-right, 0px));
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+}
+
+.lightbox-piede {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  justify-items: center;
+  gap: 0.75rem;
+  padding: 1rem var(--margine) calc(env(safe-area-inset-bottom, 0px) + 1.1rem);
+  opacity: 0;
+}
+
+.lightbox-titolo {
+  max-width: 40ch;
   font: 600 var(--t-sotto) / 1.3 var(--titoli);
   color: var(--lime);
   text-align: center;
+  text-wrap: balance;
 }
 
 .lightbox-comandi {
@@ -2526,6 +2741,14 @@ body:has(.ascolto) {
   align-items: center;
   justify-content: center;
   gap: 0.6rem;
+}
+
+/* con il movimento ridotto: niente voli, solo una dissolvenza breve */
+.lightbox.dissolve .lightbox-velo,
+.lightbox.dissolve .lightbox-img,
+.lightbox.dissolve .lightbox-piede,
+.lightbox.dissolve .lightbox-chiudi {
+  transition: opacity 0.15s ease;
 }
 
 .ebook-elenco {
@@ -2655,8 +2878,10 @@ body:has(.ascolto) {
   text-decoration: none;
 }
 
-.tool-testo h2 a:hover {
-  color: var(--bianco);
+@media (hover: hover) {
+  .tool-testo h2 a:hover {
+    color: var(--bianco);
+  }
 }
 
 .tool-tipo {
@@ -2819,9 +3044,11 @@ body:has(.ascolto) {
   text-decoration: none;
 }
 
-.indice a:hover {
-  color: var(--lime);
-  box-shadow: inset 0 0 0 1.5px var(--lime);
+@media (hover: hover) {
+  .indice a:hover {
+    color: var(--lime);
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+  }
 }
 
 .indice-n {
@@ -3320,8 +3547,10 @@ body:has(.ascolto) {
   box-shadow: 0 10px 32px rgba(0, 0, 0, 0.5);
 }
 
-.video-avvia:hover .video-play {
-  background: var(--lime-chiaro);
+@media (hover: hover) {
+  .video-avvia:hover .video-play {
+    background: var(--lime-chiaro);
+  }
 }
 
 .video-schermo iframe {
@@ -3447,9 +3676,11 @@ body:has(.ascolto) {
   font-weight: 600;
 }
 
-.apribile summary:hover h2,
-.apribile summary:hover h3 {
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  .apribile summary:hover h2,
+  .apribile summary:hover h3 {
+    color: var(--lime-chiaro);
+  }
 }
 
 .apribile-invito {
@@ -3486,6 +3717,31 @@ body:has(.ascolto) {
 .apribile[open] .apribile-dentro,
 .apribile[open] .manifesto-punti {
   animation: si-apre 0.4s ease both;
+}
+
+/* dove il browser sa animare l'altezza fino ad «auto», il contenuto si apre e si richiude
+   con la stessa molla (prima si apriva soltanto, e si chiudeva di colpo) */
+@supports (interpolate-size: allow-keywords) and selector(::details-content) {
+  .apribile {
+    interpolate-size: allow-keywords;
+  }
+
+  .apribile::details-content {
+    block-size: 0;
+    overflow: clip;
+    transition:
+      block-size var(--molla-durata) var(--molla),
+      content-visibility var(--molla-durata) allow-discrete;
+  }
+
+  .apribile[open]::details-content {
+    block-size: auto;
+  }
+
+  .apribile[open] .apribile-dentro,
+  .apribile[open] .manifesto-punti {
+    animation: none;
+  }
 }
 
 @keyframes si-apre {
@@ -3643,9 +3899,14 @@ body:has(.ascolto) {
   transition: transform 0.25s ease;
 }
 
-.social-voce:hover img,
 .social-voce:focus-visible img {
   transform: scale(1.04);
+}
+
+@media (hover: hover) {
+  .social-voce:hover img {
+    transform: scale(1.04);
+  }
 }
 
 .social-nome {
@@ -3653,8 +3914,10 @@ body:has(.ascolto) {
   color: var(--lime);
 }
 
-.social-voce:hover .social-nome {
-  color: var(--lime-chiaro);
+@media (hover: hover) {
+  .social-voce:hover .social-nome {
+    color: var(--lime-chiaro);
+  }
 }
 
 .social-dettaglio {
@@ -3676,9 +3939,14 @@ body:has(.ascolto) {
   display: none;
 }
 
-.social-voce:hover .sigillo-3d,
 .social-voce:focus-visible .sigillo-3d {
   transform: scale(1.04);
+}
+
+@media (hover: hover) {
+  .social-voce:hover .sigillo-3d {
+    transform: scale(1.04);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3757,4 +4025,191 @@ main[tabindex="-1"]:focus {
 
 html:has(dialog[open]) {
   overflow: hidden;
+}
+
+/* ------------------------------------------------------------ risposta al tocco */
+/* Come nelle interfacce di Apple: la risposta arriva quando il dito appoggia, non quando
+   si stacca. Al tocco i comandi si stringono un poco, subito (80 ms); al rilascio tornano
+   con la molla. Il grigio che i telefoni mettono da soli sui link non serve più. */
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+a,
+button,
+summary,
+label,
+input,
+select {
+  touch-action: manipulation;
+}
+
+.bottone,
+.freccia,
+.clip-pausa,
+.ascolto-suona,
+.ascolto-prossimo,
+.ascolto-chiudi,
+.testata-menu,
+.brano-icona,
+.scheda img,
+.porta img,
+.social-voce img,
+.social-voce canvas,
+.opera-apri img,
+.indice a,
+.apribile summary {
+  transition: scale var(--molla-durata) var(--molla);
+}
+
+.bottone:active,
+.freccia:active:not(:disabled),
+.clip-pausa:active,
+.ascolto-suona:active,
+.ascolto-prossimo:active,
+.ascolto-chiudi:active,
+.testata-menu:active,
+.indice a:active {
+  scale: 0.96;
+  transition-duration: 80ms;
+  transition-timing-function: ease-out;
+}
+
+/* schede e immagini che si toccano: si abbassano appena, come un oggetto premuto */
+.scheda:active img,
+.porta:active img,
+.social-voce:active img,
+.social-voce:active canvas,
+.opera-apri:active img {
+  scale: 0.97;
+  transition-duration: 80ms;
+  transition-timing-function: ease-out;
+}
+
+.brano:active:not(.brano-in-arrivo):not(.brano-col-gioco) {
+  background: rgba(103, 76, 192, 0.32);
+}
+
+.brano:active .brano-icona {
+  scale: 0.92;
+  transition-duration: 80ms;
+}
+
+.testata nav a:active,
+.apribile summary:active {
+  opacity: 0.6;
+}
+
+/* ------------------------------------------------------------ trasparenze e contrasto */
+/* Chi chiede meno trasparenze (iPhone, Mac: Accessibilità) ha superfici piene;
+   chi chiede più contrasto, superfici piene e bordi netti. */
+
+@media (prefers-reduced-transparency: reduce) {
+  .testata,
+  .ascolto {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  .testata {
+    background: var(--nero);
+  }
+
+  .ascolto {
+    background: var(--viola-notte);
+  }
+
+  .js .testata-nav {
+    background: var(--nero);
+  }
+}
+
+@media (prefers-contrast: more) {
+  .testata {
+    background: var(--nero);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border-bottom: 1px solid rgba(207, 254, 126, 0.55);
+  }
+
+  .testata::before {
+    display: none;
+  }
+
+  .ascolto {
+    background: var(--nero);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: inset 0 0 0 1.5px var(--lime);
+  }
+
+  .bottone.filo,
+  .freccia,
+  .brano-icona {
+    box-shadow: inset 0 0 0 2px var(--lime);
+  }
+}
+
+/* ------------------------------------------------------------ movimento ridotto */
+/* Niente scatti, niente voli: restano i cambi di colore e le dissolvenze brevi. */
+
+@media (prefers-reduced-motion: reduce) {
+  .bottone,
+  .freccia,
+  .clip-pausa,
+  .ascolto-suona,
+  .ascolto-prossimo,
+  .ascolto-chiudi,
+  .testata-menu,
+  .brano-icona,
+  .scheda img,
+  .porta img,
+  .social-voce img,
+  .social-voce canvas,
+  .opera-apri img,
+  .indice a,
+  .apribile summary,
+  .ascolto-via::before,
+  .ascolto-via > span,
+  .ascolto-via::after,
+  .visore-comandi .via::after,
+  .via-percorso [data-tappa]::before {
+    transition: none;
+  }
+
+  .bottone:active,
+  .freccia:active,
+  .clip-pausa:active,
+  .ascolto-suona:active,
+  .ascolto-prossimo:active,
+  .ascolto-chiudi:active,
+  .testata-menu:active,
+  .indice a:active,
+  .scheda:active img,
+  .porta:active img,
+  .social-voce:active img,
+  .social-voce:active canvas,
+  .opera-apri:active img,
+  .brano:active .brano-icona,
+  .ascolto-via.trascina::after {
+    scale: none;
+  }
+
+  .ascolto {
+    transition: opacity 0.2s ease, visibility 0.2s;
+  }
+
+  .js .testata-nav {
+    transition: opacity 0.15s ease, display 0.15s allow-discrete;
+  }
+
+  .js .testata:not(.aperta) .testata-nav,
+  .js .testata.aperta .testata-nav {
+    transform: none;
+  }
+
+  .apribile::details-content {
+    transition: none;
+  }
 }

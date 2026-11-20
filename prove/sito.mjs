@@ -161,6 +161,38 @@ for (const [larghezza, tendina] of [
   }
 }
 
+// ---------------------------------------------------------------- artwork: l'immagine in grande
+if (pagine.includes("/artwork/")) {
+  const ctx = await contesto(390, 844, true);
+  const pg = await ctx.newPage();
+  await pg.goto(`${BASE}/artwork/`, { waitUntil: "load" });
+  const voci = await pg.$$("[data-opera]");
+  if (voci.length > 1) {
+    await voci[0].click();
+    await pg.waitForTimeout(900);
+    const titolo = () => pg.textContent("[data-lightbox-titolo]");
+    const primo = await titolo();
+    if (!(await pg.evaluate(() => document.querySelector("[data-lightbox]").open))) errore("/artwork/", "l'immagine in grande non si apre");
+    // trascinata a sinistra di 140px con un lancio: deve passare alla successiva
+    const box = await (await pg.$("[data-lightbox-pista]")).boundingBox();
+    const x = box.x + box.width / 2;
+    const y = box.y + box.height / 2;
+    await pg.mouse.move(x + 70, y);
+    await pg.mouse.down();
+    for (let k = 1; k <= 7; k += 1) {
+      await pg.mouse.move(x + 70 - k * 20, y);
+      await pg.waitForTimeout(16);
+    }
+    await pg.mouse.up();
+    await pg.waitForTimeout(900);
+    if ((await titolo()) === primo) errore("/artwork/", "trascinando col dito non passa all'immagine successiva");
+    await pg.keyboard.press("Escape");
+    await pg.waitForTimeout(900);
+    if (await pg.evaluate(() => document.querySelector("[data-lightbox]").open)) errore("/artwork/", "Esc non chiude l'immagine in grande");
+  }
+  await ctx.close();
+}
+
 // ---------------------------------------------------------------- biblioteca: l'indice porta alle sezioni
 if (pagine.includes("/biblioteca/")) {
   const ctx = await contesto(1280, 800);
@@ -178,4 +210,4 @@ if (problemi.length) {
   console.error(`${problemi.length} problemi:\n- ${problemi.join("\n- ")}`);
   process.exit(1);
 }
-console.log(`Tutto a posto: ${pagine.length} pagine provate su telefono e computer, più home, menu, pillola e biblioteca.`);
+console.log(`Tutto a posto: ${pagine.length} pagine provate su telefono e computer, più home, menu, pillola, artwork e biblioteca.`);
