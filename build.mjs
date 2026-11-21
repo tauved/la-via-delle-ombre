@@ -747,13 +747,18 @@ const scheda = (c, pagina, { lazy = true } = {}) => `<a class="scheda" href="${i
   <span class="scheda-meta">${c.tavole.length} tavole${c.data ? `, ${dataEstesa(c.data)}` : ""}</span>
 </a>`;
 
-// il sigillo con l'anello: nella pagina può comparire due volte (apertura e piede), quindi l'id del cerchio cambia
+// il sigillo con l'anello: nella pagina può comparire due volte (apertura e piede), quindi l'id del cerchio cambia.
+// La scritta corre su un cerchio lungo 1011,6. «NON SERVIAM · LUX IN TENEBRIS · LUCIFER» occupa 952,7: così, col
+// Cinzel, lo spazio tra le lettere è quello che serve perché anche il vuoto tra LUCIFER e NON sia largo come gli altri
+// due (spazio, punto, spazio). Il punto dopo LUCIFER sta da solo a metà di quel vuoto, (952,7 + 1011,6) / 2 = 982,1:
+// in coda alla scritta finiva attaccato a NON.
 const sigillo = (pagina, dove = "piede", classe = "") => `<div class="sigillo${classe ? ` ${classe}` : ""}">
   <svg class="sigillo-anello" viewBox="0 0 400 400" aria-hidden="true">
     <defs><path id="giro-sigillo-${dove}" d="M 200 200 m -161 0 a 161 161 0 1 1 322 0 a 161 161 0 1 1 -322 0"/></defs>
     <circle cx="200" cy="200" r="196" fill="rgba(0,0,0,0.38)" stroke="#CFFE7E" stroke-width="2.6"/>
     <circle cx="200" cy="200" r="144" fill="none" stroke="#CFFE7E" stroke-width="2.6"/>
-    <text font-size="25" fill="#CFFE7E"><textPath href="#giro-sigillo-${dove}" textLength="1006" lengthAdjust="spacing">NON SERVIAM · LUX IN TENEBRIS · LUCIFER ·</textPath></text>
+    <text font-size="25" fill="#CFFE7E"><textPath href="#giro-sigillo-${dove}" textLength="952.7" lengthAdjust="spacing">NON SERVIAM · LUX IN TENEBRIS · LUCIFER</textPath></text>
+    <text font-size="25" fill="#CFFE7E" text-anchor="middle"><textPath href="#giro-sigillo-${dove}" startOffset="982.1">·</textPath></text>
   </svg>
   <img class="sigillo-logo" src="${indirizzo(media.logoGrande, pagina)}" width="612" height="420" alt="TAUH" loading="lazy" decoding="async">
 </div>`;
