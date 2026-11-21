@@ -984,7 +984,7 @@ function paginaHome(caroselli) {
     </div>
   </section>
 
-  <section class="sezione tappa" id="caroselli" aria-labelledby="titolo-caroselli" data-binario>
+  <section class="sezione tappa" id="caroselli" aria-labelledby="titolo-caroselli" data-binario data-giostra>
     ${testaSezione(
       "caroselli",
       "Pillole di conoscenza",

@@ -682,6 +682,8 @@ function binari(signal) {
     const indietro = $("[data-binario-indietro]", sezione);
     const avanti = $("[data-binario-avanti]", sezione);
     if (!fila || !indietro || !avanti) continue;
+    // nella home le copertine salgono sulla giostra, se il browser la sa disegnare e non si è chiesto meno movimento
+    if (sezione.hasAttribute("data-giostra") && giostra(fila, indietro, avanti, signal)) continue;
     const passo = () => Math.max(fila.clientWidth * 0.8, 200);
     const aggiorna = () => {
       indietro.disabled = fila.scrollLeft < 4;
@@ -694,6 +696,499 @@ function binari(signal) {
     fila.addEventListener("scroll", aggiorna, { passive: true, signal });
     window.addEventListener("resize", aggiorna, { signal });
     aggiorna();
+  }
+}
+
+// ---------------------------------------------------------------- in rilievo: cose che si toccano in 3D
+// Trasformazioni 3D vere (prospettiva, facce che si girano): servono preserve-3d e le facce
+// nascoste quando danno le spalle.
+const supporta3d = () =>
+  Boolean(window.CSS?.supports) &&
+  CSS.supports("transform-style", "preserve-3d") &&
+  (CSS.supports("backface-visibility", "hidden") || CSS.supports("-webkit-backface-visibility", "hidden"));
+
+// ---------------------------------------------------------------- la giostra delle pillole
+// Nella home le copertine delle pillole stanno sulle facce di un tamburo, come una giostra vista
+// da fuori: si trascina col dito o col mouse, si lancia (gira per inerzia e si ferma su una
+// faccia, con un piccolo rimbalzo), si gira con le frecce e con ← →. La copertina davanti si
+// apre; toccandone una di lato, la giostra la porta davanti. Le facce che si voltano passano nel
+// buio. Gira solo il tamburo, con una trasformazione sola: le facce stanno ferme su di lui.
+// Quando la sezione compare il tamburo fa un passo e porta davanti la pillola più recente.
+// Senza JS, con «riduci movimento» o con meno di 5 pillole resta il binario piatto.
+
+function giostra(fila, indietro, avanti, signal) {
+  const facce = [...fila.children];
+  const n = facce.length;
+  if (n < 5 || riduci.matches || !supporta3d()) return false;
+  const spicchio = 360 / n; // gradi tra una faccia e la successiva
+  const STACCO = 14; // px tra due facce vicine, sul tamburo
+
+  const palco = document.createElement("div");
+  palco.className = "giostra";
+  fila.before(palco);
+  palco.append(fila);
+  const ombre = facce.map((faccia) => {
+    const ombra = document.createElement("span");
+    ombra.className = "faccia-ombra";
+    ombra.setAttribute("aria-hidden", "true");
+    faccia.append(ombra);
+    return ombra;
+  });
+  // le copertine che aspettano di essere scaricate (loading="lazy"), faccia per faccia
+  const daScaricare = facce.map((faccia) => faccia.querySelector('img[loading="lazy"]'));
+  indietro.setAttribute("aria-label", "Pillola precedente");
+  avanti.setAttribute("aria-label", "Pillola successiva");
+
+  let larga = 0;
+  let raggio = 0;
+  let angolo = spicchio; // parte girato di una faccia (vedi sopra)
+  let meta = 0;
+  let moto = null;
+
+  // la faccia che sta davanti con un certo angolo del tamburo
+  const davanti = (a = angolo) => ((Math.round(-a / spicchio) % n) + n) % n;
+  const pxPerGrado = () => (larga + STACCO) / spicchio;
+
+  function disegna() {
+    fila.style.transform = `translateZ(${(-raggio).toFixed(1)}px) rotateY(${angolo.toFixed(3)}deg)`;
+    facce.forEach((faccia, i) => {
+      // dove guarda la faccia, da -180 a 180 gradi (0 = verso chi guarda)
+      const a = ((((i * spicchio + angolo) % 360) + 540) % 360) - 180;
+      const luce = Math.cos((a * Math.PI) / 180);
+      ombre[i].style.opacity = luce > 0 ? ((1 - luce) * 0.9).toFixed(3) : "0.9";
+      // la copertina si scarica poco prima di arrivare davanti
+      if (daScaricare[i] && Math.abs(a) < spicchio * 2.5) {
+        daScaricare[i].loading = "eager";
+        daScaricare[i] = null;
+      }
+    });
+  }
+
+  // il tamburo è un poligono con n lati larghi quanto una scheda (dal CSS, --faccia)
+  function misura() {
+    fila.style.transform = "none";
+    for (const f of facce) {
+      f.style.transform = "none";
+      f.style.height = "";
+    }
+    larga = fila.offsetWidth;
+    const alta = Math.max(...facce.map((f) => f.offsetHeight));
+    raggio = (larga + STACCO) / 2 / Math.tan(Math.PI / n);
+    fila.style.height = `${alta}px`;
+    palco.style.setProperty("--prospettiva", `${Math.round(raggio * 3.2 + larga)}px`);
+    facce.forEach((f, i) => {
+      f.style.height = `${alta}px`;
+      f.style.transform = `rotateY(${(i * spicchio).toFixed(3)}deg) translateZ(${raggio.toFixed(1)}px)`;
+    });
+    disegna();
+  }
+
+  function gira(verso, velocita = 0, risposta = 0.55) {
+    meta = verso;
+    moto?.ferma();
+    moto = molla({
+      da: angolo,
+      a: meta,
+      velocita,
+      smorzamento: 0.8,
+      risposta,
+      soglia: 0.02,
+      passo: (x) => {
+        angolo = x;
+        disegna();
+      },
+      fine: () => (moto = null),
+    });
+  }
+  // la faccia i davanti, dalla parte più corta
+  const portaDavanti = (i) => {
+    const base = -i * spicchio;
+    gira(base + Math.round((angolo - base) / 360) * 360);
+  };
+  // passi > 0: avanti (la pillola a destra viene davanti); si parte da dove la giostra sta
+  // andando, così due tocchi veloci sulla freccia fanno due passi
+  const scatta = (passi) => gira((moto ? meta : Math.round(angolo / spicchio) * spicchio) - passi * spicchio);
+
+  // ---------------- il dito e il mouse
+  const traccia = tracciaVelocita();
+  let presa = null;
+  let trascinata = false; // l'ultimo tocco è diventato un trascinamento: il clic che segue non apre
+  let davantiAllaPresa = -1;
+  const prendi = (e) => {
+    try {
+      palco.setPointerCapture(e.pointerId);
+    } catch {
+      /* senza la presa del puntatore si trascina lo stesso, finché si resta sulla giostra */
+    }
+    palco.classList.add("presa");
+  };
+  palco.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (presa || (e.pointerType === "mouse" && e.button !== 0)) return;
+      // si prende la giostra dov'è, anche mentre gira: il tocco la ferma e non apre la pillola
+      const girava = Boolean(moto);
+      moto?.ferma();
+      moto = null;
+      trascinata = girava;
+      davantiAllaPresa = davanti();
+      traccia.azzera();
+      traccia.aggiungi(e.clientX, e.clientY);
+      presa = { id: e.pointerId, x0: e.clientX, y0: e.clientY, da: angolo, asse: girava ? "x" : null };
+      if (girava) prendi(e);
+    },
+    { signal },
+  );
+  palco.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!presa || e.pointerId !== presa.id) return;
+      traccia.aggiungi(e.clientX, e.clientY);
+      const dx = e.clientX - presa.x0;
+      const dy = e.clientY - presa.y0;
+      // 8 px prima di decidere: in verticale scorre la pagina, di lato gira la giostra
+      if (!presa.asse) {
+        if (Math.hypot(dx, dy) < 8) return;
+        if (Math.abs(dx) < Math.abs(dy)) {
+          presa = null;
+          return;
+        }
+        presa.asse = "x";
+        trascinata = true;
+        prendi(e);
+      }
+      angolo = presa.da + dx / pxPerGrado();
+      disegna();
+    },
+    { signal },
+  );
+  const lascia = (e) => {
+    if (!presa || e.pointerId !== presa.id) return;
+    const { asse } = presa;
+    presa = null;
+    palco.classList.remove("presa");
+    if (asse !== "x") return;
+    const v = traccia.velocita().x / pxPerGrado(); // gradi al secondo
+    // dove andrebbe a finire il lancio (al massimo un giro e mezzo), poi la faccia più vicina
+    const lancio = Math.max(-540, Math.min(540, proietta(v)));
+    gira(Math.round((angolo + lancio) / spicchio) * spicchio, v);
+  };
+  palco.addEventListener("pointerup", lascia, { signal });
+  palco.addEventListener("pointercancel", lascia, { signal });
+  // col mouse, senza questo il browser trascinerebbe via il link o l'immagine
+  palco.addEventListener("dragstart", (e) => e.preventDefault(), { signal });
+  palco.addEventListener(
+    "click",
+    (e) => {
+      if (trascinata) {
+        trascinata = false;
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
+      const faccia = e.target.closest?.(".binario > li");
+      // da tastiera (Invio) il link si apre sempre: la faccia col fuoco è già davanti
+      if (!faccia || e.detail === 0) return;
+      const i = facce.indexOf(faccia);
+      if (i !== davantiAllaPresa) {
+        e.preventDefault();
+        e.stopPropagation();
+        portaDavanti(i);
+      }
+    },
+    { signal, capture: true },
+  );
+
+  // ---------------- frecce e tastiera
+  indietro.addEventListener("click", () => scatta(-1), { signal });
+  avanti.addEventListener("click", () => scatta(1), { signal });
+  palco.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      e.preventDefault();
+      const passi = e.key === "ArrowRight" ? 1 : -1;
+      const prossima = (davanti(moto ? meta : angolo) + passi + n) % n;
+      scatta(passi);
+      facce[prossima].querySelector("a")?.focus({ preventScroll: true });
+    },
+    { signal },
+  );
+  // col Tab il fuoco passa da una pillola all'altra: quella col fuoco viene davanti
+  palco.addEventListener(
+    "focusin",
+    (e) => {
+      const faccia = e.target.closest(".binario > li");
+      if (!faccia || !e.target.matches(":focus-visible")) return;
+      const i = facce.indexOf(faccia);
+      if (i !== davanti(moto ? meta : angolo)) portaDavanti(i);
+    },
+    { signal },
+  );
+
+  window.addEventListener("resize", misura, { signal });
+  document.fonts?.ready?.then(() => !signal.aborted && misura());
+  if ("IntersectionObserver" in window) {
+    const vista = new IntersectionObserver(
+      (voci) => {
+        if (!voci.some((v) => v.isIntersecting)) return;
+        vista.disconnect();
+        if (!presa && !moto) gira(0, 0, 0.9);
+      },
+      { threshold: 0.45 },
+    );
+    vista.observe(palco);
+    signal.addEventListener("abort", () => vista.disconnect(), { once: true });
+  } else {
+    angolo = 0;
+  }
+  signal.addEventListener("abort", () => moto?.ferma(), { once: true });
+  misura();
+  return true;
+}
+
+// ---------------------------------------------------------------- il sigillo che si gira
+// Il sigillo (nel piede di ogni pagina e, sul computer, nell'apertura) è una moneta con lo
+// spessore: si prende col dito o col mouse e si fa girare, si lancia e si ferma su una delle due
+// facce (sono uguali), oscillando un poco. Toccato, fa un giro intero. Quello del piede, la prima
+// volta che compare, si volta verso chi è arrivato in fondo alla via.
+// Davanti c'è il sigillo di sempre, dietro la sua copia; lo spessore sono dischi uno sopra
+// l'altro, viola e più scuri a metà, con un filo lime dove cominciano le facce.
+// Con «riduci movimento» il sigillo resta com'era.
+
+const STRATI_MONETA = 10;
+
+function monete(signal) {
+  if (riduci.matches || !supporta3d()) return;
+  for (const s of $$(".sigillo")) moneta(s, signal);
+}
+
+function moneta(sigillo, signal) {
+  const anello = $(".sigillo-anello", sigillo);
+  const logo = $(".sigillo-logo", sigillo);
+  if (!anello || !logo || sigillo.classList.contains("moneta")) return;
+  const corpo = document.createElement("div");
+  corpo.className = "moneta-corpo";
+  const fronte = document.createElement("div");
+  fronte.className = "moneta-faccia";
+  fronte.append(anello, logo);
+  const retro = fronte.cloneNode(true);
+  retro.classList.add("moneta-retro");
+  retro.setAttribute("aria-hidden", "true");
+  // la copia non ripete l'id del cerchio su cui corre la scritta
+  for (const el of $$("[id]", retro)) {
+    const nuovo = `${el.id}-retro`;
+    for (const rif of $$(`[href="#${el.id}"]`, retro)) rif.setAttribute("href", `#${nuovo}`);
+    el.id = nuovo;
+  }
+  const logoRetro = $("img", retro);
+  if (logoRetro) logoRetro.alt = "";
+  // facce piene: dietro ci sono i dischi dello spessore, che non devono trasparire
+  for (const f of [fronte, retro]) $("circle", f)?.setAttribute("fill", "#000");
+  const strati = [];
+  for (let k = 0; k < STRATI_MONETA; k += 1) {
+    const s = document.createElement("span");
+    s.className = "moneta-strato";
+    const scuro = 1 - 0.45 * Math.sin((Math.PI * k) / (STRATI_MONETA - 1));
+    s.style.background = k === 0 || k === STRATI_MONETA - 1 ? "#CFFE7E" : `rgb(${Math.round(103 * scuro)}, ${Math.round(76 * scuro)}, ${Math.round(192 * scuro)})`;
+    strati.push(s);
+  }
+  corpo.append(...strati, fronte, retro);
+  sigillo.append(corpo);
+  sigillo.classList.add("moneta");
+
+  const misura = () => {
+    const spessore = Math.max(5, sigillo.offsetWidth * 0.06);
+    fronte.style.transform = `translateZ(${(spessore / 2).toFixed(2)}px)`;
+    retro.style.transform = `rotateY(180deg) translateZ(${(spessore / 2).toFixed(2)}px)`;
+    // i dischi stanno tra le due facce, mai alla stessa altezza di una faccia
+    strati.forEach((s, k) => (s.style.transform = `translateZ(${(-spessore / 2 + (spessore * (k + 0.5)) / STRATI_MONETA).toFixed(2)}px)`));
+  };
+
+  let angolo = 0;
+  let moto = null;
+  const disegna = () => (corpo.style.transform = `rotateY(${angolo.toFixed(2)}deg)`);
+  const gira = (meta, velocita = 0, smorzamento = 0.6, risposta = 0.8) => {
+    moto?.ferma();
+    moto = molla({
+      da: angolo,
+      a: meta,
+      velocita,
+      smorzamento,
+      risposta,
+      soglia: 0.05,
+      passo: (x) => {
+        angolo = x;
+        disegna();
+      },
+      fine: () => {
+        moto = null;
+        angolo = ((angolo % 360) + 360) % 360;
+        disegna();
+      },
+    });
+  };
+  const posa = () => gira(Math.round(angolo / 180) * 180);
+  const larga = () => Math.max(60, sigillo.offsetWidth);
+
+  const traccia = tracciaVelocita();
+  let presa = null;
+  sigillo.addEventListener(
+    "pointerdown",
+    (e) => {
+      if (presa || (e.pointerType === "mouse" && e.button !== 0)) return;
+      moto?.ferma();
+      moto = null;
+      traccia.azzera();
+      traccia.aggiungi(e.clientX, e.clientY);
+      presa = { id: e.pointerId, x0: e.clientX, y0: e.clientY, da: angolo, asse: null, quando: performance.now() };
+    },
+    { signal },
+  );
+  sigillo.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!presa || e.pointerId !== presa.id) return;
+      traccia.aggiungi(e.clientX, e.clientY);
+      const dx = e.clientX - presa.x0;
+      const dy = e.clientY - presa.y0;
+      if (!presa.asse) {
+        if (Math.hypot(dx, dy) < 6) return;
+        if (Math.abs(dx) < Math.abs(dy)) {
+          // in verticale scorre la pagina: la moneta torna su una faccia
+          presa = null;
+          posa();
+          return;
+        }
+        presa.asse = "x";
+        try {
+          sigillo.setPointerCapture(e.pointerId);
+        } catch {
+          /* si gira lo stesso, finché si resta sul sigillo */
+        }
+        sigillo.classList.add("presa");
+      }
+      // trascinare per tutta la larghezza del sigillo = mezzo giro
+      angolo = presa.da + (dx * 180) / larga();
+      disegna();
+    },
+    { signal },
+  );
+  const lascia = (e) => {
+    if (!presa || e.pointerId !== presa.id) return;
+    const { asse, quando } = presa;
+    presa = null;
+    sigillo.classList.remove("presa");
+    if (asse === "x") {
+      const v = (traccia.velocita().x * 180) / larga();
+      const lancio = Math.max(-1080, Math.min(1080, proietta(v)));
+      gira(Math.round((angolo + lancio) / 180) * 180, v);
+    } else if (e.type === "pointerup" && performance.now() - quando < 500) {
+      gira(Math.round(angolo / 180) * 180 + 360, 0, 0.7); // un tocco: un giro intero
+    } else {
+      posa();
+    }
+  };
+  sigillo.addEventListener("pointerup", lascia, { signal });
+  sigillo.addEventListener("pointercancel", lascia, { signal });
+  sigillo.addEventListener("dragstart", (e) => e.preventDefault(), { signal });
+
+  if (sigillo.closest(".piede") && "IntersectionObserver" in window) {
+    angolo = -150;
+    const vista = new IntersectionObserver(
+      (voci) => {
+        if (!voci.some((v) => v.isIntersecting)) return;
+        vista.disconnect();
+        // si volta piano, in circa un secondo, e oscilla un poco prima di fermarsi
+        if (!presa && !moto) gira(0, 0, 0.6, 1.3);
+      },
+      { threshold: 0.6 },
+    );
+    vista.observe(sigillo);
+    signal.addEventListener("abort", () => vista.disconnect(), { once: true });
+  }
+  signal.addEventListener("abort", () => moto?.ferma(), { once: true });
+  window.addEventListener("resize", misura, { signal });
+  misura();
+  disegna();
+}
+
+// ---------------------------------------------------------------- schede in rilievo
+// Col mouse le schede con un'immagine (porte, magliette, anteprima del gioco, pillole
+// dell'archivio, artwork) si inclinano un poco sotto il puntatore, come una tavola che si preme
+// dove la si tocca, e un riflesso le attraversa seguendolo. Sul telefono no: lì le schede si
+// toccano per aprirle e la pagina scorre sotto il dito. Ferme, tornano piatte e nitide.
+
+const IN_RILIEVO = ".porta, .maglia, .gioco-schermo, .griglia .scheda, .opera";
+
+function rilievo(signal) {
+  if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches || riduci.matches || !supporta3d()) return;
+  for (const el of $$(IN_RILIEVO)) {
+    // l'anteprima del gioco è larga quanto la colonna: si inclina molto meno
+    const MASSIMO = el.matches(".gioco-schermo") ? 3 : 6;
+    const riflesso = document.createElement("span");
+    riflesso.className = "riflesso";
+    riflesso.setAttribute("aria-hidden", "true");
+    el.append(riflesso);
+    let prospettiva = 900;
+    let vx = 0; // rotateX e rotateY voluti…
+    let vy = 0;
+    let x = 0; // …e quelli di adesso, che li inseguono
+    let y = 0;
+    let giro = 0;
+    const disegna = () => {
+      giro = 0;
+      x += (vx - x) * 0.18;
+      y += (vy - y) * 0.18;
+      const arrivato = Math.abs(vx - x) < 0.01 && Math.abs(vy - y) < 0.01;
+      if (arrivato) {
+        x = vx;
+        y = vy;
+      }
+      if (arrivato && !x && !y) {
+        el.style.transform = "";
+        return;
+      }
+      el.style.transform = `perspective(${prospettiva}px) rotateX(${x.toFixed(2)}deg) rotateY(${y.toFixed(2)}deg)`;
+      if (!arrivato) giro = requestAnimationFrame(disegna);
+    };
+    const chiedi = () => {
+      if (!giro) giro = requestAnimationFrame(disegna);
+    };
+    el.addEventListener(
+      "pointerenter",
+      (e) => {
+        if (e.pointerType === "mouse") prospettiva = Math.max(700, el.offsetWidth * 2.4);
+      },
+      { signal, passive: true },
+    );
+    el.addEventListener(
+      "pointermove",
+      (e) => {
+        if (e.pointerType !== "mouse") return;
+        const r = el.getBoundingClientRect();
+        const px = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        const py = Math.min(1, Math.max(0, (e.clientY - r.top) / r.height));
+        // il punto sotto il puntatore va giù, il lato opposto si alza
+        vx = -(py - 0.5) * 2 * MASSIMO;
+        vy = (px - 0.5) * 2 * MASSIMO;
+        el.style.setProperty("--luce", `${(px * 100).toFixed(1)}%`);
+        el.classList.add("in-rilievo");
+        chiedi();
+      },
+      { signal, passive: true },
+    );
+    el.addEventListener(
+      "pointerleave",
+      () => {
+        vx = 0;
+        vy = 0;
+        el.classList.remove("in-rilievo");
+        chiedi();
+      },
+      { signal, passive: true },
+    );
+    signal.addEventListener("abort", () => cancelAnimationFrame(giro), { once: true });
   }
 }
 
@@ -2082,7 +2577,7 @@ let spegniPagina = null;
 function avviaPagina() {
   spegniPagina?.abort();
   spegniPagina = new AbortController();
-  for (const parte of [menu, incorporati, videoSbloccabili, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, apribili, sblocco, striscia, sigilli3d, via, ascoltaSubito, clip, lettoreDaParte]) {
+  for (const parte of [menu, incorporati, videoSbloccabili, binari, visore, ricerca, gioco, galleria, elencoBrani, uscita, avvisoApp, manifesto, apribili, sblocco, striscia, sigilli3d, monete, rilievo, via, ascoltaSubito, clip, lettoreDaParte]) {
     try {
       parte(spegniPagina.signal);
     } catch (errore) {

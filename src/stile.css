@@ -4758,6 +4758,153 @@ html:has(dialog[open]) {
   box-shadow: inset 0 0 0 1px var(--bordo);
 }
 
+/* ------------------------------------------------------------ in rilievo (novembre 2026) */
+/* Tre cose del sito si toccano come oggetti in 3D: la giostra delle pillole nella home, il
+   sigillo che si gira come una moneta e, col mouse, le schede che si inclinano sotto il
+   puntatore. Le accende app.js (giostra, monete, rilievo): senza JS o con «riduci movimento»
+   restano com'erano. */
+
+/* --- la giostra: il binario delle pillole diventa un tamburo, una copertina per faccia */
+.giostra {
+  --faccia: clamp(12.5rem, 56vw, 19rem);
+  /* dove comincia la colonna, a destra della via */
+  --inizio: calc(max(var(--margine), (100% - var(--colonna)) / 2) + var(--rientro));
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  padding-block: 0.75rem 1.5rem;
+  padding-inline: max(var(--margine), (100% - var(--colonna)) / 2);
+  padding-left: var(--inizio);
+  perspective: var(--prospettiva, 1100px);
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+  /* le facce di lato si perdono nel buio invece di finire tagliate dal bordo; a sinistra il buio
+     comincia prima della via, così la linea e il nodo non passano mai sopra una copertina */
+  -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--inizio) - 0.75rem), #000 calc(var(--inizio) + 3rem), #000 calc(100% - 3.5rem), transparent);
+  mask-image: linear-gradient(90deg, transparent calc(var(--inizio) - 0.75rem), #000 calc(var(--inizio) + 3rem), #000 calc(100% - 3.5rem), transparent);
+}
+
+.giostra.presa {
+  cursor: grabbing;
+}
+
+.via-percorso .giostra > .binario {
+  position: relative;
+  display: block;
+  width: var(--faccia);
+  margin: 0 auto;
+  padding: 0;
+  overflow: visible;
+  scroll-snap-type: none;
+  transform-style: preserve-3d;
+}
+
+.giostra > .binario > li {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.giostra .scheda {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.giostra .scheda,
+.giostra .scheda img,
+.moneta img {
+  -webkit-user-drag: none;
+}
+
+/* tutte le facce alte uguali: il titolo occupa sempre due righe */
+.giostra .scheda-titolo {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+/* il buio sulle facce che si voltano (app.js gli dà l'opacità faccia per faccia) */
+.faccia-ombra {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--r-scheda);
+  background: var(--nero);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* --- il sigillo che si gira: una moneta con lo spessore */
+.sigillo.moneta {
+  perspective: 900px;
+  touch-action: pan-y;
+  cursor: grab;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.sigillo.moneta.presa {
+  cursor: grabbing;
+}
+
+.moneta-corpo {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.moneta-faccia {
+  position: absolute;
+  inset: 0;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* lo spessore: dischi grandi quanto il cerchio esterno dell'anello */
+.moneta-strato {
+  position: absolute;
+  inset: 0.7%;
+  border-radius: 50%;
+}
+
+/* --- schede in rilievo, col mouse: il riflesso che le attraversa */
+.porta,
+.maglia,
+.opera,
+.griglia .scheda {
+  position: relative;
+}
+
+.riflesso {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent calc(var(--luce, 50%) - 28%),
+    rgba(255, 255, 255, 0.07) var(--luce, 50%),
+    transparent calc(var(--luce, 50%) + 28%)
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.in-rilievo {
+  will-change: transform;
+}
+
+.in-rilievo > .riflesso {
+  opacity: 1;
+}
+
 /* ------------------------------------------------------------ risposta al tocco */
 /* Come nelle interfacce di Apple: la risposta arriva quando il dito appoggia, non quando
    si stacca. Al tocco i comandi si stringono un poco, subito (100 ms); al rilascio tornano

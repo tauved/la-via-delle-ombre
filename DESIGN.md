@@ -252,7 +252,7 @@ Il ritmo verticale è a gradini clamp(): circa 1–1.5rem dentro un blocco, 2.25
 
 ## Elevation & Depth
 
-Il sito è quasi piatto. La profondità viene da tre superfici di viola notte una sopra l'altra (a riposo, al passaggio, premuta), chiuse sul nero da un filo bianco interno, e dai veli scuri sulle foto. Le ombre vere sono poche e solo scure, per staccare dal fondo ciò che galleggia sopra il contenuto: il lettore fisso, il menu a tendina e la finestra degli artwork.
+Il sito è quasi piatto, con tre eccezioni in 3D vero che si toccano (la giostra delle pillole, il sigillo-moneta, il rilievo delle schede col mouse: vedi Componenti). Per il resto la profondità viene da tre superfici di viola notte una sopra l'altra (a riposo, al passaggio, premuta), chiuse sul nero da un filo bianco interno, e dai veli scuri sulle foto. Le ombre vere sono poche e solo scure, per staccare dal fondo ciò che galleggia sopra il contenuto: il lettore fisso, il menu a tendina e la finestra degli artwork.
 
 ### Shadow Vocabulary
 - **Filo bianco** (`box-shadow: inset 0 0 0 1px var(--bordo)`; al passaggio `var(--bordo-forte)`): schede, bottoni morbidi, frecce e tondi, campi, voci dell'indice.
@@ -303,6 +303,13 @@ Ringraziamenti e Manifesto chiusi su una scheda: titolo a sinistra (Ringraziamen
 
 ### Il sigillo
 Il logo di TAUH dentro due cerchi lime con l'anello «NON SERVIAM · LUX IN TENEBRIS · LUCIFER» in Cinzel 700. Chiude la via nel piede (clamp(9.5rem, 34vw, 12.5rem)); sul computer apre anche l'apertura. L'anello ruota solo mentre si scorre la pagina.
+- **Moneta:** il sigillo ha uno spessore (il 6% del lato: dieci dischi viola, più scuri a metà, con un filo lime vicino alle facce) e due facce uguali, piene di nero. Si prende col dito o col mouse e gira attorno all'asse verticale (trascinare per tutta la sua larghezza = mezzo giro); lanciato, gira per inerzia e si ferma su una faccia oscillando; un tocco gli fa fare un giro intero. Quello del piede, la prima volta che compare, si volta verso chi è arrivato in fondo alla via.
+
+### La giostra delle pillole
+Nella home le otto pillole più recenti stanno sulle facce di un tamburo visto da fuori, una copertina per faccia (le schede di sempre, larghe clamp(12.5rem, 56vw, 19rem), alte tutte uguali con il titolo su due righe). Davanti c'è la più recente; le facce di lato si voltano, scuriscono con il coseno dell'angolo (nero fino al 90%) e sfumano nel buio ai bordi; a sinistra il buio comincia prima della via, così linea e nodo non passano mai sopra una copertina. Si gira trascinando di lato (in verticale scorre la pagina), lanciando, con le frecce e con ← →; col Tab la pillola che prende il fuoco viene davanti. La copertina davanti si apre; toccandone una di lato la giostra la porta davanti. Quando la sezione compare il tamburo fa un passo e presenta la più recente. Senza JS, con «riduci movimento» o con meno di cinque pillole resta il binario piatto che scorre di lato.
+
+### Schede in rilievo
+Solo dove c'è un mouse: porte, magliette, anteprima del gioco, schede dell'archivio e artwork si inclinano sotto il puntatore (il punto sotto il puntatore va giù, fino a 6°; 3° per l'anteprima del gioco, che è larga quanto la colonna) e un riflesso bianco al 7%, una banda lineare, le attraversa seguendolo. Uscendo tornano piatte e nitide. Sul telefono no: lì le schede si toccano per aprirle e la pagina scorre sotto il dito.
 
 ### Il lettore fisso
 In basso a destra, sopra ogni pagina. Da fermo è una pillola viola notte al 94% con sfocatura, tondo viola 46px con il triangolo lime e «Ascolta TAUH» (sul telefono solo il tondo). Finché l'uscita dell'apertura è sullo schermo, il lettore fermo si fa da parte (dissolvenza di 0.25s), così il pre-save resta l'unico bottone pieno. In ascolto diventa una barra di 26rem con angoli 20px: copertina 44px, titolo Cinzel lime, tempo, via di avanzamento con un nodo da 14px, tondo lime per la pausa, prossimo e chiudi. Si apre crescendo dal suo tondo verso sinistra (il bordo destro resta fermo) e ci torna chiudendosi; il contenuto compare in dissolvenza a barra quasi aperta. La musica continua cambiando pagina, e una barra aperta in pausa si ritrova uguale nella pagina dopo.
@@ -325,6 +332,7 @@ Testata: logo a sinistra; da 70em le voci (Montserrat 600 --t-piccolo, bianco al
 - La via e il nodo seguono lo scorrimento (sticky più una trasformazione sul tratto percorso, `.via-fatta`), non un'animazione a tempo. Scorrendo non si misura niente e non si cambia nessuna variabile sul contenitore: le posizioni delle tappe si leggono solo quando la pagina cambia altezza.
 - Tutto ciò che si muove si può riprendere a metà: riparte da dove si trova (immagine in grande, menu, lettore, riquadri).
 - L'anello del sigillo ruota legato allo scorrimento (animation-timeline: scroll), solo senza «riduci movimento».
+- **Profondità vera, in tre punti soli:** la giostra delle pillole, il sigillo-moneta e il rilievo delle schede col mouse. Usano le molle di app.js (giostra: smorzamento 0.8, risposta 0,55 s, 0,9 s all'entrata; moneta: 0.6 e 0,8 s, 1,3 s quando si volta nel piede), si prendono anche mentre girano e si fermano sempre su una faccia. Muovono solo transform (il tamburo con una trasformazione sola) e l'opacità del buio sulle facce; con «riduci movimento» non si accendono.
 - La clip del gioco è muta, gira solo quando è sullo schermo e ha un tondo in basso a sinistra per fermarla; con «riduci movimento» resta sul primo fotogramma.
 - Navigazione morbida (view transition 0.2s) e scorrimento dolce solo senza «riduci movimento»; tra una pagina e l'altra una linea lime corre in cima solo se l'attesa supera 0,3 s (ferma e piena con «riduci movimento»).
 - Con «riduci movimento» restano i cambi di colore e le dissolvenze brevi; con «riduci trasparenza» e «aumenta contrasto» testata e lettore diventano pieni.

@@ -44,7 +44,10 @@
       { "name": "clip-gioco", "value": "video muted loop playsinline, play solo con IntersectionObserver (soglia 0.25)", "purpose": "La partita vera gira solo quando è sullo schermo; con riduci movimento resta sul primo fotogramma; tondo in basso a sinistra per fermarla." },
       { "name": "apribile", "value": "height animata da app.js, 0.2–0.32s var(--frenata), in apertura e in chiusura", "purpose": "Ringraziamenti e Manifesto; subito con la tastiera e con riduci movimento." },
       { "name": "menu", "value": "apre: transform var(--molla-durata) var(--molla) + opacity 0.2s; chiude: 0.16s var(--frenata)", "purpose": "La tendina nasce dal bottone; chi chiude ha già deciso." },
-      { "name": "cambio-pagina", "value": "@view-transition navigation: auto; 0.2s; linea lime 2px che corre in cima (viaggio 0.9s) dopo 0.3s di attesa", "purpose": "Navigazione morbida con la musica che continua; con riduci movimento la linea è ferma e piena." }
+      { "name": "cambio-pagina", "value": "@view-transition navigation: auto; 0.2s; linea lime 2px che corre in cima (viaggio 0.9s) dopo 0.3s di attesa", "purpose": "Navigazione morbida con la musica che continua; con riduci movimento la linea è ferma e piena." },
+      { "name": "giostra", "value": "tamburo preserve-3d con una pillola per faccia (360°/n); molla in app.js smorzamento 0.8, risposta 0.55s (entrata 0.9s); lancio proiettato e scatto alla faccia", "purpose": "Le pillole della home si girano col dito, col mouse, con le frecce e con ← →; senza JS o con riduci movimento resta il binario piatto." },
+      { "name": "moneta", "value": "sigillo con due facce e 10 dischi di spessore, rotateY; molla smorzamento 0.6, risposta 0.8s (nel piede si volta entrando: 1.3s)", "purpose": "Il sigillo si prende e si fa girare; si ferma su una faccia oscillando; disattivato con riduci movimento." },
+      { "name": "rilievo", "value": "perspective(2.4 × larghezza) rotateX/rotateY fino a 6° (3° l'anteprima del gioco), inseguimento 0.18 a fotogramma; riflesso lineare bianco al 7%", "purpose": "Solo col mouse: le schede con un'immagine si inclinano sotto il puntatore e tornano piatte e nitide." }
     ],
     "breakpoints": [
       { "name": "lettore-compatto", "value": "max-width: 640px" },
