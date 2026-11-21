@@ -3423,8 +3423,11 @@ html.lightbox-aperta {
 
 /* ------------------------------------------------------------ sostienimi (donazioni) */
 
+/* minmax(0, 1fr): la colonna si stringe con lo schermo; con auto la allargava il campo del codice
+   (largo di suo una ventina di caratteri) e a 320 px, cioè con lo zoom al 400%, usciva di lato */
 .sostieni {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.5rem;
   align-items: start;
 }
@@ -3445,6 +3448,7 @@ html.lightbox-aperta {
 
 .sostieni-testo {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.9rem;
   justify-items: start;
 }
@@ -3492,6 +3496,7 @@ html.lightbox-aperta {
 /* «Hai già donato?»: il codice che sblocca i pezzi del gioco */
 .sblocco {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 0.55rem;
   width: 100%;
   max-width: 34rem;
@@ -4651,6 +4656,7 @@ html:has(dialog[open]) {
 @media (max-width: 30em) {
   .apribile summary {
     flex-wrap: nowrap;
+    column-gap: 0.75rem;
   }
 
   .apribile-invito > span {
@@ -4660,6 +4666,14 @@ html:has(dialog[open]) {
     overflow: hidden;
     clip-path: inset(50%);
     white-space: nowrap;
+  }
+}
+
+/* sui telefoni più stretti, e con lo zoom al 400%, «Manifesto» si rimpicciolisce quanto basta per
+   stare accanto al tondo col più: a 320 px il tondo usciva dalla scheda e la pagina scorreva di lato */
+@media (max-width: 23.75em) {
+  .manifesto summary h2 {
+    font-size: min(var(--t-grande), 10.5vw);
   }
 }
 

@@ -76,6 +76,19 @@ for (const [larghezza, altezza, telefono] of [
   await ctx.close();
 }
 
+// ---------------------------------------------------------------- zoom al 400%
+// 1280 px ingranditi quattro volte sono 320 px: nessuna pagina deve scorrere di lato
+{
+  const ctx = await contesto(320, 640, true);
+  const pg = await ctx.newPage();
+  for (const indirizzo of pagine) {
+    await pg.goto(BASE + indirizzo, { waitUntil: "load" });
+    const largo = await pg.evaluate(() => document.documentElement.scrollWidth);
+    if (largo > 321) errore(`${indirizzo} a 320px`, `scorre di lato (${largo}px)`);
+  }
+  await ctx.close();
+}
+
 // ---------------------------------------------------------------- home
 {
   // la nuova uscita sta nella prima schermata anche col telefono basso (browser di Instagram)
@@ -281,4 +294,4 @@ if (problemi.length) {
   console.error(`${problemi.length} problemi:\n- ${problemi.join("\n- ")}`);
   process.exit(1);
 }
-console.log(`Tutto a posto: ${pagine.length} pagine provate su telefono e computer, più home, menu, pillola, artwork e biblioteca.`);
+console.log(`Tutto a posto: ${pagine.length} pagine provate su telefono e computer (e a 320 px), più home, menu, pillola, artwork e biblioteca.`);
