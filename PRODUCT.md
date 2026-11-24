@@ -12,11 +12,11 @@ web
 
 - Chi segue TAUH su Instagram, TikTok, YouTube e Telegram e arriva dal link nella bio: quasi sempre dal telefono, spesso dentro il browser interno di Instagram, con pochi secondi di attenzione.
 - Chi vuole leggere con calma le «pillole di conoscenza» (le tavole dei caroselli di TAUH su esoterismo, magia, filosofia) con il testo accanto.
-- Chi viene per ascoltare i brani, giocare a «Incubo», scaricare gli artwork o i programmi gratuiti, comprare una maglietta o fare una donazione.
+- Chi viene per ascoltare i brani, giocare a «GODSKILLER», scaricare gli artwork o i programmi gratuiti, comprare una maglietta o fare una donazione.
 
 ## Product Purpose
 
-«La via delle ombre» è il sito di TAUH: mette in un posto solo musica, pillole di conoscenza, il gioco «Incubo», artwork, biblioteca, tools per artisti, merch, donazioni e i social. Funziona quando chi arriva dai social pre-salva o ascolta l'ultima uscita, entra nel canale Telegram, legge una pillola o gioca, e poi torna.
+«La via delle ombre» è il sito di TAUH: mette in un posto solo musica, pillole di conoscenza, il gioco «GODSKILLER», artwork, biblioteca, tools per artisti, merch, donazioni e i social. Funziona quando chi arriva dai social pre-salva o ascolta l'ultima uscita, entra nel canale Telegram, legge una pillola o gioca, e poi torna.
 
 ## Positioning
 
@@ -50,7 +50,7 @@ Un solo artista che fa musica, divulgazione esoterica e un videogioco con la ste
 
 - `contenuti/`: le pillole con tutte le tavole e i testi, i brani, gli artwork, la Biblioteca, i tools, il merch, i sigilli, i testi del sito (`sito.json`).
 - `src/img/ritratto-*.webp`: il ritratto di TAUH con la maschera.
-- `static/gioco/play/`: il gioco «Incubo».
+- `static/gioco/play/`: il gioco «GODSKILLER» (fino al 25 novembre 2026 si chiamava «Incubo»).
 - Non esistono recensioni, citazioni della stampa o numeri di ascolti da mostrare: non vanno inventati.
 
 ## Product Principles

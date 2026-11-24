@@ -1815,7 +1815,7 @@ function paginaPrivacy() {
     <p>Restano finché non le cancelli:</p>
     <ul>
       <li>i brani e i video che hai sbloccato con un codice (<code>tauh-sblocco:…</code>, <code>tauh-satanismo</code>);</li>
-      <li>i brani che hai sbloccato finendo i livelli di Incubo (<code>tauh-incubo-livello-1</code>, <code>tauh-incubo-livello-2</code>);</li>
+      <li>i brani che hai sbloccato finendo i livelli di GODSKILLER (<code>tauh-incubo-livello-1</code>, <code>tauh-incubo-livello-2</code>);</li>
       <li>le impostazioni e i progressi del gioco (<code>tauh-incubo-impostazioni</code>, <code>tauh-incubo-progressi</code>);</li>
       <li>se hai già chiuso la striscia per chi arriva da Instagram (<code>tauh-striscia:…</code>).</li>
     </ul>

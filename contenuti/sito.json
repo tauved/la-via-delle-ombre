@@ -44,15 +44,15 @@
   },
   "gioco": {
     "disponibile": true,
-    "titolo": "Incubo",
-    "sottotitolo": "Primo livello: la Breccia",
+    "titolo": "GODSKILLER",
+    "sottotitolo": "Due livelli: la Breccia e Oltre il Velo",
     "testo": "Sei un demone di Samael, entrato da una breccia nel Cielo del Parassita. Libera le anime chiuse nelle gabbie, uccidi gli angeli e il loro carceriere, l'Esattore di Anime.",
-    "dettagli": "Uno sparatutto in prima persona alla Doom, disegnato in cel shading con i contorni a inchiostro. Si gioca nel browser, da computer o da telefono, senza installare niente. In sottofondo suona «Incubo» di Tauh.",
+    "dettagli": "Uno sparatutto in prima persona alla Doom, disegnato in cel shading con i contorni a inchiostro. Si gioca nel browser, da computer o da telefono, senza installare niente. In sottofondo suonano «Incubo» e «Sert» di Tauh.",
     "in_arrivo": "Lo stiamo ancora forgiando. Quando apre lo annunciamo sul canale Telegram.",
     "percorso": "/gioco/play/",
     "proporzioni": "16 / 9",
     "immagine": "incubo",
-    "descrizione_immagine": "Una scena di Incubo: nel Chiostro delle Anime un Serafino apre le ali piene d'occhi sotto l'Occhio del Parassita, e in primo piano ci sono gli artigli del demone.",
+    "descrizione_immagine": "Una scena di GODSKILLER: nel Chiostro delle Anime un Serafino apre le ali piene d'occhi sotto l'Occhio del Parassita, e in primo piano ci sono gli artigli del demone.",
     "comandi": [
       [
         "WASD o frecce",
