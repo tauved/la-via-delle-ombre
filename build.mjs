@@ -63,8 +63,12 @@ const perRicerca = (testo) => {
 const oggiItalia = () =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Rome", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
 
-// La chiave con cui il gioco segna nel browser che il primo livello è finito (la legge anche src/app.js).
-const CHIAVE_GIOCO = "tauh-incubo-livello-1";
+// Le chiavi con cui il browser ricorda i livelli finiti del gioco: «tauh-incubo-livello-1», «-2»…
+// (le legge anche src/app.js). Fino al 25 novembre 2026 si giocava solo il primo.
+const chiaveLivello = (n) => `tauh-incubo-livello-${n}`;
+const ORDINALI = ["primo", "secondo", "terzo", "quarto", "quinto", "sesto", "settimo", "ottavo", "nono"];
+// il nome della chiave dei codici di un brano (e dello sblocco ricordato dal browser): dal nome del file
+const chiaveDaFile = (file) => path.basename(file, path.extname(file)).toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
 const dataEstesa = (iso) => {
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso || "");
@@ -290,7 +294,17 @@ async function caricaMusica() {
     if (b.su_spotify_dal && !/^\d{4}-\d{2}-\d{2}$/.test(b.su_spotify_dal)) {
       throw new ErroreContenuti(`Nel brano «${b.titolo}» la data di «su_spotify_dal» deve essere nel formato AAAA-MM-GG.`);
     }
-    return { ...b, sorgente, sorgenteCopertina: copertina, bloccata, colGioco };
+    // "livello": il livello del gioco che lo apre (1 se manca). "codice_livello": l'impronta del codice che
+    // il gioco mostra alla fine di quel livello (node strumenti/codice-sblocco.mjs CODICE): scritto nel
+    // riquadro del codice apre il brano anche su un altro telefono o computer, come finire il livello lì.
+    const livello = b.livello ?? 1;
+    if (!Number.isInteger(livello) || livello < 1 || livello > ORDINALI.length) {
+      throw new ErroreContenuti(`Nel brano «${b.titolo}» "livello" deve essere il numero del livello del gioco (1, 2, …).`);
+    }
+    if (b.codice_livello != null && !/^[0-9a-f]{64}$/.test(b.codice_livello)) {
+      throw new ErroreContenuti(`Nel brano «${b.titolo}» "codice_livello" deve essere l'impronta del codice (node strumenti/codice-sblocco.mjs CODICE), mai il codice.`);
+    }
+    return { ...b, sorgente, sorgenteCopertina: copertina, bloccata, colGioco, livello, codiciLivello: b.codice_livello ? [b.codice_livello] : [] };
   });
 }
 
@@ -304,7 +318,13 @@ function collegaCodici() {
     if (b.chiusa) throw new ErroreContenuti(`«${titolo}» è «in arrivo» senza data: i codici delle donazioni valgono solo per i brani col lucchetto del gioco.`);
     if (!liste[titolo].length) continue;
     b.codici = liste[titolo];
-    b.chiaveCodici = path.basename(b.file, path.extname(b.file)).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    b.chiaveCodici = chiaveDaFile(b.file);
+  }
+  // il codice di fine livello si scrive nello stesso riquadro di quelli delle donazioni
+  for (const b of raccolte.elencoBrani) {
+    if (!b.codiciLivello?.length || !b.colGioco) continue;
+    b.codici ??= [];
+    b.chiaveCodici ??= chiaveDaFile(b.file);
   }
 }
 
@@ -596,7 +616,7 @@ function barraAscolto(pagina) {
     copertina: indirizzo(b.urlCopertina, pagina),
     ...(b.urlMini ? { mini: indirizzo(b.urlMini, pagina) } : {}),
     durata: Math.round(b.durata * 10) / 10,
-    ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true } : {}), ...(b.chiaveCodici ? { codice: b.chiaveCodici } : {}) } : {}),
+    ...(b.bloccata ? { bloccata: b.bloccata, ...(b.colGioco ? { gioco: true, livello: b.livello } : {}), ...(b.chiaveCodici ? { codice: b.chiaveCodici } : {}) } : {}),
   }));
   const primo = raccolte.brani.find((b) => !b.bloccata) || raccolte.brani[0];
   return `<div class="ascolto" data-lettore>
@@ -909,16 +929,17 @@ function paginaHome(caroselli) {
     const suSpotify = b.spotify
       ? `<span class="brano-spotify"${b.su_spotify_dal ? ` data-dal="${b.su_spotify_dal}"` : ""}${spotifyOra ? "" : " hidden"}>, oppure <a href="${esc(b.spotify)}" target="_blank" rel="noopener">ascoltala su Spotify</a>${b.spotify_dentro ? ` dentro «${esc(b.spotify_dentro)}»` : ""}</span>`
       : "";
-    const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">primo livello del gioco</a>${b.chiaveCodici ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
+    const quale = `${ORDINALI[b.livello - 1]} livello del gioco`;
+    const strade = `Per ascoltarla ${b.spotify ? "qui " : ""}finisci il <a href="${indirizzo("/gioco/", pagina)}">${quale}</a>${b.codici?.length ? ` o <a href="#sostieni">sostienimi con una donazione</a>` : ""}${suSpotify}`;
     const chiuso = b.colGioco
       ? b.chiaveCodici || b.spotify
         ? `<div class="brano brano-chiuso brano-col-gioco" data-sblocca>${interno(strade, icona.lucchetto, true)}
           </div>`
-        : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno("Finisci il primo livello del gioco per ascoltarla", icona.lucchetto)}
+        : `<a class="brano brano-chiuso" href="${indirizzo("/gioco/", pagina)}" data-sblocca>${interno(`Finisci il ${quale} per ascoltarla`, icona.lucchetto)}
           </a>`
       : `<div class="brano brano-chiuso brano-in-arrivo" data-sblocca>${interno("In arrivo", icona.lucchetto)}
           </div>`;
-    return `<li data-bloccata="${b.bloccata}"${b.colGioco ? " data-col-gioco" : ""}${b.chiaveCodici ? ` data-codice="${b.chiaveCodici}"` : ""}>${bottone}
+    return `<li data-bloccata="${b.bloccata}"${b.colGioco ? ` data-col-gioco data-livello="${b.livello}"` : ""}${b.chiaveCodici ? ` data-codice="${b.chiaveCodici}"` : ""}>${bottone}
           ${chiuso}</li>`;
   };
   const tuttiBrani = raccolte.elencoBrani.length;
@@ -1104,9 +1125,12 @@ function paginaHome(caroselli) {
               <figcaption>${esc(sostieni.qr_testo || "Inquadra il codice col telefono per donare.")}</figcaption>
             </figure>` : ""}
           </div>
-          ${braniConCodice.length ? `<form class="sblocco" data-sblocco aria-labelledby="titolo-sblocco" data-brani="${esc(JSON.stringify(Object.fromEntries(braniConCodice.map((b) => [b.chiaveCodici, { titolo: b.titolo, codici: b.codici, fino: b.bloccata, gioco: b.colGioco }]))))}" hidden>
+          ${braniConCodice.length ? `<form class="sblocco" data-sblocco aria-labelledby="titolo-sblocco" data-brani="${esc(JSON.stringify(Object.fromEntries(braniConCodice.map((b) => [b.chiaveCodici, { titolo: b.titolo, codici: b.codici, codiciLivello: b.codiciLivello, fino: b.bloccata, gioco: b.colGioco, livello: b.livello }]))))}" hidden>
             <h3 class="sblocco-titolo" id="titolo-sblocco">${esc(sostieni.sblocco_titolo || "Hai già donato?")}</h3>
-            <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi")} ${esc(elencoTitoli(braniConCodice))}.</p>
+            <p class="sblocco-testo">${esc(sostieni.sblocco_testo || "Scrivi il codice che ti ho mandato e sblocchi")} ${esc(elencoTitoli(braniConCodice.filter((b) => b.codici.length)))}.${braniConCodice
+              .filter((b) => b.codiciLivello.length)
+              .map((b) => ` Per «${esc(b.titolo)}» vale anche il codice che ti dà il gioco alla fine del ${ORDINALI[b.livello - 1]} livello.`)
+              .join("")}</p>
             <div class="sblocco-riga">
               <label class="nascosto" for="codice-sblocco">Codice di sblocco</label>
               <input id="codice-sblocco" name="codice" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Il tuo codice" aria-describedby="esito-sblocco" required>
@@ -1791,7 +1815,7 @@ function paginaPrivacy() {
     <p>Restano finché non le cancelli:</p>
     <ul>
       <li>i brani e i video che hai sbloccato con un codice (<code>tauh-sblocco:…</code>, <code>tauh-satanismo</code>);</li>
-      <li>i brani che hai sbloccato finendo il primo livello di Incubo (<code>tauh-incubo-livello-1</code>);</li>
+      <li>i brani che hai sbloccato finendo i livelli di Incubo (<code>tauh-incubo-livello-1</code>, <code>tauh-incubo-livello-2</code>);</li>
       <li>le impostazioni e i progressi del gioco (<code>tauh-incubo-impostazioni</code>, <code>tauh-incubo-progressi</code>);</li>
       <li>se hai già chiuso la striscia per chi arriva da Instagram (<code>tauh-striscia:…</code>).</li>
     </ul>
@@ -1829,7 +1853,7 @@ function paginaPrivacy() {
     <p>Puoi chiedermi in ogni momento di vedere, correggere o cancellare i dati che ho su di te: in pratica il nome nei Ringraziamenti e i messaggi che mi mandi. Se pensi che qualcosa non vada, puoi rivolgerti al ${fuori("https://www.garanteprivacy.it/", "Garante per la protezione dei dati personali")}.</p>
   </section>
 
-  <p class="informativa-data">Ultimo aggiornamento: 24 novembre 2026.</p>
+  <p class="informativa-data">Ultimo aggiornamento: 25 novembre 2026.</p>
 </main>`;
   return documento({
     pagina,
@@ -1865,13 +1889,14 @@ async function scrivi(percorsoPagina, html) {
 
 // Il gioco esportato per itch.io carica i caratteri da Google: qui li sostituisco
 // con quelli del sito, così nessuna pagina chiama server esterni.
-// Quando il giocatore vede la schermata di vittoria del primo livello, il browser se lo ricorda:
-// così i brani col lucchetto si sbloccano nella musica del sito. Lo script osserva solo lo
-// schermo #won del gioco, senza toccarne il codice.
+// Quando il giocatore vede la schermata di vittoria di un livello, il browser se lo ricorda con
+// «tauh-incubo-livello-N»: il numero lo scrive il gioco in #won (data-livello; senza, è il primo).
+// Così i brani col lucchetto di quel livello si sbloccano nella musica del sito. Lo script osserva
+// solo lo schermo #won del gioco, senza toccarne il codice, e vale per ogni vittoria della partita
+// (anche il livello dopo, con PROSEGUI, senza ricaricare la pagina).
 function scriptSblocco(bloccati, pagina) {
   const dati = {
-    chiave: CHIAVE_GIOCO,
-    brani: bloccati.map((b) => ({ titolo: b.titolo, fino: b.bloccata })),
+    brani: bloccati.map((b) => ({ titolo: b.titolo, fino: b.bloccata, livello: b.livello })),
     musica: indirizzo("/#musica", pagina),
   };
   return `<style>.sblocco-sito{max-width:560px;margin:4px 0 0;font-size:15px;line-height:1.5;color:#CFFE7E}.sblocco-sito-link{font-family:Cinzel,serif;font-weight:800;font-size:14px;letter-spacing:.2em;color:#CFFE7E;border:2px solid #CFFE7E;padding:10px 22px;text-decoration:none;pointer-events:auto}.sblocco-sito-link:hover,.sblocco-sito-link:focus-visible{background:#CFFE7E;color:#140b1c;outline:none}</style>
@@ -1880,19 +1905,21 @@ function scriptSblocco(bloccati, pagina) {
   const d = ${JSON.stringify(dati).replace(/</g, "\\u003c")};
   const oggi = new Date();
   oggi.setHours(0, 0, 0, 0);
-  const ancoraChiusi = d.brani.filter((b) => {
+  const chiuso = (b) => {
     if (b.fino === "sempre") return true;
     const [a, m, g] = b.fino.split("-").map(Number);
     return new Date(a, m - 1, g) > oggi;
-  });
-  let fatto = false;
-  new MutationObserver(() => {
+  };
+  new MutationObserver((cambi) => {
     const vinto = document.getElementById("won");
-    if (fatto || !vinto || vinto.hidden) return;
-    fatto = true;
-    try { localStorage.setItem(d.chiave, String(Date.now())); } catch (e) { return; }
-    if (!ancoraChiusi.length) return;
-    const titoli = ancoraChiusi.map((b) => "«" + b.titolo + "»");
+    if (!vinto || vinto.hidden) return;
+    // una vittoria nuova: #won ha appena perso «hidden» (anche se nel frattempo era sparito e ricomparso)
+    if (!cambi.some((c) => c.target === vinto && c.oldValue !== null)) return;
+    const livello = Number(vinto.dataset.livello) || 1;
+    try { localStorage.setItem("tauh-incubo-livello-" + livello, String(Date.now())); } catch (e) { return; }
+    for (const el of vinto.querySelectorAll(".sblocco-sito, .sblocco-sito-link")) el.remove();
+    const titoli = d.brani.filter((b) => b.livello === livello && chiuso(b)).map((b) => "«" + b.titolo + "»");
+    if (!titoli.length) return;
     const testo = document.createElement("p");
     testo.className = "sblocco-sito";
     testo.textContent = "Hai sbloccato " + titoli.join(" e ") + ": ora " + (titoli.length > 1 ? "le" : "la") + " ascolti anche sul sito.";
@@ -1904,7 +1931,7 @@ function scriptSblocco(bloccati, pagina) {
     const prima = vinto.querySelector("button");
     vinto.insertBefore(testo, prima);
     vinto.insertBefore(link, prima);
-  }).observe(document.documentElement, { subtree: true, attributes: true, attributeFilter: ["hidden"] });
+  }).observe(document.documentElement, { subtree: true, attributes: true, attributeOldValue: true, attributeFilter: ["hidden"] });
 })();
 </script>`;
 }

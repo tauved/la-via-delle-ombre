@@ -140,7 +140,10 @@ function tracciaVelocita() {
 // (lo script lo aggiunge build.mjs). Un brano con "in_arrivo" non si ascolta e basta.
 // In tutti e due i casi, dal giorno indicato il brano è libero per tutti.
 
-const CHIAVE_GIOCO = "tauh-incubo-livello-1";
+// I livelli finiti del gioco: «tauh-incubo-livello-1», «tauh-incubo-livello-2»… (li scrive lo script che
+// build.mjs aggiunge al gioco). Ogni brano col lucchetto del gioco dice quale livello lo apre (1 se manca).
+const chiaveLivello = (n) => `tauh-incubo-livello-${Number(n) || 1}`;
+const ORDINALI = ["primo", "secondo", "terzo", "quarto", "quinto", "sesto", "settimo", "ottavo", "nono"];
 
 const giornoArrivato = (iso) => {
   if (iso === "sempre") return false; // lucchetto senza scadenza
@@ -151,9 +154,9 @@ const giornoArrivato = (iso) => {
   return new Date(anno, mese - 1, giorno) <= oggi;
 };
 
-const giocoFinito = () => {
+const giocoFinito = (livello = 1) => {
   try {
-    return Boolean(localStorage.getItem(CHIAVE_GIOCO));
+    return Boolean(localStorage.getItem(chiaveLivello(livello)));
   } catch {
     return false;
   }
@@ -183,8 +186,8 @@ const donazioneFatta = (codice) => {
   }
 };
 
-const libero = (bloccata, colGioco = false, codice = "") =>
-  !bloccata || giornoArrivato(bloccata) || (colGioco && giocoFinito()) || donazioneFatta(codice);
+const libero = (bloccata, colGioco = false, codice = "", livello = 1) =>
+  !bloccata || giornoArrivato(bloccata) || (colGioco && giocoFinito(livello)) || donazioneFatta(codice);
 
 // ================================================================ lettore della musica
 
@@ -227,7 +230,7 @@ const lettore = (() => {
   const ripieghi = new Map();
   const ascoltatori = new Set();
 
-  const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco, brani[i]?.codice);
+  const chiuso = (i) => !libero(brani[i]?.bloccata, brani[i]?.gioco, brani[i]?.codice, brani[i]?.livello);
 
   // Shuffle: i brani suonano in un ordine casuale, nuovo a ogni visita. La scheda lo ricorda
   // (sessionStorage) mentre si gira per il sito; finito il giro se ne mescola un altro.
@@ -1887,7 +1890,8 @@ function uscita() {
 function sblocco(signal) {
   const form = $("[data-sblocco]");
   if (!form) return;
-  // per ogni brano coi codici: { titolo, codici: [impronte], fino, gioco }, sotto il nome della sua chiave
+  // per ogni brano coi codici: { titolo, codici: [impronte], codiciLivello: [impronte], fino, gioco, livello },
+  // sotto il nome della sua chiave. codiciLivello: il codice che il gioco dà alla fine del livello del brano.
   let voci = [];
   try {
     voci = Object.entries(JSON.parse(form.dataset.brani || "{}"));
@@ -1897,7 +1901,7 @@ function sblocco(signal) {
   const campo = $("input", form);
   const riga = $(".sblocco-riga", form);
   const esito = $("[data-sblocco-esito]", form);
-  const ancoraChiusi = () => voci.filter(([codice, b]) => !libero(b.fino, b.gioco, codice));
+  const ancoraChiusi = () => voci.filter(([codice, b]) => !libero(b.fino, b.gioco, codice, b.livello));
   // si vede solo se in questo browser c'è ancora un brano da sbloccare col codice
   form.hidden = !ancoraChiusi().length;
   const di = (testo, classe = "") => {
@@ -1920,16 +1924,17 @@ function sblocco(signal) {
         di("Questo browser non riesce a controllare il codice: prova ad aprire il sito con Safari o Chrome.", "sbagliato");
         return;
       }
-      // ogni codice vale solo per il suo brano
-      const trovato = voci.find(([, b]) => b.codici.includes(impronta));
+      // ogni codice vale solo per il suo brano; quello di fine livello come aver finito il livello qui
+      const trovato = voci.find(([, b]) => b.codici.includes(impronta) || b.codiciLivello?.includes(impronta));
       if (!trovato) {
         di("Il codice non è giusto: controlla di averlo scritto bene.", "sbagliato");
         campo.select();
         return;
       }
       const [codice, b] = trovato;
+      const delGioco = !b.codici.includes(impronta);
       try {
-        localStorage.setItem(chiaveDonazione(codice), "1");
+        localStorage.setItem(delGioco ? chiaveLivello(b.livello) : chiaveDonazione(codice), delGioco ? String(Date.now()) : "1");
       } catch {
         di("Il browser non permette di ricordare lo sblocco: se sei in navigazione privata, riprova in una finestra normale.", "sbagliato");
         return;
@@ -1937,7 +1942,12 @@ function sblocco(signal) {
       campo.value = "";
       // se ci sono altri brani da sbloccare il campo resta, per un altro codice
       riga.hidden = !ancoraChiusi().length;
-      di(`Fatto, grazie del sostegno! «${b.titolo}» ora la ascolti anche qui, nell'elenco dei brani.`, "fatto");
+      di(
+        delGioco
+          ? `Fatto: è il codice del ${ORDINALI[(Number(b.livello) || 1) - 1]} livello. «${b.titolo}» ora la ascolti anche qui, nell'elenco dei brani.`
+          : `Fatto, grazie del sostegno! «${b.titolo}» ora la ascolti anche qui, nell'elenco dei brani.`,
+        "fatto",
+      );
       window.dispatchEvent(new Event("tauh-sbloccati"));
     },
     { signal },
@@ -2159,7 +2169,7 @@ function elencoBrani(signal) {
   const chiusi = $$("[data-bloccata]");
   const controlla = () => {
     for (const voce of chiusi) {
-      const aperto = libero(voce.dataset.bloccata, "colGioco" in voce.dataset, voce.dataset.codice);
+      const aperto = libero(voce.dataset.bloccata, "colGioco" in voce.dataset, voce.dataset.codice, voce.dataset.livello);
       const bottone = $("[data-brano]", voce);
       const verso = $("[data-sblocca]", voce);
       if (bottone) bottone.hidden = !aperto;
@@ -2171,7 +2181,7 @@ function elencoBrani(signal) {
   if (chiusi.length) {
     controlla();
     // il gioco finito o il codice scritto in un'altra scheda, o tornando indietro dal gioco
-    const chiave = (k) => k === null || k === CHIAVE_GIOCO || k.startsWith("tauh-sblocco:");
+    const chiave = (k) => k === null || k.startsWith("tauh-incubo-livello-") || k.startsWith("tauh-sblocco:");
     window.addEventListener("storage", (e) => chiave(e.key) && controlla(), { signal });
     window.addEventListener("pageshow", controlla, { signal });
     // il codice della donazione appena scritto in questa pagina

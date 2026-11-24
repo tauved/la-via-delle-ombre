@@ -19,6 +19,7 @@
     {"titolo": "Incubo", "file": "incubo.mp3", "copertina": "incubo.webp", "nota": "La traccia del gioco", "bloccata_fino_al": true, "spotify": "https://open.spotify.com/album/471NYsnc0iLDSj32U5f8Oc", "spotify_dentro": "Come Dio", "su_spotify_dal": "2026-10-28"},
     {"titolo": "Brivido e Panico", "file": "brivido-e-panico.mp3", "copertina": "incubo.webp"},
     {"titolo": "Eraserhead", "file": "eraserhead.mp3", "nota": "Freestyle"},
-    {"titolo": "Bestie di Satana", "file": "bestie-di-satana.mp3", "nota": "feat. Kid Bakura"}
+    {"titolo": "Bestie di Satana", "file": "bestie-di-satana.mp3", "nota": "feat. Kid Bakura"},
+    {"titolo": "Sert", "file": "sert.mp3", "copertina": "sert.webp", "nota": "La traccia del secondo livello del gioco", "bloccata_fino_al": true, "livello": 2, "codice_livello": "6aa78ba08c845e9a3c77d8036641336bd2d999eaa52d49e02f548891351f2c43", "spotify": "https://ffm.to/tauh-sert", "su_spotify_dal": "2026-11-25"}
   ]
 }
