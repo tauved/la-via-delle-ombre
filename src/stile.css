@@ -4107,6 +4107,69 @@ html.lightbox-aperta {
   text-align: center;
 }
 
+/* il link all'informativa, sotto la firma: discreto ma comodo da toccare */
+.piede-legale {
+  margin-top: -0.75rem;
+  font-size: var(--t-piccolo);
+}
+
+.piede-legale a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.75rem;
+  color: var(--grigio);
+  text-underline-offset: 0.2em;
+}
+
+@media (hover: hover) {
+  .piede-legale a:hover {
+    color: var(--lime);
+  }
+}
+
+/* ------------------------------------------------------------ privacy e cookie */
+
+.informativa {
+  display: grid;
+  gap: clamp(1.75rem, 5vw, 2.5rem);
+  padding-bottom: clamp(2.5rem, 8vw, 4rem);
+}
+
+.informativa section {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 44rem;
+}
+
+.informativa h2 {
+  font: 600 var(--t-sotto) / 1.25 var(--corpo);
+  color: var(--bianco);
+}
+
+.informativa ul {
+  display: grid;
+  gap: 0.45rem;
+  max-width: 62ch;
+  margin: 0;
+  padding-left: 1.25rem;
+}
+
+.informativa li::marker {
+  color: var(--lime);
+}
+
+.informativa code {
+  font: 500 0.86em / 1.4 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: var(--lime);
+  overflow-wrap: anywhere;
+}
+
+.informativa-data {
+  color: var(--grigio);
+  font-size: var(--t-piccolo);
+}
+
 /* ------------------------------------------------------------ dettagli */
 
 html:not(.js) .ascolto {

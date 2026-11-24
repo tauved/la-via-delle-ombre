@@ -583,6 +583,7 @@ function piede(pagina) {
     ${sigillo(pagina)}
     ${sito.piede?.motto ? `<p class="piede-motto">${esc(sito.piede.motto)}</p>` : ""}
     <p class="firma">TAUH · la via delle ombre</p>
+    <p class="piede-legale"><a href="${indirizzo("/privacy/", pagina)}"${pagina === "/privacy/" ? ' aria-current="page"' : ""}>Privacy e cookie</a></p>
   </div>
 </footer>`;
 }
@@ -1763,6 +1764,82 @@ function pagina404() {
   return documento({ pagina, titolo: "Pagina non trovata", descrizione: "Questa pagina non esiste.", immagine: media.ogHome, corpo });
 }
 
+// ---------------------------------------------------------------- privacy e cookie
+// L'informativa (il link sta nel piede di ogni pagina). Descrive quello che il sito fa davvero:
+// se cambiano le chiavi salvate nel browser (app.js, gioco), i servizi incorporati o l'hosting,
+// va aggiornata anche questa pagina, data compresa. Niente nome vero né email di TAUH: il
+// contatto è il DM di Instagram.
+
+function paginaPrivacy() {
+  const pagina = "/privacy/";
+  const fuori = (href, testo) => `<a href="${href}" target="_blank" rel="noopener">${testo}<span class="nascosto"> (si apre in un'altra scheda)</span></a>`;
+  const dm = sito.merch?.link || "https://ig.me/m/tauh616";
+  const corpo = `<main id="contenuto" class="colonna informativa">
+  <header class="archivio-testa">
+    <h1>Privacy e cookie</h1>
+    <p>La via delle ombre non ti traccia: niente cookie del sito, niente statistiche, niente pubblicità. Qui c'è tutto quello che succede ai tuoi dati mentre la percorri.</p>
+  </header>
+
+  <section aria-labelledby="privacy-chi">
+    <h2 id="privacy-chi">Chi gestisce il sito</h2>
+    <p>Il sito è di TAUH. Per qualsiasi domanda sui tuoi dati, o per chiedere di vederli, correggerli o cancellarli, scrivimi su Instagram: ${fuori(esc(dm), "@tauh616")}.</p>
+  </section>
+
+  <section aria-labelledby="privacy-browser">
+    <h2 id="privacy-browser">Cosa ricorda il tuo browser</h2>
+    <p>Il sito non mette cookie. Per far funzionare alcune cose salva qualche nota nella memoria del tuo browser: resta sul tuo telefono o computer e non viene mandata a nessuno, nemmeno a me. Sono note tecniche, servono solo a darti quello che chiedi, quindi non serve il tuo consenso.</p>
+    <p>Restano finché non le cancelli:</p>
+    <ul>
+      <li>i brani e i video che hai sbloccato con un codice (<code>tauh-sblocco:…</code>, <code>tauh-satanismo</code>);</li>
+      <li>i brani che hai sbloccato finendo il primo livello di Incubo (<code>tauh-incubo-livello-1</code>);</li>
+      <li>le impostazioni e i progressi del gioco (<code>tauh-incubo-impostazioni</code>, <code>tauh-incubo-progressi</code>);</li>
+      <li>se hai già chiuso la striscia per chi arriva da Instagram (<code>tauh-striscia:…</code>).</li>
+    </ul>
+    <p>Si cancellano da sole quando chiudi la scheda:</p>
+    <ul>
+      <li>il brano e il punto in cui eri, così la musica continua mentre cambi pagina (<code>tauh-lettore</code>);</li>
+      <li>se sei arrivato da Instagram (<code>tauh-da-instagram</code>).</li>
+    </ul>
+    <p>I codici di sblocco si controllano dentro il tuo browser: non passano da nessun server. Per cancellare tutto, cancella i dati di questo sito dalle impostazioni del browser; poi gli sblocchi vanno rifatti col codice.</p>
+  </section>
+
+  <section aria-labelledby="privacy-incorporati">
+    <h2 id="privacy-incorporati">Spotify e YouTube</h2>
+    <p>Il player di Spotify e i video di YouTube non si caricano da soli: arrivano solo quando premi il loro bottone, e finché non lo premi il tuo browser non si collega ai loro server. Da quel momento Spotify o YouTube (cioè Google) possono usare i loro cookie e raccogliere dati secondo le loro regole: ${fuori("https://www.spotify.com/it/legal/privacy-policy/", "informativa di Spotify")}, ${fuori("https://policies.google.com/privacy?hl=it", "norme sulla privacy di Google")}.</p>
+  </section>
+
+  <section aria-labelledby="privacy-donazioni">
+    <h2 id="privacy-donazioni">Donazioni, codici e ringraziamenti</h2>
+    <p>Le donazioni passano da PayPal, che tratta i tuoi dati secondo la sua ${fuori("https://www.paypal.com/it/legalhub/paypal/privacy-full", "informativa sulla privacy")}. Io vedo solo quello che PayPal mostra a chi riceve il pagamento, per esempio il nome, l'importo e la causale.</p>
+    <p>Il profilo che mi lasci nella causale lo uso per mandarti il codice e, come chiedi lasciandolo, per scriverti tra i Ringraziamenti del sito. Resta lì finché non mi scrivi per toglierlo.</p>
+  </section>
+
+  <section aria-labelledby="privacy-link">
+    <h2 id="privacy-link">Link verso altri siti</h2>
+    <p>Pre-save (feature.fm), Spotify, Apple Music, TIDAL, YouTube, Instagram, TikTok, Telegram, PayPal e le librerie della Biblioteca sono link: quando li apri sei sul loro sito e valgono le loro regole sulla privacy.</p>
+  </section>
+
+  <section aria-labelledby="privacy-hosting">
+    <h2 id="privacy-hosting">Dove sta il sito</h2>
+    <p>Il sito è ospitato da Cloudflare. Per consegnarti le pagine e proteggerle dagli attacchi, Cloudflare tratta i dati tecnici di ogni richiesta, come l'indirizzo IP, anche fuori dall'Unione europea: ${fuori("https://www.cloudflare.com/privacypolicy/", "informativa di Cloudflare")}. Se è attiva la protezione dai bot, può mettere un cookie tecnico di sicurezza (<code>__cf_bm</code>) che non serve a seguirti da un sito all'altro: ${fuori("https://developers.cloudflare.com/fundamentals/reference/policies-compliances/cloudflare-cookies/", "i cookie di Cloudflare")}.</p>
+  </section>
+
+  <section aria-labelledby="privacy-diritti">
+    <h2 id="privacy-diritti">I tuoi diritti</h2>
+    <p>Puoi chiedermi in ogni momento di vedere, correggere o cancellare i dati che ho su di te: in pratica il nome nei Ringraziamenti e i messaggi che mi mandi. Se pensi che qualcosa non vada, puoi rivolgerti al ${fuori("https://www.garanteprivacy.it/", "Garante per la protezione dei dati personali")}.</p>
+  </section>
+
+  <p class="informativa-data">Ultimo aggiornamento: 24 novembre 2026.</p>
+</main>`;
+  return documento({
+    pagina,
+    titolo: "Privacy e cookie",
+    descrizione: "Cosa succede ai tuoi dati sulla Via delle ombre: niente tracciamento e niente cookie del sito.",
+    immagine: media.ogHome,
+    corpo,
+  });
+}
+
 // ---------------------------------------------------------------- risorse e scrittura
 
 const media = {};
@@ -2105,6 +2182,7 @@ async function principale() {
     ...(raccolte.biblioteca.length ? [["/biblioteca/", paginaBiblioteca()]] : []),
     ...(raccolte.tools.length ? [["/tools/", paginaTools()], ...raccolte.tools.map((x) => [`/tools/${x.slug}/`, paginaTool(x)])] : []),
     ...(raccolte.satanismo ? [[raccolte.satanismo.percorso, paginaSatanismo()]] : []),
+    ["/privacy/", paginaPrivacy()],
     ["/404.html", pagina404()],
   ];
   for (const [percorso, html] of pagine) await scrivi(percorso, html);

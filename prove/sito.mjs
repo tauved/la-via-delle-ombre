@@ -64,9 +64,12 @@ for (const [larghezza, altezza, telefono] of [
         // i link nascosti agli screen reader (aria-hidden, fuori dal Tab) sono doppioni voluti di un altro link
         senzaNome: [...document.querySelectorAll("a[href], button")].filter((e) => visibile(e) && !e.closest('[aria-hidden="true"]') && !nome(e)).map((e) => e.outerHTML.slice(0, 80)),
         h1: document.querySelectorAll("h1").length,
+        // l'informativa si raggiunge dal piede di ogni pagina
+        privacy: Boolean(document.querySelector('.piede a[href$="privacy/"]')),
       };
     });
     if (r.largo > larghezza + 1) errore(dove, `scorre di lato (${r.largo}px)`);
+    if (!r.privacy) errore(dove, "nel piede manca il link a Privacy e cookie");
     for (const x of r.nascostiVisibili) errore(dove, `elemento con hidden visibile: ${x}`);
     for (const x of r.senzaAlt) errore(dove, `immagine senza alt: ${x}`);
     for (const x of r.senzaNome) errore(dove, `link o bottone senza nome: ${x}`);
