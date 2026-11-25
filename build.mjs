@@ -2082,6 +2082,9 @@ async function principale() {
     raccolte.brani.push(voce);
     raccolte.elencoBrani.push(voce);
   }
+  // Regola: le canzoni da sbloccare (col gioco o con un codice) stanno in cima all'elenco, in ordine di livello;
+  // le altre restano nell'ordine di musica.json. Il lettore non cambia: i bottoni usano «indice».
+  raccolte.elencoBrani.sort((a, b) => Number(Boolean(b.colGioco)) - Number(Boolean(a.colGioco)) || (a.colGioco && b.colGioco ? a.livello - b.livello : 0));
   for (const x of ebook) {
     for (const f of x.formati) {
       const { url, dati: contenuto } = await copiaConImpronta(path.join(x.dir, f.file), `scarica/ebook/${x.slug}`, f.file);

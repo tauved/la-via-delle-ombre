@@ -170,7 +170,7 @@ Con `"in_arrivo": true`, senza data, il brano resta chiuso finché non togli la 
 
 Con `"bloccata_fino_al": "AAAA-MM-GG"` il brano ha il lucchetto: nell'elenco compare con «Finisci il primo livello del gioco per ascoltarla» e porta alla pagina del gioco, e il lettore lo salta. Chi finisce il primo livello lo sblocca: il browser se lo ricorda e il brano si ascolta come gli altri. Dal giorno indicato (a mezzanotte) il brano è libero per tutti, senza fare niente; dopo quella data la riga si può anche togliere.
 
-Con `"bloccata_fino_al": true`, senza data, il lucchetto non scade mai: nel lettore del sito il brano si ascolta solo finendo il livello o con il codice di una donazione (vedi sotto). Adesso ce l'ha «Incubo», la traccia del gioco, anche dopo l'uscita.
+Con `"bloccata_fino_al": true`, senza data, il lucchetto non scade mai: nel lettore del sito il brano si ascolta solo finendo il livello o con il codice di una donazione (vedi sotto). Adesso ce l'ha «Incubo», la traccia del gioco, anche dopo l'uscita. Questi brani, quelli col lucchetto del gioco, stanno sempre in cima all'elenco, in ordine di livello (`"livello"`), qualunque sia il loro posto in `musica.json`.
 
 A chi non lo sblocca si può offrire il brano su Spotify: con `"spotify": "https://open.spotify.com/…"` nel brano chiuso compare anche «oppure ascoltala su Spotify», e con `"su_spotify_dal": "AAAA-MM-GG"` compare solo da quel giorno (per esempio il giorno dell'uscita). Se su Spotify il brano sta dentro un'uscita con un altro titolo, metti il link dell'uscita in `"spotify"` e il suo titolo in `"spotify_dentro"`: la frase diventa «oppure ascoltala su Spotify dentro «Titolo»».
 
